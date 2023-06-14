@@ -15,6 +15,7 @@ public class RPG : ModuleRules
         PrivateDependencyModuleNames.Add("CoreUObject");
         PrivateDependencyModuleNames.Add("Engine");
         PrivateDependencyModuleNames.Add("InputCore");
-        PrivateDependencyModuleNames.Add("Niagara");
+
+        PublicDependencyModuleNames.Add("Niagara");
     }
 }
