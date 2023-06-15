@@ -9,6 +9,9 @@ public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 
+	void PluginButtonClicked();
+
 private:
 	TSharedPtr<class FWeaponContextMenu> ContextMenu;//언리얼 내 우클릭 대분류목록
+	TSharedPtr<class FWeaponCommand> Command;//언리얼 내 우클릭 대분류목록
 };
