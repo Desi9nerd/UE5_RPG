@@ -1,5 +1,7 @@
 #include "WeaponAssetEditor.h"
 #include "SWeaponLeftArea.h"
+#include "SWeaponDetailsView.h"
+#include "SWeaponEquipmentData.h"
 #include "Weapons/CWeaponAsset.h"
 
 //설정한 이름들
@@ -37,6 +39,30 @@ void FWeaponAssetEditor::Shutdown()
 
 void FWeaponAssetEditor::Open(FString InAssetName)
 {
+	LeftArea = SNew(SWeaponLeftArea)//SWeaponLeftArea에서 받은 자료형을 생성하여 넣어준다.
+		.OnSelectedItem(this, &FWeaponAssetEditor::OnListViewSelectedItem);//LeftArea에서 선택한 데이터
+
+	FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
+
+	//DetailsView
+	{
+		FDetailsViewArgs args(false, false, true, FDetailsViewArgs::HideNameArea);//기본값 설정. ActorsUserNameArea, ObjectsUserNameArea, HideNameArea
+		args.ViewIdentifier = "WeaponAssetEditorDetailsView";//식별자 설정. 게임 Editor쪽에서 DetailView 접근시 이 식별자로 찾을 수 있다.
+		DetailsView = prop.CreateDetailView(args);//Detail 창 띄우기.
+
+		FOnGetDetailCustomizationInstance detailView;
+		detailView.BindStatic(&SWeaponDetailsView::MakeInstance);//Static은 객체가 필요없다. 그래서 함수 주소로 바로 연결한다.
+		DetailsView->SetGenericLayoutDetailsDelegate(detailView);//Delegate를 연결해준다.
+	}
+
+	//EquipmentData
+	{
+		FOnGetPropertyTypeCustomizationInstance instance;
+		instance.BindStatic(&SWeaponEquipmentData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("EquipmentData", instance);//instance를 delegate 등록
+	}
+
+
 	//Layout 설정
 	TSharedRef<FTabManager::FLayout> layout = FTabManager::NewLayout("WeaponAssetEditor_Layout")
 		->AddArea //전체화면의 메인 영역
@@ -55,7 +81,7 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 				(
 					FTabManager::NewStack()
 					->SetSizeCoefficient(0.175f)//왼쪽 17.5% 사용
-					->AddTab(LeftAreaTabId, ETabState::OpenedTab)//LeftAreaTabId
+					->AddTab(LeftAreaTabId, ETabState::OpenedTab)//ListViewTabId
 					->SetHideTabWell(true)
 				)
 				->Split
@@ -68,9 +94,40 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 			)
 		);
 
-	UCWeaponAsset* asset = NewObject<UCWeaponAsset>();//현재 없는 상태이므로 일단 빈 상태로 만들어준다.
+	UCWeaponAsset* asset = nullptr;
+	asset = LeftArea->GetFirstDataPtr()->Asset;//LeftArea의 맨 위 첫번째 데이터 선택
+
 	FAssetEditorToolkit::InitAssetEditor(EToolkitMode::Standalone, TSharedPtr<IToolkitHost>(), EditorName, layout, true, true, asset);
 
+	//DetailsView->SetObject(asset);//어느 DetailView든 asset객체가 세팅된다. 창은 여러개지만 실제 관리는 내부적으로 하나로 관리한다. 그래서 창이 종료될 때 DetailsView가 해제 안 되어 있으면 터진다.
+	LeftArea->SelectDataPtr(asset);
+}
+
+bool FWeaponAssetEditor::OnRequestClose()
+{
+	if (!!DetailsView)
+	{
+		//AssetEditorSubsystem안에(=DetailView 안에)
+		//GetEditingObject()가 등록되어 있었다면 해제하고 Editor에 알린다.
+		if (!!GEditor && !!GEditor->GetEditorSubsystem<UAssetEditorSubsystem>())
+			GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->NotifyAssetClosed(GetEditingObject(), this);
+
+		//해당 모듈이 읽힌적이 있다면 해제.
+		if (FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
+		{
+			FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");//해당모듈을 가져온다.
+			prop.UnregisterCustomClassLayout("EquipmentData");//등록 해제
+		}
+	}
+
+	if (LeftArea.IsValid())
+		LeftArea.Reset();
+
+	if (DetailsView.IsValid())
+		DetailsView.Reset();
+
+	return true;
+	//false 리턴인 경우 창이 닫힐 수 없다는 것을 의미한다.
 }
 
 void FWeaponAssetEditor::RegisterTabSpawners(const TSharedRef<FTabManager>& InTabManager)
@@ -80,23 +137,50 @@ void FWeaponAssetEditor::RegisterTabSpawners(const TSharedRef<FTabManager>& InTa
 	FOnSpawnTab tab;
 	tab.BindSP(this, &FWeaponAssetEditor::Spawn_LeftAreaTab);
 	TabManager->RegisterTabSpawner(LeftAreaTabId, tab);
+
+	FOnSpawnTab tab2;
+	tab2.BindSP(this, &FWeaponAssetEditor::Spawn_DetailsViewTab);
+	TabManager->RegisterTabSpawner(DetailTabId, tab2);
 }
 
 TSharedRef<SDockTab> FWeaponAssetEditor::Spawn_LeftAreaTab(const FSpawnTabArgs& InArgs)
 {
-	TSharedPtr<SDockTab> tab = SNew(SDockTab)
+	//TSharedPtr<SDockTab> tab = SNew(SDockTab)
+	//[
+	//	SNew(SButton)
+	//	.OnClicked(this, &FWeaponAssetEditor::OnClicked)//OnClicked 함수 연결
+	//	[
+	//		SNew(STextBlock)
+	//		.Text(FText::FromString("Test"))
+	//	]
+	//];
+
+	//return tab.ToSharedRef();
+
+	return SNew(SDockTab)
 		[
-			SNew(SButton)
-			.OnClicked(this, &FWeaponAssetEditor::OnClicked)//OnClicked 함수 연결
-		[
-			SNew(STextBlock)
-			.Text(FText::FromString("Test"))
-		]
+			LeftArea.ToSharedRef()
 		];
+}
 
-	return tab.ToSharedRef();
+TSharedRef<SDockTab> FWeaponAssetEditor::Spawn_DetailsViewTab(const FSpawnTabArgs& InArgs)
+{
+	return SNew(SDockTab)
+		[
+			DetailsView.ToSharedRef()
+		];
+}
 
-	//return SNew(SDockTab);
+void FWeaponAssetEditor::OnListViewSelectedItem(FWeaponRowDataPtr InDataPtr)
+{
+	if (InDataPtr == nullptr)//LeftArea에서 선택한게 없다면(또는 빈 공간을 선택했다면)
+		return;
+
+	if (!!GetEditingObject())//편집하는 객체가 있다면
+		RemoveEditingObject(GetEditingObject());//현재 창에서 편집중인 애들 제거한다.
+
+	AddEditingObject(InDataPtr->Asset);//현재 창에 편집해줄 객체를 등록해준다.
+	DetailsView->SetObject(InDataPtr->Asset);//창 안의 DetailsView도 변경해준다.
 }
 
 FName FWeaponAssetEditor::GetToolkitFName() const

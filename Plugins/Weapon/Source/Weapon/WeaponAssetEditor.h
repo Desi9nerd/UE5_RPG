@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Toolkits/AssetEditorToolkit.h"
 
@@ -16,11 +15,18 @@ private:
 private:
 	void Open(FString InAssetName);
 
+protected:
+	bool OnRequestClose() override;//창이 닫힐 때 콜이 되게 설계.
+
 public:
 	void RegisterTabSpawners(const TSharedRef<FTabManager>& InTabManager) override;
 
 private:
 	TSharedRef<SDockTab> Spawn_LeftAreaTab(const FSpawnTabArgs& InArgs);
+	TSharedRef<SDockTab> Spawn_DetailsViewTab(const FSpawnTabArgs& InArgs);
+
+private:
+	void OnListViewSelectedItem(FWeaponRowDataPtr InDataPtr);//LeftArea에서 선택한 FWeaponRowDataPtr
 
 public:
 	FName GetToolkitFName() const override;
@@ -30,6 +36,7 @@ public:
 
 private:
 	TSharedPtr<class SWeaponLeftArea> LeftArea;
+	TSharedPtr<class IDetailsView> DetailsView;//IDetailsView는 DetailView의 최상위 자료형.
 
 private:
 	static const FName EditorName;
