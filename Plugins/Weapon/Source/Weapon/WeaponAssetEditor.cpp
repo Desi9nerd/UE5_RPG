@@ -1,9 +1,10 @@
 #include "WeaponAssetEditor.h"
+#include "SWeaponLeftArea.h"
 #include "Weapons/CWeaponAsset.h"
 
 //설정한 이름들
 const FName FWeaponAssetEditor::EditorName = "WeaponAssetEditor";
-const FName FWeaponAssetEditor::ListViewTabId = "ListView";
+const FName FWeaponAssetEditor::LeftAreaTabId = "LeftArea";
 const FName FWeaponAssetEditor::DetailTabId = "Details";
 
 TSharedPtr<FWeaponAssetEditor> FWeaponAssetEditor::Instance = nullptr;//헤더에서 선언한 static 외부 초기화.
@@ -54,7 +55,7 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 				(
 					FTabManager::NewStack()
 					->SetSizeCoefficient(0.175f)//왼쪽 17.5% 사용
-					->AddTab(ListViewTabId, ETabState::OpenedTab)//ListViewTabId
+					->AddTab(LeftAreaTabId, ETabState::OpenedTab)//LeftAreaTabId
 					->SetHideTabWell(true)
 				)
 				->Split
@@ -77,11 +78,11 @@ void FWeaponAssetEditor::RegisterTabSpawners(const TSharedRef<FTabManager>& InTa
 	FAssetEditorToolkit::RegisterTabSpawners(InTabManager);
 
 	FOnSpawnTab tab;
-	tab.BindSP(this, &FWeaponAssetEditor::Spawn_ListViewTab);
-	TabManager->RegisterTabSpawner(ListViewTabId, tab);
+	tab.BindSP(this, &FWeaponAssetEditor::Spawn_LeftAreaTab);
+	TabManager->RegisterTabSpawner(LeftAreaTabId, tab);
 }
 
-TSharedRef<SDockTab> FWeaponAssetEditor::Spawn_ListViewTab(const FSpawnTabArgs& InArgs)
+TSharedRef<SDockTab> FWeaponAssetEditor::Spawn_LeftAreaTab(const FSpawnTabArgs& InArgs)
 {
 	TSharedPtr<SDockTab> tab = SNew(SDockTab)
 		[

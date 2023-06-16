@@ -20,7 +20,7 @@ public:
 	void RegisterTabSpawners(const TSharedRef<FTabManager>& InTabManager) override;
 
 private:
-	TSharedRef<SDockTab> Spawn_ListViewTab(const FSpawnTabArgs& InArgs);
+	TSharedRef<SDockTab> Spawn_LeftAreaTab(const FSpawnTabArgs& InArgs);
 
 public:
 	FName GetToolkitFName() const override;
@@ -29,8 +29,11 @@ public:
 	FLinearColor GetWorldCentricTabColorScale() const override;
 
 private:
+	TSharedPtr<class SWeaponLeftArea> LeftArea;
+
+private:
 	static const FName EditorName;
-	static const FName ListViewTabId;
+	static const FName LeftAreaTabId;
 	static const FName DetailTabId;
 
 private:
