@@ -18,5 +18,11 @@ public class Weapon : ModuleRules
 
         PrivateDependencyModuleNames.Add("UnrealEd");//UFactory 
         PrivateDependencyModuleNames.Add("EditorStyle");
-	}
+        PrivateDependencyModuleNames.Add("InputCore");
+
+        PrivateDependencyModuleNames.Add("Projects");
+        PrivateDependencyModuleNames.Add("EditorFramework");
+        PrivateDependencyModuleNames.Add("ToolMenus");
+
+    }
 }

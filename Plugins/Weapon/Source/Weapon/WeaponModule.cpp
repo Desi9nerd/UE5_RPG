@@ -6,7 +6,6 @@
 #include "AssetToolsModule.h"
 
 #define LOCTEXT_NAMESPACE "FWeaponModule"
-//IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, Weapon, "Weapon");
 IMPLEMENT_MODULE(FWeaponModule, Weapon)
 
 void FWeaponModule::StartupModule()

@@ -28,7 +28,7 @@ FWeaponStyle::FWeaponStyle()
     FString path = "";
 
     path = FPaths::ProjectPluginsDir() / "Weapon" / "Resources";
-    RegisterIcon("ToolBar_Icon", path / "weapon_thumnail_icon.png", FVector2D(40, 40), ToolBar_Icon);
+    RegisterIcon("ToolBar_Icon", path / "weapon_thumnail_icon.png", FVector2D(20, 20), ToolBar_Icon);
 
     FSlateStyleRegistry::RegisterSlateStyle(*StyleSet.Get());
 }
