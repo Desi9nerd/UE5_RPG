@@ -1,10 +1,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Styling/SlateStyle.h"
 
-class WEAPON_API FWeaponStyle
+class FWeaponStyle
 {
 public:
+	/** @return The Slate style set for the Shooter game */
+	//static const ISlateStyle& Get();
 	static TSharedRef<FWeaponStyle> Get();
 	static void Shutdown();
 
@@ -13,17 +16,11 @@ private:
 
 public:
 	FWeaponStyle();
-	~FWeaponStyle();
 
-private:
-	void RegisterIcon(const FString& InName, const FString& InPath, const FVector2D& InIconSize, FSlateIcon& OutSlateIcon);
-
-private:
+public:
 	static const FName StyleSetName;
 
 private:
-	TSharedPtr<class FSlateStyleSet> StyleSet;
+	static TSharedRef< class FSlateStyleSet > Create();
 
-public:
-	FSlateIcon ToolBar_Icon;
 };

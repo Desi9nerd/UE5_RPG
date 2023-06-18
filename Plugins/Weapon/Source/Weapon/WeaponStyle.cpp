@@ -1,52 +1,51 @@
 #include "WeaponStyle.h"
-#include "Styling/SlateStyle.h"
+#include "WeaponModule.h"
+#include "Framework/Application/SlateApplication.h"
 #include "Styling/SlateStyleRegistry.h"
+#include "Slate/SlateGameResources.h"
+#include "Interfaces/IPluginManager.h"
+#include "Styling/SlateStyleMacros.h"
+
+#define RootToContentDir Style->RootToContentDir
 
 const FName FWeaponStyle::StyleSetName = "WeaponStyle";
 
 TSharedPtr<FWeaponStyle> FWeaponStyle::Instance = nullptr;
 
+//const ISlateStyle& FWeaponStyle::Get()
+//{
+//	return *Instance;
+//}
+
 TSharedRef<FWeaponStyle> FWeaponStyle::Get()
 {
-    if (Instance == nullptr)
-        Instance = MakeShareable(new FWeaponStyle());
+	if (Instance == nullptr)
+		Instance = MakeShareable(new FWeaponStyle());
 
-    return Instance.ToSharedRef();
+	return Instance.ToSharedRef();
 }
 
 void FWeaponStyle::Shutdown()
 {
-    if (Instance.IsValid())
-        Instance.Reset();
+	//FSlateStyleRegistry::UnRegisterSlateStyle(*Instance);
+	//ensure(Instance.IsUnique());
+	//Instance.Reset();
 }
 
 FWeaponStyle::FWeaponStyle()
 {
-    StyleSet = MakeShareable(new FSlateStyleSet(StyleSetName));
-
-
-    FString path = "";
-
-    path = FPaths::ProjectPluginsDir() / "Weapon" / "Resources";
-    RegisterIcon("ToolBar_Icon", path / "weapon_thumnail_icon.png", FVector2D(20, 20), ToolBar_Icon);
-
-    FSlateStyleRegistry::RegisterSlateStyle(*StyleSet.Get());
 }
 
-FWeaponStyle::~FWeaponStyle()
+const FVector2D Icon16x16(16.0f, 16.0f);
+const FVector2D Icon20x20(20.0f, 20.0f);
+
+TSharedRef< FSlateStyleSet > FWeaponStyle::Create()
 {
-    if (StyleSet.IsValid() == false) return;
+	TSharedRef< FSlateStyleSet > Style = MakeShareable(new FSlateStyleSet("WeaponStyle"));
+	Style->SetContentRoot(IPluginManager::Get().FindPlugin("Weapon")->GetBaseDir() / TEXT("Resources"));
 
-    FSlateStyleRegistry::UnRegisterSlateStyle(StyleSetName);
-    StyleSet.Reset();
+	Style->Set("Weapon.PluginAction", new IMAGE_BRUSH_SVG(TEXT("PlaceholderButtonIcon"), Icon20x20));
+	return Style;
 }
 
-void FWeaponStyle::RegisterIcon(const FString& InName, const FString& InPath, const FVector2D& InIconSize, FSlateIcon& OutSlateIcon)
-{
-    FSlateImageBrush* brush = new FSlateImageBrush(InPath, InIconSize);
 
-    FString name = StyleSetName.ToString() + "." + InName;
-    StyleSet->Set(FName(name), brush);
-
-    OutSlateIcon = FSlateIcon(FName(StyleSetName), FName(name));
-}
