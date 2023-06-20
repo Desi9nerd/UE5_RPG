@@ -42,7 +42,7 @@ public:
 private:
 	//UPROPERTY를 붙여 가비지 콜렉터가 제거하기 전까지 물고 있게 만든다.
 	//UWeaponAsset은 UObject로부터 상속받아 Actor의 생성주기에 영향을 받지 않아 가비지 콜렉터에 영향을 받는다.
-	UPROPERTY() 
+	UPROPERTY()
 		class ACAttachment* Attachment;
 
 	UPROPERTY()
@@ -50,4 +50,8 @@ private:
 
 	UPROPERTY()
 		class UCDoAction* DoAction;
+
+#if WITH_EDITOR //Editor 내에서만 수행
+	void PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent) override;
+#endif
 };

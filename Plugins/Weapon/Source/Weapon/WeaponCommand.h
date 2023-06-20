@@ -17,6 +17,8 @@ public:
 
 private:
 	TSharedPtr<FExtender> Extender;
+	//2023.06.20 »≠ø‰¿œ
+	//TSharedPtr<FToolMenuSection> Section;
 
 	TSharedPtr<FUICommandList> Command;
 	TSharedPtr<FUICommandInfo> Id;

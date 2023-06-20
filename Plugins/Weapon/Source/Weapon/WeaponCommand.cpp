@@ -2,6 +2,7 @@
 #include "WeaponStyle.h"
 #include "WeaponAssetEditor.h"
 #include "LevelEditor.h"
+//#include "ToolMenus.h"
 
 FWeaponCommand::FWeaponCommand()
 	: TCommands("Toolbar_Buttons", FText::FromString(""), NAME_None, FEditorStyle::GetStyleSetName())
@@ -21,15 +22,40 @@ FWeaponCommand::~FWeaponCommand()
 void FWeaponCommand::Startup()
 {
 	FWeaponCommand::RegisterCommands();
-
+	
 	Extender = MakeShareable(new FExtender());
 
-
 	FToolBarExtensionDelegate toolbar = FToolBarExtensionDelegate::CreateRaw(this, &FWeaponCommand::AddToolBar);
-	Extender->AddToolBarExtension("Settings", EExtensionHook::After, Command, toolbar);
-
+	Extender->AddToolBarExtension("PluginTools", EExtensionHook::After, Command, toolbar);//Settings, PluginTools, Contents
+	
 	FLevelEditorModule& levelEditor = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
 	levelEditor.GetToolBarExtensibilityManager()->AddExtender(Extender);
+		
+	/*
+	//2023.06.20 È­¿äÀÏ
+	//Extender = MakeShareable(new FExtender);	
+	//Extender->AddToolBarExtension("PluginTools", EExtensionHook::After, Command, FToolBarExtensionDelegate::CreateRaw(this, //&FWeaponCommand::AddToolBar));
+	//
+	//FToolMenuOwnerScoped OwnerScoped(this);
+	//
+	//{
+	//	UToolMenu* Menu = UToolMenus::Get()->ExtendMenu("LevelEditor.MainMenu.Window");
+	//	{
+	//		FToolMenuSection& Section = Menu->FindOrAddSection("WindowLayout");
+	//		Section.AddMenuEntryWithCommandList(Id, Command);
+	//	}
+	//}
+	//{
+	//	UToolMenu* ToolbarMenu = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar.PlayToolBar");
+	//	{
+	//		FToolMenuSection& Section = ToolbarMenu->FindOrAddSection("PluginTools");
+	//		{
+	//			FToolMenuEntry& Entry = Section.AddEntry(FToolMenuEntry::InitToolBarButton(Id));
+	//			Entry.SetCommandList(Command);
+	//		}
+	//	}
+	//}
+	*/
 }
 
 void FWeaponCommand::RegisterCommands()
