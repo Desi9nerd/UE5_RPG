@@ -1,5 +1,7 @@
 #include "WeaponAssetEditor.h"
 #include "SWeaponLeftArea.h"
+#include "SWeaponDetailsView.h"
+#include "SWeaponEquipmentData.h"
 #include "Weapons/CWeaponAsset.h"
 
 //설정한 이름들
@@ -42,9 +44,24 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 
 	FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 
-	FDetailsViewArgs args(false, false, true, FDetailsViewArgs::HideNameArea);//기본값 설정. ActorsUserNameArea, ObjectsUserNameArea, HideNameArea
-	args.ViewIdentifier = "WeaponAssetEditorDetailsView";//식별자 설정. 게임 Editor쪽에서 DetailView 접근시 이 식별자로 찾을 수 있다.
-	DetailsView = prop.CreateDetailView(args);
+	//DetailsView
+	{
+		FDetailsViewArgs args(false, false, true, FDetailsViewArgs::HideNameArea);//기본값 설정. ActorsUserNameArea, ObjectsUserNameArea, HideNameArea
+		args.ViewIdentifier = "WeaponAssetEditorDetailsView";//식별자 설정. 게임 Editor쪽에서 DetailView 접근시 이 식별자로 찾을 수 있다.
+		DetailsView = prop.CreateDetailView(args);//Detail 창 띄우기.
+
+		FOnGetDetailCustomizationInstance detailView;
+		detailView.BindStatic(&SWeaponDetailsView::MakeInstance);//Static은 객체가 필요없다. 그래서 함수 주소로 바로 연결한다.
+		DetailsView->SetGenericLayoutDetailsDelegate(detailView);//Delegate를 연결해준다.
+	}
+
+	//EquipmentData
+	{
+		FOnGetPropertyTypeCustomizationInstance instance;
+		instance.BindStatic(&SWeaponEquipmentData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("EquipmentData", instance);//instance를 delegate 등록
+	}
+
 
 	//Layout 설정
 	TSharedRef<FTabManager::FLayout> layout = FTabManager::NewLayout("WeaponAssetEditor_Layout")
@@ -94,6 +111,13 @@ bool FWeaponAssetEditor::OnRequestClose()
 		//GetEditingObject()가 등록되어 있었다면 해제하고 Editor에 알린다.
 		if (!!GEditor && !!GEditor->GetEditorSubsystem<UAssetEditorSubsystem>())
 			GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->NotifyAssetClosed(GetEditingObject(), this);
+
+		//해당 모듈이 읽힌적이 있다면 해제.
+		if (FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
+		{
+			FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");//해당모듈을 가져온다.
+			prop.UnregisterCustomClassLayout("EquipmentData");//등록 해제
+		}
 	}
 
 	if (LeftArea.IsValid())
