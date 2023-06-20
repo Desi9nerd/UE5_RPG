@@ -1,47 +1,39 @@
 #include "WeaponModule.h"
 #include "WeaponStyle.h"
-#include "WeaponCommands.h"
+#include "WeaponCommand.h"
+#include "WeaponContextMenu.h"
+#include "IAssetTools.h"
+#include "AssetToolsModule.h"
 #include "Misc/MessageDialog.h"
 #include "ToolMenus.h"
 
 static const FName WeaponTabName("Weapon");
 
 #define LOCTEXT_NAMESPACE "FWeaponModule"
+IMPLEMENT_MODULE(FWeaponModule, Weapon)
 
 void FWeaponModule::StartupModule()
 {
-	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
+	IAssetTools& assetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
+	EAssetTypeCategories::Type categories = assetTools.RegisterAdvancedAssetCategory("WeaponAsset", FText::FromString("Weapon"));//
 
-	FWeaponCommands::Register();
-	
-	PluginCommands = MakeShareable(new FUICommandList);
+	ContextMenu = MakeShareable(new FWeaponContextMenu(categories));
+	assetTools.RegisterAssetTypeActions(ContextMenu.ToSharedRef());
 
-	PluginCommands->MapAction(
-		FWeaponCommands::Get().PluginAction,
-		FExecuteAction::CreateRaw(this, &FWeaponModule::PluginButtonClicked),
-		FCanExecuteAction());		
+	Command = MakeShareable(new FWeaponCommand());
+	Command->Startup();
 }
 
 void FWeaponModule::ShutdownModule()
 {
-	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
-	// we call this function before unloading the module.
+	if (ContextMenu.IsValid())
+		ContextMenu.Reset();
 
-	UToolMenus::UnRegisterStartupCallback(this);
-
-	UToolMenus::UnregisterOwner(this);
+	if (Command.IsValid())
+		Command.Reset();
 
 	FWeaponStyle::Shutdown();
-
-	FWeaponCommands::Unregister();
-}
-
-void FWeaponModule::PluginButtonClicked()
-{
-	// Put your "OnButtonClicked" stuff here	
-	FMessageDialog::Open(EAppMsgType::Ok, FText::FromString("Test"));
 }
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FWeaponModule, Weapon)
