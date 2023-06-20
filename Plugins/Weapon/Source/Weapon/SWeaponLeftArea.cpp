@@ -59,6 +59,7 @@ void SWeaponLeftArea::Construct(const FArguments& InArgs)
 		.ListItemsSource(&RowDatas)
 		.OnGenerateRow(this, &SWeaponLeftArea::OnGenerateRow)//한줄한줄 어떻게 표현할지 모양을 정해달라는 의미.
 		.OnSelectionChanged(this, &SWeaponLeftArea::OnSelectionChanged)
+		.SelectionMode(ESelectionMode::Single)
 		]
 	+ SVerticalBox::Slot()
 		.AutoHeight()
@@ -88,6 +89,27 @@ void SWeaponLeftArea::SelectDataPtr(UCWeaponAsset* InAsset)
 			return;
 		}
 	}
+}
+
+FWeaponRowDataPtr SWeaponLeftArea::GetRowDataPtrByName(FString InAssetName)
+{
+	for (FWeaponRowDataPtr ptr : RowDatas)//RowDatas를 모두 탐색했을때
+	{
+		if (ptr->Name == InAssetName)//ptr의 이름이 받은 InAssetName이 같다면
+			return ptr;//그 데이터인 ptr를 리턴.
+	}
+
+	return nullptr;
+}
+
+FString SWeaponLeftArea::SelectedRowDataPtrName()
+{
+	TArray<FWeaponRowDataPtr> ptrs = ListView->GetSelectedItems();
+
+	if (ptrs.Num() > 0)//선택된게 있을때
+		return ptrs[0]->Asset->GetName();//선택된 것의 이름을 리턴
+
+	return "";//빈 문자열 리턴
 }
 
 TSharedRef<ITableRow> SWeaponLeftArea::OnGenerateRow(FWeaponRowDataPtr InRow, const TSharedRef<STableViewBase>& InTable)

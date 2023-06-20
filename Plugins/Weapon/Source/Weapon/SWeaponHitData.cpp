@@ -1,4 +1,4 @@
-#include "SWeaponDoActionData.h"
+#include "SWeaponHitData.h"
 #include "WeaponStyle.h"
 #include "IPropertyUtilities.h"
 #include "IDetailPropertyRow.h"
@@ -6,15 +6,15 @@
 #include "SWeaponCheckBoxes.h"
 #include "DetailWidgetRow.h"
 
-TArray<TSharedPtr<SWeaponCheckBoxes>> SWeaponDoActionData::CheckBoxes;
+TArray<TSharedPtr<SWeaponCheckBoxes>> SWeaponHitData::CheckBoxes;
 
-TSharedRef<IPropertyTypeCustomization> SWeaponDoActionData::MakeInstance()
+TSharedRef<IPropertyTypeCustomization> SWeaponHitData::MakeInstance()
 {
 	//자신의 클래스 타입을 만들어서 return해준다.
-	return MakeShareable(new SWeaponDoActionData());
+	return MakeShareable(new SWeaponHitData());
 }
 
-TSharedPtr<SWeaponCheckBoxes> SWeaponDoActionData::AddCheckBoxes()
+TSharedPtr<SWeaponCheckBoxes> SWeaponHitData::AddCheckBoxes()
 {
 	TSharedPtr<SWeaponCheckBoxes> checkBoxes = MakeShareable(new SWeaponCheckBoxes());
 	int32 index = CheckBoxes.Add(checkBoxes);
@@ -22,7 +22,7 @@ TSharedPtr<SWeaponCheckBoxes> SWeaponDoActionData::AddCheckBoxes()
 	return CheckBoxes[index];
 }
 
-void SWeaponDoActionData::EmptyCheckBoxes()
+void SWeaponHitData::EmptyCheckBoxes()
 {
 	for (TSharedPtr<SWeaponCheckBoxes> ptr : CheckBoxes)
 	{
@@ -33,7 +33,7 @@ void SWeaponDoActionData::EmptyCheckBoxes()
 	CheckBoxes.Empty();
 }
 
-void SWeaponDoActionData::CustomizeHeader(TSharedRef<IPropertyHandle> InPropertyHandle, FDetailWidgetRow& InHeaderRow,
+void SWeaponHitData::CustomizeHeader(TSharedRef<IPropertyHandle> InPropertyHandle, FDetailWidgetRow& InHeaderRow,
 	IPropertyTypeCustomizationUtils& InCustomizationUtils)
 {
 	if (SWeaponCheckBoxes::CanDraw(InPropertyHandle, CheckBoxes.Num()) == false)
@@ -43,7 +43,7 @@ void SWeaponDoActionData::CustomizeHeader(TSharedRef<IPropertyHandle> InProperty
 	CheckBoxes[index]->SetUtilities(InCustomizationUtils.GetPropertyUtilities());//Header,Children,Header,Children..순서로 콜된다.
 
 	FString name = InPropertyHandle->GetPropertyDisplayName().ToString();//0,1,2..표시하는 name
-	name = "DoAction Data - " + name;
+	name = "Hit Data - " + name;
 
 	InHeaderRow
 		.NameContent()
@@ -62,7 +62,7 @@ void SWeaponDoActionData::CustomizeHeader(TSharedRef<IPropertyHandle> InProperty
 		];
 }
 
-void SWeaponDoActionData::CustomizeChildren(TSharedRef<IPropertyHandle> InPropertyHandle,
+void SWeaponHitData::CustomizeChildren(TSharedRef<IPropertyHandle> InPropertyHandle,
 	IDetailChildrenBuilder& InChildBuilder, IPropertyTypeCustomizationUtils& InCustomizationUtils)
 {
 	if (SWeaponCheckBoxes::CanDraw(InPropertyHandle, CheckBoxes.Num()) == false)

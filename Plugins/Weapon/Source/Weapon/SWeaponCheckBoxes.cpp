@@ -36,8 +36,17 @@ TSharedRef<SWidget> SWeaponCheckBoxes::Draw(bool bBackground)
             ];
     }
 
-    return panel.ToSharedRef();//추가를 하게되면, 추가된 그자체를 return
+    if (bBackground == false)
+        return panel.ToSharedRef();//추가를 하게되면, 추가된 그자체를 return
 
+
+    TSharedPtr<SBorder> border = SNew(SBorder)//한 줄 생성.
+        .BorderImage(FWeaponStyle::Get()->Array_Image.Get())
+        [
+            panel.ToSharedRef()//panel를 컨텐츠 영역으로 넣어준다.
+        ];
+
+    return border.ToSharedRef();//border를 리턴.
 }
 
 void SWeaponCheckBoxes::DrawProperties(TSharedRef<IPropertyHandle> InPropertyHandle, IDetailChildrenBuilder* InChildrenBuilder)
@@ -52,20 +61,26 @@ void SWeaponCheckBoxes::DrawProperties(TSharedRef<IPropertyHandle> InPropertyHan
         // 자식부분을 담당, 이 Handle이 기본모양을 추가해서 만들어준다. 커스텀 마이징도 가능하다
         IDetailPropertyRow& row = InChildrenBuilder->AddProperty(handle.ToSharedRef());
 
-        FString name = FString("Name ") + FString::FromInt(i + 1);
+        //초기세팅1//FString name = FString("Name ") + FString::FromInt(i + 1);
+        TSharedPtr<SWidget> name;
+        TSharedPtr<SWidget> value;
+
+        row.GetDefaultWidgets(name, value);
 
         row.CustomWidget()
-        .NameContent()
-        [
-            handle->CreatePropertyNameWidget()
-        ]
+            .NameContent()
+            [
+                //초기세팅1//handle->CreatePropertyNameWidget()
+                name.ToSharedRef()
+            ]
         //줄이거나 늘렸을 때 Min 이하로는 고정. Max 이상으로는 고정.
         .ValueContent()
-        .MinDesiredWidth(FWeaponStyle::Get()->DesiredWidth.X)
-        .MaxDesiredWidth(FWeaponStyle::Get()->DesiredWidth.Y)
-        [
-            handle->CreatePropertyValueWidget()
-        ];
+            .MinDesiredWidth(FWeaponStyle::Get()->DesiredWidth.X)
+            .MaxDesiredWidth(FWeaponStyle::Get()->DesiredWidth.Y)
+            [
+                //초기세팅1//handle->CreatePropertyValueWidget()
+                value.ToSharedRef()
+            ];
     }
 }
 
@@ -87,6 +102,18 @@ void SWeaponCheckBoxes::OnCheckStateChanged(ECheckBoxState InState, int32 InInde
     }
     SWeaponDetailsView::OffRefreshByCheckBoxes();
 
+}
+
+bool SWeaponCheckBoxes::CanDraw(TSharedPtr<IPropertyHandle> InHandle, int InCount)
+{
+    bool bCheck = true;
+    bCheck &= InCount > 0;//배열의 개수 InCount가 0보다 큰지
+
+    int32 index = InHandle->GetIndexInArray();//InHandle에서 배열 인덱스번호를 가져온다.
+    bCheck &= index >= 0;
+    bCheck &= index < InCount;//인덱스가 InCount 배열의 개수보다 작은지//크면 범위를 벗어나서 그릴 수 없다.
+
+    return bCheck;
 }
 
 void SWeaponCheckBoxes::CheckDefaultObject(int32 InIndex, UObject* InValue)

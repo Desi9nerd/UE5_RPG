@@ -3,6 +3,7 @@
 #include "SWeaponDetailsView.h"
 #include "SWeaponEquipmentData.h"
 #include "SWeaponDoActionData.h"
+#include "SWeaponHitData.h"
 #include "Weapons/CWeaponAsset.h"
 
 //설정한 이름들
@@ -15,8 +16,24 @@ TSharedPtr<FWeaponAssetEditor> FWeaponAssetEditor::Instance = nullptr;//헤더에서
 void FWeaponAssetEditor::OpenWindow(FString InAssetName)
 {
 	//아래의 코드 대신에 Shutdown()을 사용하면 안 된다! Shutdown()은 다른 곳에서도 콜이 되기 때문에 아래의 코드 대신에 사용하면 문제가 된다.
-	if (Instance.IsValid()) //창이 만들어졌다면
+	//창이 한번이라도 열리면 인스턴스가 할당된다.
+	if (Instance.IsValid()) //창이 만들어졌다면 
 	{
+		if (Instance->LeftArea.IsValid())//LeftArea가 존재한다면
+		{
+			FWeaponRowDataPtr ptr = nullptr;
+
+			if (InAssetName.Len() > 0)//콘텐츠 브라우저를 더블클릭 했다면
+				ptr = Instance->LeftArea->GetRowDataPtrByName(InAssetName);//InAssetName으로 ptr
+
+			if (ptr.IsValid() == false)//더블클릭 안 했다면 또는 InAssetName을 못 찾았다면
+				ptr = Instance->LeftArea->GetFirstDataPtr();//첫번째꺼
+
+			Instance->LeftArea->SelectDataPtr(ptr->Asset);
+
+			return;
+		}
+
 		Instance->CloseWindow();//창을 닫는다.
 
 		Instance.Reset();
@@ -68,8 +85,15 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 		FOnGetPropertyTypeCustomizationInstance instance;
 		instance.BindStatic(&SWeaponDoActionData::MakeInstance);
 		prop.RegisterCustomPropertyTypeLayout("DoActionData", instance);//instance를 delegate 등록
-
 	}
+
+	//HitData
+	{
+		FOnGetPropertyTypeCustomizationInstance instance;
+		instance.BindStatic(&SWeaponHitData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("HitData", instance);//instance를 delegate 등록
+	}
+
 	//Layout 설정
 	TSharedRef<FTabManager::FLayout> layout = FTabManager::NewLayout("WeaponAssetEditor_Layout")
 		->AddArea //전체화면의 메인 영역
@@ -102,7 +126,18 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 		);
 
 	UCWeaponAsset* asset = nullptr;
-	asset = LeftArea->GetFirstDataPtr()->Asset;//LeftArea의 맨 위 첫번째 데이터 선택
+	if (InAssetName.Len() > 0)//받은 InAssetName의 문자열이 0보다 크다면(=에셋이 있다는 의미)
+	{
+		FWeaponRowDataPtr ptr = LeftArea->GetRowDataPtrByName(InAssetName);
+
+		if (LeftArea->SelectedRowDataPtrName() == InAssetName)//LeftArea의 선택된 이름과 InAssetName이 같다면
+			return;
+
+		if (ptr.IsValid())
+			asset = ptr->Asset;//ptr의 Asset을 넣어준다.
+	}
+	if (asset == nullptr)
+		asset = LeftArea->GetFirstDataPtr()->Asset;//LeftArea의 첫번째 데이터 선택
 
 	FAssetEditorToolkit::InitAssetEditor(EToolkitMode::Standalone, TSharedPtr<IToolkitHost>(), EditorName, layout, true, true, asset);
 
@@ -125,6 +160,7 @@ bool FWeaponAssetEditor::OnRequestClose()
 			FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");//해당모듈을 가져온다.
 			prop.UnregisterCustomClassLayout("EquipmentData");//등록 해제
 			prop.UnregisterCustomClassLayout("DoActionData");//등록 해제
+			prop.UnregisterCustomClassLayout("HitData");//등록 해제
 		}
 	}
 

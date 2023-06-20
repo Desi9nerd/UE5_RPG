@@ -1,4 +1,5 @@
 #pragma once
+
 #include "CoreMinimal.h"
 
 class WEAPON_API SWeaponCheckBoxes
@@ -9,7 +10,7 @@ public:
     void AddProperties(TSharedPtr<IPropertyHandle> InHandle);
 
     //SNew에 최상의 부모가 SWidget이 된다. 레퍼런스를 사용하기 때문에 동일하게 쓰기위함
-    TSharedRef<SWidget> Draw(bool bBackground = false);
+    TSharedRef<SWidget> Draw(bool bBackground = false);//디폴트 파라미터로 기본값을 false로 설정.
 
     //해당 Properties를 그릴지 말지 결정
     void DrawProperties(TSharedRef<IPropertyHandle> InPropertyHandle, IDetailChildrenBuilder* InChildrenBuilder);
@@ -20,6 +21,9 @@ public:
 private:
     //체크가 완료되었는지 
     void OnCheckStateChanged(ECheckBoxState InState, int32 InIndex);
+
+public:
+    static bool CanDraw(TSharedPtr<IPropertyHandle> InHandle, int InCount);//사용자가 체크한 InHandle이 들어와서 배열이 개수와 일치하는지 판단. 배열 범위를 벗어나면 그리지 않도록 false를 리턴.
 
 public:
     //InIndex에는 Property 번호가 InValue에는 값.

@@ -1,81 +1,59 @@
 #include "WeaponStyle.h"
-#include "WeaponModule.h"
-#include "Framework/Application/SlateApplication.h"
+#include "Styling/SlateStyle.h"
 #include "Styling/SlateStyleRegistry.h"
-#include "Slate/SlateGameResources.h"
-#include "Interfaces/IPluginManager.h"
-#include "Styling/SlateStyleMacros.h"
-
-#define RootToContentDir Style->RootToContentDir
 
 const FName FWeaponStyle::StyleSetName = "WeaponStyle";
 
 TSharedPtr<FWeaponStyle> FWeaponStyle::Instance = nullptr;
 
-//void FWeaponStyle::Initialize()
-//{
-//	if (!StyleSet.IsValid())
-//	{
-//		StyleSet = Create();
-//		FSlateStyleRegistry::RegisterSlateStyle(*StyleSet);
-//	}
-//}
-
 TSharedRef<FWeaponStyle> FWeaponStyle::Get()
 {
-	if (Instance == nullptr)
-		Instance = MakeShareable(new FWeaponStyle());
+    if (Instance == nullptr)
+        Instance = MakeShareable(new FWeaponStyle());
 
-	return Instance.ToSharedRef();
+    return Instance.ToSharedRef();
 }
 
 void FWeaponStyle::Shutdown()
 {
-	if (Instance.IsValid())
-		Instance.Reset();
-
-	//FSlateStyleRegistry::UnRegisterSlateStyle(*StyleSet);
-	//ensure(StyleSet.IsUnique());
-	//StyleSet.Reset();
+    if (Instance.IsValid())
+        Instance.Reset();
 }
-
-//TSharedRef< FSlateStyleSet > FWeaponStyle::Create()
-//{
-//	TSharedRef< FSlateStyleSet > Style = MakeShareable(new FSlateStyleSet("WeaponStyle"));
-//	Style->SetContentRoot(IPluginManager::Get().FindPlugin("Weapon")->GetBaseDir() / TEXT("Resources"));
-//
-//	Style->Set("Weapon.PluginAction", new IMAGE_BRUSH_SVG(TEXT("PlaceholderButtonIcon"), Icon20x20));
-//	return Style;
-//}
 
 FWeaponStyle::FWeaponStyle()
 {
-	if (!StyleSet.IsValid())
-	{
-		TSharedRef< FSlateStyleSet > Style = MakeShareable(new FSlateStyleSet("WeaponStyle"));
-		Style->SetContentRoot(IPluginManager::Get().FindPlugin("Weapon")->GetBaseDir() / TEXT("Resources"));
+    StyleSet = MakeShareable(new FSlateStyleSet(StyleSetName));
 
-		Style->Set("Weapon.PluginAction", new IMAGE_BRUSH_SVG(TEXT("PlaceholderButtonIcon"), FVector2D(20.0f, 20.0f)));
 
-		FSlateStyleRegistry::RegisterSlateStyle(*Style);
-	}
+    FString path = "";
+
+    path = FPaths::ProjectPluginsDir() / "Weapon" / "Resources";
+    RegisterIcon("ToolBar_Icon", path / "weapon_thumnail_icon.png", FVector2D(40, 40), ToolBar_Icon);
+
+    FSlateStyleRegistry::RegisterSlateStyle(*StyleSet.Get());
+
+
+    path = FPaths::EngineConfigDir() / "Editor" / "Slate" / "Common/Selection.png";//Engine이 설치된 Config 경로에 있는 해당 png 이미지의 파일 경로
+    Array_Image = MakeShareable(new FSlateImageBrush(path, FVector2D(8, 8), FLinearColor(1, 1, 1, 0.1f)));//path 경로의 이미지를 (8, 8)사이즈로 해당 색과 alpha값으로 생성한다. 
 }
 
 FWeaponStyle::~FWeaponStyle()
 {
-	if (StyleSet.IsValid() == false) return;
+    if (Array_Image.IsValid())
+        Array_Image.Reset();
 
-	FSlateStyleRegistry::UnRegisterSlateStyle(StyleSetName);
-	StyleSet.Reset();
+    if (StyleSet.IsValid() == false) return;
+
+    FSlateStyleRegistry::UnRegisterSlateStyle(StyleSetName);
+    StyleSet.Reset();
 }
-
 
 void FWeaponStyle::RegisterIcon(const FString& InName, const FString& InPath, const FVector2D& InIconSize, FSlateIcon& OutSlateIcon)
 {
-	FSlateImageBrush* brush = new FSlateImageBrush(InPath, InIconSize);
+    FSlateImageBrush* brush = new FSlateImageBrush(InPath, InIconSize);
 
-	FString name = StyleSetName.ToString() + "." + InName;
-	StyleSet->Set(FName(name), brush);
+    FString name = StyleSetName.ToString() + "." + InName;
+    StyleSet->Set(FName(name), brush);
 
-	OutSlateIcon = FSlateIcon(FName(StyleSetName), FName(name));
+    OutSlateIcon = FSlateIcon(FName(StyleSetName), FName(name));
 }

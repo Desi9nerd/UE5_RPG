@@ -23,5 +23,7 @@ public class Weapon : ModuleRules
 
         PrivateDependencyModuleNames.Add("UnrealEd");//UFactory 
         PrivateDependencyModuleNames.Add("EditorStyle");
+
+        PublicDependencyModuleNames.Add("Niagara");
     }
 }

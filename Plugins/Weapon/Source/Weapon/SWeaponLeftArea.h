@@ -28,7 +28,7 @@ struct FWeaponRowData
 };
 typedef TSharedPtr<FWeaponRowData> FWeaponRowDataPtr;//실제 출력할 자료형
 
-
+///////////////////////////////////////////////////////////////////////////////
 //한줄에 여러개 SMultiColumnTableRow
 
 class WEAPON_API SWeaponTableRow
@@ -67,9 +67,12 @@ public:
 
 public:
 	bool HasRowDataPtr() { return  RowDatas.Num() > 0; }//하나라도 데이터 있는지 체크
-	FWeaponRowDataPtr GetFirstDataPtr() { return RowDatas[0]; }//맨 위의 데이터 리턴
+	FWeaponRowDataPtr GetFirstDataPtr() { return RowDatas[0]; }//첫번째 데이터 리턴
 
 	void SelectDataPtr(class UCWeaponAsset* InAsset);
+
+	FWeaponRowDataPtr GetRowDataPtrByName(FString InAssetName);
+	FString SelectedRowDataPtrName();
 
 private:
 	TSharedRef<ITableRow> OnGenerateRow(FWeaponRowDataPtr InRow, const TSharedRef<STableViewBase>& InTable);
