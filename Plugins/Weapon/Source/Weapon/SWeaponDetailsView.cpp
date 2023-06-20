@@ -36,6 +36,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 		category.AddProperty("AttachmentClass", type);//CWeaponAsset의 AttachmentClass를 카테고리에 추가.
 		category.AddProperty("EquipmentClass", type);//CWeaponAsset의 EquipmentClass를 카테고리에 추가.
 		category.AddProperty("DoActionClass", type);//CWeaponAsset의 DoActionClass를 카테고리에 추가.
+		category.AddProperty("SubActionClass", type);//CWeaponAsset의 SubActionClass를 카테고리에 추가.
 	}
 
 	//EquipmentData
@@ -77,7 +78,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 			{
 				TSharedPtr<IPropertyHandle> handle = row.GetPropertyHandle()->GetChildHandle(i);//헤더의 handle
 
-				TSharedPtr<SWeaponCheckBoxes> checkBoxes = SWeaponHitData::AddCheckBoxes();//카테고리가 처음에 만들어질 때 checkBox를 만든다.
+				TSharedPtr<SWeaponCheckBoxes> checkBoxes = SWeaponDoActionData::AddCheckBoxes();//카테고리가 처음에 만들어질 때 checkBox를 만든다.
 				checkBoxes->AddProperties(handle);
 
 				int32 index = 0;

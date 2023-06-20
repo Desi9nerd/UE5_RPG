@@ -37,7 +37,21 @@ void SWeaponDoActionData::CustomizeHeader(TSharedRef<IPropertyHandle> InProperty
 	IPropertyTypeCustomizationUtils& InCustomizationUtils)
 {
 	if (SWeaponCheckBoxes::CanDraw(InPropertyHandle, CheckBoxes.Num()) == false)
+	{
+		InHeaderRow
+			.NameContent()
+			[
+				InPropertyHandle->CreatePropertyNameWidget()
+			]
+		.ValueContent()
+			.MinDesiredWidth(FWeaponStyle::Get()->DesiredWidth.X)
+			.MaxDesiredWidth(FWeaponStyle::Get()->DesiredWidth.Y)
+			[
+				InPropertyHandle->CreatePropertyValueWidget()
+			];
+
 		return;//CanDraw가 false면 그리지 않고 리턴.
+	}
 
 	int32 index = InPropertyHandle->GetIndexInArray();//GetIndexInArray()는 Array 안에서의 번호를 리턴.
 	CheckBoxes[index]->SetUtilities(InCustomizationUtils.GetPropertyUtilities());//Header,Children,Header,Children..순서로 콜된다.
@@ -66,7 +80,35 @@ void SWeaponDoActionData::CustomizeChildren(TSharedRef<IPropertyHandle> InProper
 	IDetailChildrenBuilder& InChildBuilder, IPropertyTypeCustomizationUtils& InCustomizationUtils)
 {
 	if (SWeaponCheckBoxes::CanDraw(InPropertyHandle, CheckBoxes.Num()) == false)
+	{
+		uint32 number = 0;
+		InPropertyHandle->GetNumChildren(number);
+
+		for (uint32 i = 0; i < number; i++)
+		{
+			TSharedPtr<IPropertyHandle> handle = InPropertyHandle->GetChildHandle(i);
+			IDetailPropertyRow& row = InChildBuilder.AddProperty(handle.ToSharedRef());
+
+			TSharedPtr<SWidget> name;
+			TSharedPtr<SWidget> value;
+
+			row.GetDefaultWidgets(name, value);
+
+			row.CustomWidget()
+				.NameContent()
+				[
+					name.ToSharedRef()
+				]
+			.ValueContent()
+				.MinDesiredWidth(FWeaponStyle::Get()->DesiredWidth.X)
+				.MaxDesiredWidth(FWeaponStyle::Get()->DesiredWidth.Y)
+				[
+					value.ToSharedRef()
+				];
+		}//for(i)
+
 		return;//CanDraw가 false면 그리지 않고 리턴.
+	}
 
 	int32 index = InPropertyHandle->GetIndexInArray();//GetIndexInArray()는 Array 안에서의 번호를 리턴.
 	CheckBoxes[index]->DrawProperties(InPropertyHandle, &InChildBuilder);

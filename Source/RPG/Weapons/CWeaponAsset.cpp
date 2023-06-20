@@ -3,13 +3,13 @@
 #include "CAttachment.h"
 #include "CEquipment.h"
 #include "CDoAction.h"
+#include "CSubAction.h"
 #include "GameFramework/Character.h"
 
 UCWeaponAsset::UCWeaponAsset()
 {
 	AttachmentClass = ACAttachment::StaticClass();//기본값
 	EquipmentClass = UCEquipment::StaticClass();//기본값
-	DoActionClass = UCDoAction::StaticClass();//기본값
 }
 
 void UCWeaponAsset::BeginPlay(ACharacter* InOwner)
@@ -47,6 +47,12 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner)
 			Attachment->OnAttachmentBeginOverlap.AddDynamic(DoAction, &UCDoAction::OnAttachmentBeginOverlap);
 			Attachment->OnAttachmentEndOverlap.AddDynamic(DoAction, &UCDoAction::OnAttachmentEndOverlap);
 		}
+	}
+
+	if (!!SubActionClass)
+	{
+		SubAction = NewObject<UCSubAction>(this, SubActionClass);
+		SubAction->BeginPlay(InOwner, Attachment, DoAction);
 	}
 }
 

@@ -42,6 +42,16 @@ void UCStateComponent::SetActionMode()
 	ChangeType(EStateType::Action);
 }
 
+void UCStateComponent::OnSubActionMode()
+{
+	bInSubActionMode = true;
+}
+
+void UCStateComponent::OffSubActionMode()
+{
+	bInSubActionMode = false;
+}
+
 void UCStateComponent::ChangeType(EStateType InType)
 {
 	EStateType prevType = Type;

@@ -42,6 +42,7 @@ public:
 	class ACAttachment* GetAttachment();
 	class UCEquipment* GetEquipment();
 	class UCDoAction* GetDoAction();
+	class UCSubAction* GetSubAction();
 
 public: //公扁 技泼
 	void SetUnarmedMode();
@@ -53,6 +54,8 @@ public: //公扁 技泼
 	void SetBowMode();
 
 	void DoAction();
+	void SubAction_Pressed();
+	void SubAction_Released();
 
 private:
 	void SetMode(EWeaponType InType);

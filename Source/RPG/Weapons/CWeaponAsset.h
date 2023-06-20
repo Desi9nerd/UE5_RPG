@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "Weapons/CWeaponStructures.h"
@@ -29,10 +28,14 @@ private:
 	UPROPERTY(EditAnywhere)
 		TArray<FHitData> HitDatas; //CWeaopnStructure내의 FHitData
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UCSubAction> SubActionClass;
+
 public:
 	FORCEINLINE class ACAttachment* GetAttachment() { return Attachment; }//외부에 생성된 것을 리턴해줌. 
 	FORCEINLINE class UCEquipment* GetEquipment() { return Equipment; }//외부에 생성된 것을 리턴해줌.
 	FORCEINLINE class UCDoAction* GetDoAction() { return DoAction; }//외부에 생성된 것을 리턴해줌.
+	FORCEINLINE class UCSubAction* GetSubAction() { return SubAction; }//외부에 생성된 것을 리턴해줌.
 
 public:
 	UCWeaponAsset();
@@ -50,6 +53,9 @@ private:
 
 	UPROPERTY()
 		class UCDoAction* DoAction;
+
+	UPROPERTY()
+		class UCSubAction* SubAction;
 
 #if WITH_EDITOR //Editor 내에서만 수행
 	void PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent) override;
