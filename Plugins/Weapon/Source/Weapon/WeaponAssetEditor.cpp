@@ -2,6 +2,7 @@
 #include "SWeaponLeftArea.h"
 #include "SWeaponDetailsView.h"
 #include "SWeaponEquipmentData.h"
+#include "SWeaponDoActionData.h"
 #include "Weapons/CWeaponAsset.h"
 
 //설정한 이름들
@@ -62,7 +63,13 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 		prop.RegisterCustomPropertyTypeLayout("EquipmentData", instance);//instance를 delegate 등록
 	}
 
+	//DoActionData
+	{
+		FOnGetPropertyTypeCustomizationInstance instance;
+		instance.BindStatic(&SWeaponDoActionData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("DoActionData", instance);//instance를 delegate 등록
 
+	}
 	//Layout 설정
 	TSharedRef<FTabManager::FLayout> layout = FTabManager::NewLayout("WeaponAssetEditor_Layout")
 		->AddArea //전체화면의 메인 영역
@@ -117,6 +124,7 @@ bool FWeaponAssetEditor::OnRequestClose()
 		{
 			FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");//해당모듈을 가져온다.
 			prop.UnregisterCustomClassLayout("EquipmentData");//등록 해제
+			prop.UnregisterCustomClassLayout("DoActionData");//등록 해제
 		}
 	}
 

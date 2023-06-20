@@ -1,40 +1,50 @@
 #pragma once
-
 #include "CoreMinimal.h"
 
-//스마트 포인터 내부에서 this를 참조해야 되는 경우, 아래와 같이 자기 자신을 명시해서 상속받는다. TSharedFromThis<자기 자신>
 class WEAPON_API SWeaponCheckBoxes
-	: public TSharedFromThis<SWeaponCheckBoxes>
+    : public TSharedFromThis<SWeaponCheckBoxes> // 직접적으로 상속받으면 주소가 일치하게된다.
 {
 public:
-	//IPropertyHandle는 하나의 Property에 대한 식별자
-	void AddProperties(TSharedPtr<IPropertyHandle> InHandle);
+    //IPropertyHandle는 하나의 Property에 대한 식별자
+    void AddProperties(TSharedPtr<IPropertyHandle> InHandle);
 
-	TSharedRef<SWidget> Draw(bool bBackground = false);
-	void DrawProperties(TSharedRef<IPropertyHandle> InPropertyHandle, IDetailChildrenBuilder* InChildrenBuilder);//해당 프로퍼티를 그릴지말지 결정
+    //SNew에 최상의 부모가 SWidget이 된다. 레퍼런스를 사용하기 때문에 동일하게 쓰기위함
+    TSharedRef<SWidget> Draw(bool bBackground = false);
 
-	void SetUtilities(TSharedPtr<class IPropertyUtilities> InUtilities);//새로고침 값을 넘기는 역할
+    //해당 Properties를 그릴지 말지 결정
+    void DrawProperties(TSharedRef<IPropertyHandle> InPropertyHandle, IDetailChildrenBuilder* InChildrenBuilder);
+
+    //객체를 외부에서 받기위해,
+    void SetUtilities(TSharedPtr<class IPropertyUtilities> InUtilities);
 
 private:
-	void OnCheckStateChanged(ECheckBoxState InState, int32 InIndex);//CheckBox의 true, false를 바꾸어주는 함수
+    //체크가 완료되었는지 
+    void OnCheckStateChanged(ECheckBoxState InState, int32 InIndex);
+
+public:
+    //InIndex에는 Property 번호가 InValue에는 값.
+    void CheckDefaultObject(int32 InIndex, UObject* InValue);
+    void CheckDefaultValue(int32 InIndex, float InValue);
+    void CheckDefaultValue(int32 InIndex, bool InValue);
+    void CheckDefaultValue(int32 InIndex, const FVector& InValue);
 
 private:
-	//내부 구조체
-	struct FInternalData
-	{
-		bool bChecked;//체크 되었는가
-		FString Name;//이름
-		TSharedPtr<IPropertyHandle> Handle;//식별자
+    //내부 구조체 생성, 관리를 위해 사용
+    struct FInternalData
+    {
+        bool bChecked;//체크 되었는가
+        FString Name;//이름
+        TSharedPtr<IPropertyHandle> Handle;
 
-		FInternalData(TSharedPtr<IPropertyHandle> InHandle)
-		{
-			bChecked = false;//기본값은 false로 설정.
-			Handle = InHandle;
+        FInternalData(TSharedPtr<IPropertyHandle> InHandle)
+        {
+            bChecked = false;//기본값은 false로 설정.
+            Handle = InHandle;
 
-			Name = Handle->GetPropertyDisplayName().ToString();//핸들 내의 DisplayName을 출력이름으로 설정.
-		}
-	};
-	TArray<FInternalData> InternalDatas;//구조체 Data 전부를 포괄한 배열변수
+            Name = Handle->GetPropertyDisplayName().ToString();//핸들 내의 DisplayName을 출력이름으로 설정.
+        }
+    };
+    TArray<FInternalData> InternalDatas;//구조체 Data 전부를 포괄한 배열변수
 
-	TSharedPtr<class IPropertyUtilities> Utilities;//멤버 변수
+    TSharedPtr<class IPropertyUtilities> Utilities;//멤버 변수
 };

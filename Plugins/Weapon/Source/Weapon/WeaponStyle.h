@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 
 class WEAPON_API FWeaponStyle
@@ -26,4 +25,7 @@ private:
 
 public:
 	FSlateIcon ToolBar_Icon;
+
+public:
+	const FVector2D DesiredWidth = FVector2D(250, 1000);
 };
