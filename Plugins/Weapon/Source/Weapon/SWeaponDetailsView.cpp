@@ -6,6 +6,8 @@
 #include "IDetailPropertyRow.h"
 #include "Weapons/CWeaponAsset.h"
 
+bool SWeaponDetailsView::bRefreshByCheckBoxes = false;//static 변수 초기화.
+
 TSharedRef<IDetailCustomization> SWeaponDetailsView::MakeInstance()
 {
 	//자신의 클래스 타입을 만들어서 return해준다.
@@ -35,7 +37,10 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("EquipmentData", FText::FromString("Equipment Data"));
 		IDetailPropertyRow& row = category.AddProperty("EquipmentData", type);
 
-		TSharedPtr<SWeaponCheckBoxes> checkBoxes = SWeaponEquipmentData::CreateCheckBoxes();//카테고리가 처음에 만들어질 때 checkBox를 만든다.
-		checkBoxes->AddProperties(row.GetPropertyHandle());//checkBoxes에 실제로 가진 Handle를 추가
+		if (bRefreshByCheckBoxes == false)//새로고침이 아닐 때
+		{
+			TSharedPtr<SWeaponCheckBoxes> checkBoxes = SWeaponEquipmentData::CreateCheckBoxes();//카테고리가 처음에 만들어질 때 checkBox를 만든다.
+			checkBoxes->AddProperties(row.GetPropertyHandle());//checkBoxes에 실제로 가진 Handle를 추가
+		}
 	}
 }

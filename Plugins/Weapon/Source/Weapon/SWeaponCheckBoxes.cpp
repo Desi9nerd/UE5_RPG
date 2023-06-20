@@ -1,4 +1,5 @@
 #include "SWeaponCheckBoxes.h"
+#include "SWeaponDetailsView.h"
 #include "Widgets/Layout/SUniformGridPanel.h"
 #include "IPropertyUtilities.h"
 #include "IDetailPropertyRow.h"
@@ -39,8 +40,45 @@ TSharedRef<SWidget> SWeaponCheckBoxes::Draw(bool bBackground)
 	return panel.ToSharedRef();
 }
 
+void SWeaponCheckBoxes::DrawProperties(TSharedRef<IPropertyHandle> InPropertyHandle, IDetailChildrenBuilder* InChildrenBuilder)
+{
+	for (int32 i = 0; i < InternalDatas.Num(); i++)
+	{
+		if (InternalDatas[i].bChecked == false)//그릴 필요가 없는 경우
+			continue;
+
+		TSharedPtr<IPropertyHandle> handle = InPropertyHandle->GetChildHandle(i);
+		IDetailPropertyRow& row = InChildrenBuilder->AddProperty(handle.ToSharedRef());//handle를 가지고 기본모양을 추가하여 만들어준다.
+
+		FString name = FString("Name ") + FString::FromInt(i + 1);
+
+		row.CustomWidget()
+		.NameContent()
+		[
+			handle->CreatePropertyNameWidget()
+		]
+		//줄이거나 늘렸을 때 Min 이하로는 고정. Max 이상으로는 고정.
+		.ValueContent()
+		.MinDesiredWidth(FEditorStyle::GetFloat("StandardDialog.MinDesiredSlotWidth"))
+		.MaxDesiredWidth(FEditorStyle::GetFloat("StandardDialog.MaxDesiredSlotWidth"))
+		[
+			handle->CreatePropertyValueWidget()
+		];
+	}
+}
+
+void SWeaponCheckBoxes::SetUtilities(TSharedPtr<IPropertyUtilities> InUtilities)
+{
+	Utilities = InUtilities;
+}
+
 void SWeaponCheckBoxes::OnCheckStateChanged(ECheckBoxState InState, int32 InIndex)
 {
-	GLog->Log(FString::FromInt(InIndex));
-	GLog->Log(StaticEnum<ECheckBoxState>()->GetValueAsString(InState));
+	InternalDatas[InIndex].bChecked = !InternalDatas[InIndex].bChecked;//bChecked값을 뒤집어준다.
+
+	SWeaponDetailsView::OnRefreshByCheckBoxes();
+	{
+		Utilities->ForceRefresh();//새로고침이 된다.
+	}
+	SWeaponDetailsView::OffRefreshByCheckBoxes();
 }
