@@ -2,12 +2,26 @@
 #include "IPropertyUtilities.h"
 #include "IDetailPropertyRow.h"
 #include "IDetailChildrenBuilder.h"
+#include "SWeaponCheckBoxes.h"
 #include "DetailWidgetRow.h"
+
+TSharedPtr<SWeaponCheckBoxes> SWeaponEquipmentData::CheckBoxes;//초기화
 
 TSharedRef<IPropertyTypeCustomization> SWeaponEquipmentData::MakeInstance()
 {
 	//자신의 클래스 타입을 만들어서 return해준다.
-	return MakeShareable(new SWeaponEquipmentData);
+	return MakeShareable(new SWeaponEquipmentData());
+}
+
+TSharedPtr<SWeaponCheckBoxes> SWeaponEquipmentData::CreateCheckBoxes()
+{
+	if (CheckBoxes.IsValid())
+	{
+		CheckBoxes.Reset();
+		CheckBoxes = nullptr;
+	}
+
+	return CheckBoxes = MakeShareable(new SWeaponCheckBoxes());
 }
 
 void SWeaponEquipmentData::CustomizeHeader(TSharedRef<IPropertyHandle> InPropertyHandle, FDetailWidgetRow& InHeaderRow, IPropertyTypeCustomizationUtils& InCustomizationUtils)
@@ -21,8 +35,7 @@ void SWeaponEquipmentData::CustomizeHeader(TSharedRef<IPropertyHandle> InPropert
 		.MinDesiredWidth(FEditorStyle::GetFloat("StandardDialog.MinDesiredSlotWidth"))
 		.MaxDesiredWidth(FEditorStyle::GetFloat("StandardDialog.MaxDesiredSlotWidth"))
 		[
-			SNew(STextBlock)
-			.Text(FText::FromString("Value"))
+			CheckBoxes->Draw()//CheckBoxes를 그려준다(=생성한다).
 		];
 }
 

@@ -1,4 +1,6 @@
 #include "SWeaponDetailsView.h"
+#include "SWeaponCheckBoxes.h"
+#include "SWeaponEquipmentData.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailCategoryBuilder.h"
 #include "IDetailPropertyRow.h"
@@ -32,5 +34,8 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("EquipmentData", FText::FromString("Equipment Data"));
 		IDetailPropertyRow& row = category.AddProperty("EquipmentData", type);
+
+		TSharedPtr<SWeaponCheckBoxes> checkBoxes = SWeaponEquipmentData::CreateCheckBoxes();//카테고리가 처음에 만들어질 때 checkBox를 만든다.
+		checkBoxes->AddProperties(row.GetPropertyHandle());//checkBoxes에 실제로 가진 Handle를 추가
 	}
 }
