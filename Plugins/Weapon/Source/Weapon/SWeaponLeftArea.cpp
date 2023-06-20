@@ -1,6 +1,7 @@
 #include "SWeaponLeftArea.h"
 #include "Weapons/CWeaponAsset.h"
 #include "EngineUtils.h"
+#include "Widgets/Input/SSearchBox.h"
 
 void SWeaponTableRow::Construct(const FArguments& InArgs, const TSharedRef<STableViewBase>& InOwnerTable)
 {
@@ -24,18 +25,28 @@ TSharedRef<SWidget> SWeaponTableRow::GenerateWidgetForColumn(const FName& InColu
 		.Text(FText::FromString(str));//출력할 문자str를 생성하여 리턴해준다.
 }
 
-///////////////////////////////////////////////////////////////////////////
 
 /*모양을 디자인 해주는 역할*/
 void SWeaponLeftArea::Construct(const FArguments& InArgs)
 {
+	OnListViewSelectedItem = InArgs._OnSelectedItem;//InArgs안의 OnSelectionItem 사용.
+
 	ChildSlot
 		[
 			SNew(SVerticalBox)
 			+ SVerticalBox::Slot()
+		.AutoHeight()
+		.Padding(2, 0)
+		[
+			SAssignNew(SearchBox, SSearchBox)//SearchBox를 가져와 동적할당하여 사용한다.
+			.SelectAllTextWhenFocused(true)//검색창 클릭 시 텍스트 입력되있어도 자동으로 입력되게 해주는 기능.
+		.OnTextChanged(this, &SWeaponLeftArea::OnTextChanged)
+		.OnTextCommitted(this, &SWeaponLeftArea::OnTextCommitted)
+		]
+	+ SVerticalBox::Slot()
 		.FillHeight(1)//1이 100%를 의미한다. 한줄을 다 채우겠다는 의미.
 		[
-			SAssignNew(ListView, SListView<FWeaponRowDataPtr>)//자료형은 FWeaponRowDataPtr
+			SAssignNew(ListView, SListView<FWeaponRowDataPtr>)//ListView를 가져와 동적할당하여 사용한다. 자료형은 FWeaponRowDataPtr
 			.HeaderRow
 			(
 				SNew(SHeaderRow)
@@ -47,6 +58,7 @@ void SWeaponLeftArea::Construct(const FArguments& InArgs)
 			)
 		.ListItemsSource(&RowDatas)
 		.OnGenerateRow(this, &SWeaponLeftArea::OnGenerateRow)//한줄한줄 어떻게 표현할지 모양을 정해달라는 의미.
+		.OnSelectionChanged(this, &SWeaponLeftArea::OnSelectionChanged)
 		]
 	+ SVerticalBox::Slot()
 		.AutoHeight()
@@ -59,12 +71,23 @@ void SWeaponLeftArea::Construct(const FArguments& InArgs)
 		]
 		];
 
-	//테스트용 출력
-	//RowDatas.Add(FWeaponRowData::Make(1, "aaa", nullptr));
-	//RowDatas.Add(FWeaponRowData::Make(2, "bbb", nullptr));
-	//RowDatas.Add(FWeaponRowData::Make(3, "ccc", nullptr));
-
 	ReadDataAssetList();
+}
+
+void SWeaponLeftArea::SelectDataPtr(UCWeaponAsset* InAsset)
+{
+	if (HasRowDataPtr() == false)
+		return;
+
+	for (FWeaponRowDataPtr ptr : RowDatas)
+	{
+		if (ptr->Asset == InAsset)
+		{
+			ListView->SetSelection(ptr);
+
+			return;
+		}
+	}
 }
 
 TSharedRef<ITableRow> SWeaponLeftArea::OnGenerateRow(FWeaponRowDataPtr InRow, const TSharedRef<STableViewBase>& InTable)
@@ -90,8 +113,14 @@ void SWeaponLeftArea::ReadDataAssetList()
 		if (asset == nullptr) continue;
 
 		FString name = asset->GetName();
+		if (SearchText.IsEmpty() == false)//검색하는 문자열(=SearchText)이 비워져있지 않다면(=있다면)
+		{
+			//에셋에 SearchText 문자열이 포함되는지 확인. 포함되지 않는다면 보여줄게 아니기 때문에 continue; 
+			if (name.Contains(SearchText.ToString()) == false)
+				continue;
+		}
 
-		RowDatas.Add(FWeaponRowData::Make(++index, name, asset));//데이터를 하나씩 넣어준다.
+		RowDatas.Add(FWeaponRowData::Make(++index, name, asset));//데이터를 하나씩 추가해준다.
 	}
 
 	RowDatas.Sort([](const FWeaponRowDataPtr& A, const FWeaponRowDataPtr& B)
@@ -107,4 +136,28 @@ FText SWeaponLeftArea::OnGetAssetCount() const
 	FString str = FString::Printf(L"%d Asset", RowDatas.Num());//에셋
 
 	return FText::FromString(str);
+}
+
+void SWeaponLeftArea::OnTextChanged(const FText& InText)
+{
+	if (SearchText.CompareToCaseIgnored(InText) == 0)//기존 문자열과 현재 입력된 문자열이 같다면
+		return;//리턴으로 끝내버린다.
+
+	SearchText = InText;
+	ReadDataAssetList();//재검색하도록 ReadDataAssetList()를 콜 한다.
+}
+
+void SWeaponLeftArea::OnTextCommitted(const FText& InText, ETextCommit::Type InType)
+{
+	OnTextChanged(InText);
+}
+
+void SWeaponLeftArea::OnSelectionChanged(FWeaponRowDataPtr InDataPtr, ESelectInfo::Type InType)
+{
+	//InDataPtr로 선택된 데이터가 들어온다.
+	//주의사항: 빈 구역을 클릭해도 InDataPtr의 데이터가 들어온다. 빈 구역 클릭 시 null로 값이 들어온다.
+	if (InDataPtr.IsValid() == false)
+		return;
+
+	OnListViewSelectedItem.ExecuteIfBound(InDataPtr);
 }
