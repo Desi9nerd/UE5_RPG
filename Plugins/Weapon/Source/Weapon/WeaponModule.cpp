@@ -1,13 +1,9 @@
 #include "WeaponModule.h"
+#include "WeaponContextMenu.h"
 #include "WeaponStyle.h"
 #include "WeaponCommand.h"
-#include "WeaponContextMenu.h"
 #include "IAssetTools.h"
 #include "AssetToolsModule.h"
-#include "Misc/MessageDialog.h"
-#include "ToolMenus.h"
-
-static const FName WeaponTabName("Weapon");
 
 #define LOCTEXT_NAMESPACE "FWeaponModule"
 IMPLEMENT_MODULE(FWeaponModule, Weapon)
@@ -36,4 +32,3 @@ void FWeaponModule::ShutdownModule()
 }
 
 #undef LOCTEXT_NAMESPACE
-	

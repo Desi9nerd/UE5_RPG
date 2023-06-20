@@ -1,4 +1,5 @@
 #include "WeaponAssetEditor.h"
+#include "SWeaponLeftArea.h"
 #include "Weapons/CWeaponAsset.h"
 
 //설정한 이름들
@@ -36,6 +37,8 @@ void FWeaponAssetEditor::Shutdown()
 
 void FWeaponAssetEditor::Open(FString InAssetName)
 {
+	LeftArea = SNew(SWeaponLeftArea);//SWeaponLeftArea에서 받은 자료형을 생성하여 넣어준다.
+
 	//Layout 설정
 	TSharedRef<FTabManager::FLayout> layout = FTabManager::NewLayout("WeaponAssetEditor_Layout")
 		->AddArea //전체화면의 메인 영역
@@ -83,19 +86,24 @@ void FWeaponAssetEditor::RegisterTabSpawners(const TSharedRef<FTabManager>& InTa
 
 TSharedRef<SDockTab> FWeaponAssetEditor::Spawn_ListViewTab(const FSpawnTabArgs& InArgs)
 {
-	TSharedPtr<SDockTab> tab = SNew(SDockTab)
-		[
-			SNew(SButton)
-			.OnClicked(this, &FWeaponAssetEditor::OnClicked)//OnClicked 함수 연결
-		[
-			SNew(STextBlock)
-			.Text(FText::FromString("Test"))
-		]
-		];
+	//TSharedPtr<SDockTab> tab = SNew(SDockTab)
+	//[
+	//	SNew(SButton)
+	//	.OnClicked(this, &FWeaponAssetEditor::OnClicked)//OnClicked 함수 연결
+	//	[
+	//		SNew(STextBlock)
+	//		.Text(FText::FromString("Test"))
+	//	]
+	//];
 
-	return tab.ToSharedRef();
+	//return tab.ToSharedRef();
 
 	//return SNew(SDockTab);
+
+	return SNew(SDockTab)
+		[
+			LeftArea.ToSharedRef()
+		];
 }
 
 FName FWeaponAssetEditor::GetToolkitFName() const

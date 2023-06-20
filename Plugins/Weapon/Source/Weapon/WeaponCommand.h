@@ -3,7 +3,8 @@
 #include "CoreMinimal.h"
 #include "Framework/Commands/Commands.h"
 
-class FWeaponCommand : public TCommands<FWeaponCommand>
+class FWeaponCommand
+	: public TCommands<FWeaponCommand>
 {
 public:
 	FWeaponCommand();
@@ -11,7 +12,7 @@ public:
 
 	void Startup();
 
-	// TCommands<> interface
+public:
 	virtual void RegisterCommands() override;
 
 private:

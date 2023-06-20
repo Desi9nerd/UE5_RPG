@@ -29,6 +29,9 @@ public:
 	FLinearColor GetWorldCentricTabColorScale() const override;
 
 private:
+	TSharedPtr<class SWeaponLeftArea> LeftArea;
+
+private:
 	static const FName EditorName;
 	static const FName ListViewTabId;
 	static const FName DetailTabId;
