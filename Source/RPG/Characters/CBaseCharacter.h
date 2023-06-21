@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Components/CStateComponent.h"
 #include "CBaseCharacter.generated.h"
 
 class AWeapon;
@@ -33,6 +34,5 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
 
 };
