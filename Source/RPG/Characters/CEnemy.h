@@ -4,32 +4,18 @@
 #include "ICharacter.h"
 #include "Components/CStateComponent.h"
 #include "GameFramework/Character.h"
+#include "Characters/CBaseCharacter.h"
 #include "CEnemy.generated.h"
 
 UCLASS()
-class RPG_API ACEnemy : public ACharacter, public IICharacter //다중상속
+class RPG_API ACEnemy
+	: public ACBaseCharacter, public IICharacter //다중상속
 {
 	GENERATED_BODY()
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Color")
 		FLinearColor OriginColor = FLinearColor::White;//색상 설정.
-
-private:
-	UPROPERTY(VisibleAnywhere)
-		class UCWeaponComponent* Weapon;
-
-	UPROPERTY(VisibleAnywhere)
-		class UCMontagesComponent* Montages;
-
-	UPROPERTY(VisibleAnywhere)
-		class UCMovementComponent* Movement;
-
-	UPROPERTY(VisibleAnywhere)
-		class UCStateComponent* State;
-
-	UPROPERTY(VisibleAnywhere)
-		class UCStatusComponent* Status;
 
 public:
 	ACEnemy();

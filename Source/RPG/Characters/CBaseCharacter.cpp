@@ -2,14 +2,10 @@
 
 ACBaseCharacter::ACBaseCharacter()
 {
-
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ACBaseCharacter::BeginPlay()
 {
-}
-
-void ACBaseCharacter::Tick(float DeltaTime)
-{
-
+	Super::BeginPlay();
 }

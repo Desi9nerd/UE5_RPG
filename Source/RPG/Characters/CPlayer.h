@@ -3,12 +3,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Components/CStateComponent.h"
+#include "Characters/CBaseCharacter.h"
 #include "Characters/ICharacter.h"
 #include "CPlayer.generated.h"
 
 UCLASS()
 class RPG_API ACPlayer
-	: public ACharacter, public IICharacter //다중상속
+	: public ACBaseCharacter, public IICharacter //다중상속
 {
 	GENERATED_BODY()
 
@@ -18,19 +19,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 		class UCameraComponent* Camera;
-
-private:
-	UPROPERTY(VisibleAnywhere)
-		class UCWeaponComponent* Weapon;
-
-	UPROPERTY(VisibleAnywhere)
-		class UCMontagesComponent* Montages;
-
-	UPROPERTY(VisibleAnywhere)
-		class UCMovementComponent* Movement;
-
-	UPROPERTY(VisibleAnywhere)
-		class UCStateComponent* State;
 
 public:
 	ACPlayer();
