@@ -17,6 +17,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Action")
 		TArray<FHitData> HitDatas;
 
+	UPROPERTY(EditAnywhere, Category = "Action")
+		TSubclassOf<class ACGhostTrail> GhostTrailClass;
+
 public:
 	void Pressed() override;
 
@@ -25,4 +28,7 @@ public:
 private:
 	TArray<class ACharacter*> Hitted;
 	int32 HitIndex;
+
+private:
+	class ACGhostTrail* GhostTrail;
 };

@@ -20,6 +20,10 @@ void UCMovementComponent::SetSpeed(ESpeedType InType)
 	OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed[(int32)InType];
 }
 
+void UCMovementComponent::OnJump()
+{
+}
+
 void UCMovementComponent::OnSprint()
 {
 	SetSpeed(ESpeedType::Sprint);

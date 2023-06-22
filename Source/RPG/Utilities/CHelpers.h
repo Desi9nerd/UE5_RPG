@@ -4,6 +4,9 @@
 #include "Particles/ParticleSystem.h"
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
+#include "GameFramework/Character.h"
+#include "Components/CapsuleComponent.h"
+#include "Weapons/AddOns/CGhostTrail.h"
 
 #define CheckTrue(x) { if(x == true) return; }
 #define CheckTrueResult(x, y) { if(x == true) return y; }
@@ -157,5 +160,25 @@ public:
 
 			return;
 		}
+	}
+
+	static ACGhostTrail* Play_GhostTrail(TSubclassOf<ACGhostTrail>& InClass, class ACharacter* InOwner)
+	{
+		//InClass나 InOwner 둘 중 하나라도 없으면 플레이 할 수 없다.
+		CheckNullResult(InClass, nullptr);//InClass가 없다면 nullptr
+		CheckNullResult(InOwner, nullptr);//InOwner가 없다면 nullptr
+
+
+		FActorSpawnParameters params;
+		params.Owner = InOwner;
+		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;//충돌되었어도 반드시 Spawn되게 해준다.
+
+		FVector location = InOwner->GetActorLocation();//Spawn위치 설정을 위한 location.
+		location.Z -= InOwner->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();//발 아래로 보내기 위해 캡슐 높이의 절반만큼 내려준다.
+
+		FTransform transform;
+		transform.SetTranslation(location);//location 위치로 이동시킨다.
+
+		return InOwner->GetWorld()->SpawnActor<ACGhostTrail>(InClass, transform, params);
 	}
 };

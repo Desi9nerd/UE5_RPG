@@ -49,6 +49,7 @@ private:
 	void SetSpeed(ESpeedType InType);
 
 public:
+	void OnJump();
 	void OnSprint();
 	void OnRun();
 	void OnWalk();

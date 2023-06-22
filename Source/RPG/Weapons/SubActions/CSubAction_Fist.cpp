@@ -5,6 +5,7 @@
 #include "Components/CMovementComponent.h"
 #include "Weapons/CAttachment.h"
 #include "Weapons/CDoAction.h"
+#include "Weapons/AddOns/CGhostTrail.h"
 
 void UCSubAction_Fist::Pressed()
 {
@@ -15,6 +16,8 @@ void UCSubAction_Fist::Pressed()
 
 	State->SetActionMode();
 	State->OnSubActionMode();
+
+	GhostTrail = CHelpers::Play_GhostTrail(GhostTrailClass, Owner);//GhostTrail 플레이.
 
 	ActionData.DoAction(Owner);
 }
@@ -29,4 +32,6 @@ void UCSubAction_Fist::End_SubAction_Implementation()
 
 	Movement->Move();
 	Movement->DisableFixedCamera();
+
+	GhostTrail->Destroy();//GhostTrail를 지워준다.
 }
