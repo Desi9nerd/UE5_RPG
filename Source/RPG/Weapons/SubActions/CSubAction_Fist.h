@@ -23,7 +23,16 @@ public:
 public:
 	void Pressed() override;
 
+	void Begin_SubAction_Implementation() override;
 	void End_SubAction_Implementation() override;
+
+private:
+	//충돌 처리를 위한 함수
+	UFUNCTION()
+		void OnAttachmentEndCollision();
+
+	UFUNCTION()
+		void OnAttachmentBeginOverlap(class ACharacter* InAttacker, AActor* InAttackCauser, class ACharacter* InOther);
 
 private:
 	TArray<class ACharacter*> Hitted;
