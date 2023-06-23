@@ -35,6 +35,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 private:
 	bool IsIdleMode();//StateComponent, WeaponComponent 둘 다 같은 레벨이다. 서로 소유할 수 없는 관계이기 때문에 참조만해서 리턴받기 위해 IsIdleMode를 사용한다.
 

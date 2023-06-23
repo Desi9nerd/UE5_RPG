@@ -4,7 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "CGhostTrail.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class RPG_API ACGhostTrail : public AActor
 {
 	GENERATED_BODY()

@@ -10,7 +10,8 @@
 
 UCWeaponComponent::UCWeaponComponent()
 {
-
+	//Tick을 실행시켜주는 코드
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 void UCWeaponComponent::BeginPlay()
@@ -23,6 +24,14 @@ void UCWeaponComponent::BeginPlay()
 		if (!!DataAssets[i]) //DataAssets[i]이 있다면(=무기가 할당되어 있다면)
 			DataAssets[i]->BeginPlay(OwnerCharacter);//BeginPla y 시 OwnerCharacter에 Spawn시켜준다.
 	}
+}
+
+void UCWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (!!GetSubAction())//SubAction이 있다면
+		GetSubAction()->Tick(DeltaTime);//SubAction의 Tick을 콜 해준다.
 }
 
 bool UCWeaponComponent::IsIdleMode()
