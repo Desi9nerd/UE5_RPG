@@ -39,10 +39,18 @@ public:
     void Tick_Implementation(float InDeltaTime) override;
 
 private:
+    UFUNCTION()
+        void OnAttachmentBeginOverlap(class ACharacter* InAttacker, AActor* InAttackCauser, class ACharacter* InOther);//충돌 함수
+
+private:
     bool bMoving;
 
     FVector Start;
     FVector End;
+
+    //복구를 위해 저장해두는 변수: Overlapped, Hitted
+    TArray<class ACharacter*> Overlapped;
+    TArray<class ACharacter*> Hitted;
 
 private:
     class ACGhostTrail* GhostTrail;
