@@ -11,11 +11,19 @@ class RPG_API UCSubAction_Hammer : public UCSubAction
 	GENERATED_BODY()
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Aura")
+		TSubclassOf<class ACAura> AuraClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Aura")
+		FVector AuraLoction;//Aura를 Spawn시킬 위치 변수
+
+private:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 		FDoActionData ActionData;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Add-On")
 		TSubclassOf<class ACGhostTrail> GhostTrailClass;
+
 
 public:
 	void Pressed() override;

@@ -27,6 +27,16 @@ void UCSubAction_Hammer::Begin_SubAction_Implementation()
 {
 	Super::Begin_SubAction_Implementation();
 
+	FActorSpawnParameters params;
+	params.Owner = Owner;
+	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;//AlwaysSpawn는 있는없든 무조건 Spawn시키라는 의미.
+
+	FTransform transform;
+	transform.SetLocation(Owner->GetActorLocation());
+	transform.AddToTranslation(AuraLoction);//보정 위치
+	transform.SetRotation(FQuat(Owner->GetActorRotation()));//캐릭터의 전방방향을 캐릭터의 회전방향으로 설정.
+
+	Owner->GetWorld()->SpawnActor<ACAura>(AuraClass, transform, params);
 }
 
 void UCSubAction_Hammer::End_SubAction_Implementation()
