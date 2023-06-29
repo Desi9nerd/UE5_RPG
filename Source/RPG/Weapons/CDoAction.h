@@ -22,6 +22,8 @@ public:
 		const TArray<FHitData>& InHitDatas //CWeaponStucture내의 FHitData
 	);
 
+	virtual void Tick(float InDeltaTime) { }
+
 public:
 	//재정의 할 수 있도록 virtual로 만든다.
 	virtual void DoAction();
@@ -42,6 +44,7 @@ public:
 		virtual void OnAttachmentEndOverlap(class ACharacter* InAttacker, class ACharacter* InOther) { }
 
 protected:
+	bool bInAction;//Action 중인지 체크하는 변수.DoAction에 true, End_DoAction에 false로 만들어준다.
 	bool bBeginAction;
 
 	class ACharacter* OwnerCharacter;

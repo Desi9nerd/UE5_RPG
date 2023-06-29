@@ -30,6 +30,9 @@ void UCWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (!!GetDoAction())//DoAction이 있다면
+		GetDoAction()->Tick(DeltaTime);//DoAction의 Tick을 콜 해준다.
+
 	if (!!GetSubAction())//SubAction이 있다면
 		GetSubAction()->Tick(DeltaTime);//SubAction의 Tick을 콜 해준다.
 }
