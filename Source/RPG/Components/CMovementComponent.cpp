@@ -58,6 +58,9 @@ void UCMovementComponent::OnMoveForward(float InAxis)
 	FRotator rotator = FRotator(0, OwnerCharacter->GetControlRotation().Yaw, 0);
 	FVector direction = FQuat(rotator).GetForwardVector();
 
+	if (bTopViewCamera)//(Warp)TopView 카메라 사용한다면
+		direction = FVector::XAxisVector;//절대방향인 XAxisVector을 방향으로 사용.
+
 	OwnerCharacter->AddMovementInput(direction, InAxis);
 }
 
@@ -67,6 +70,9 @@ void UCMovementComponent::OnMoveRight(float InAxis)
 
 	FRotator rotator = FRotator(0, OwnerCharacter->GetControlRotation().Yaw, 0);
 	FVector direction = FQuat(rotator).GetRightVector();
+
+	if (bTopViewCamera)//(Warp)TopView 카메라 사용한다면
+		direction = FVector::YAxisVector;//절대방향인 YAxisVector을 방향으로 사용.
 
 	OwnerCharacter->AddMovementInput(direction, InAxis);
 }

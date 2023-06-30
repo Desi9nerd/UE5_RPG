@@ -39,6 +39,9 @@ public:
 	FORCEINLINE void EnableFixedCamera() { bFixedCamera = true; }
 	FORCEINLINE void DisableFixedCamera() { bFixedCamera = false; }
 
+	FORCEINLINE void EnableTopViewCamera() { bTopViewCamera = true; }
+	FORCEINLINE void DisableTopViewCamera() { bTopViewCamera = false; }
+
 public:
 	UCMovementComponent();
 
@@ -69,4 +72,5 @@ private:
 private:
 	bool bCanMove = true; //이동할 수 있는가
 	bool bFixedCamera; //카메라 고정인가
+	bool bTopViewCamera;//(Warp)TopView 카메라 사용할건가
 };
