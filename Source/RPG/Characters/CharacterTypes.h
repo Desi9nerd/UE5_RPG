@@ -1,5 +1,16 @@
 #pragma once
 
+//TODO:
+//ActionMode 기준
+//if(State->IsAction())
+//WeaponType과 HitReactionType을 조합하여
+//Enemy 기준에서 HitData의 Attacker는 Player, Causer는 무기이다. 
+//Enemy가 HitData에서 Causer인 무기를 판단하여 HitReactionType을 결정해 다른 몽타주가 나오도록 해보자.
+//TODO
+//SubActionMode 기준
+//if(State->IsSubActionMode())
+//Player가 SubActionMode일 때 위와 같은 방법으로 구현.
+
 UENUM(BlueprintType)
 enum class ECharacterState : uint8
 {

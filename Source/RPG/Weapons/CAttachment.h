@@ -26,11 +26,13 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintNativeEvent)
 		void OnBeginEquip();
+	virtual void OnBeginEquip_Implementation() {}
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintNativeEvent)
 		void OnUnequip();
+	virtual void OnUnequip_Implementation() {}
 
 public:
 	void OnCollisions(); //Collision дя╠Б
