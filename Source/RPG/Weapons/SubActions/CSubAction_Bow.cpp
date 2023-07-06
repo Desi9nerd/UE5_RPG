@@ -12,6 +12,49 @@ UCSubAction_Bow::UCSubAction_Bow()
 	CHelpers::GetAsset<UCurveVector>(&Curve, "CurveVector'/Game/Weapons/Bow/Curve_Aiming.Curve_Aiming'");//Editor에서 만든 CurveVector를 할당한다.
 }
 
+void UCSubAction_Bow::Pressed()
+{
+	CheckTrue(State->IsSubActionMode());
+	CheckNull(SpringArm);
+	CheckNull(Camera);
+
+
+	Super::Pressed();
+
+	State->OnSubActionMode();
+
+	OriginData.TargetArmLength = SpringArm->TargetArmLength;
+	OriginData.SocketOffset = SpringArm->SocketOffset;
+	OriginData.bEnableCameraLag = SpringArm->bEnableCameraLag;
+	OriginData.CameraLocation = Camera->GetRelativeLocation();
+
+	SpringArm->TargetArmLength = AimData.TargetArmLength;
+	SpringArm->SocketOffset = AimData.SocketOffset;
+	SpringArm->bEnableCameraLag = AimData.bEnableCameraLag;
+	Camera->SetRelativeLocation(AimData.CameraLocation);
+
+	Timeline.PlayFromStart();//Timeline 동작 시작.
+}
+
+void UCSubAction_Bow::Released()
+{
+	CheckFalse(State->IsSubActionMode());
+	CheckNull(SpringArm);
+	CheckNull(Camera);
+
+
+	Super::Released();
+
+	State->OffSubActionMode();
+
+	SpringArm->TargetArmLength = OriginData.TargetArmLength;
+	SpringArm->SocketOffset = OriginData.SocketOffset;
+	SpringArm->bEnableCameraLag = OriginData.bEnableCameraLag;
+	Camera->SetRelativeLocation(OriginData.CameraLocation);
+
+	Timeline.ReverseFromEnd();//Timeline 뒤집기
+}
+
 void UCSubAction_Bow::BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment, UCDoAction* InDoAction)
 {
 	Super::BeginPlay(InOwner, InAttachment, InDoAction);
@@ -21,7 +64,7 @@ void UCSubAction_Bow::BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment,
 
 
 	FOnTimelineVector timeline;
-	timeline.BindUFunction(this, "OnAiming");
+	timeline.BindUFunction(this, "OnAiming");//OnAiming함수를 묶어서 콜한다.
 
 	Timeline.AddInterpVector(Curve, timeline);
 	Timeline.SetPlayRate(AimingSpeed);
@@ -37,4 +80,5 @@ void UCSubAction_Bow::Tick_Implementation(float InDeltaTime)
 
 void UCSubAction_Bow::onAiming(FVector Output)
 {
+	Camera->FieldOfView = Output.X;//조준 활성화와 해제에 앞뒤 ZoomIn&Out에 Output.X값이 쓰인다.
 }

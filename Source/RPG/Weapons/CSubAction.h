@@ -9,6 +9,9 @@ class RPG_API UCSubAction : public UObject
 	GENERATED_BODY()
 
 public:
+	FORCEINLINE bool GetInAction() { return bInAction; }//bInAction의 true,false 여부를 리턴하는 함수
+
+public:
 	UCSubAction();
 
 public:
@@ -23,17 +26,19 @@ public:
 	//Implementation는 추상화. 함수 호출 해줄테니 필요하면 재정의해서 써라.
 	UFUNCTION(BlueprintNativeEvent)
 		void Begin_SubAction();
-	virtual void Begin_SubAction_Implementation() {}
+	virtual void Begin_SubAction_Implementation();
 
 	UFUNCTION(BlueprintNativeEvent)
 		void End_SubAction();
-	virtual void End_SubAction_Implementation() {}
+	virtual void End_SubAction_Implementation();
 
 	UFUNCTION(BlueprintNativeEvent)
 		void Tick(float InDeltaTime);
 	virtual void Tick_Implementation(float InDeltaTime) {}
 
 protected:
+	bool bInAction;
+
 	class ACharacter* Owner;
 	class ACAttachment* Attachment;
 	class UCDoAction* DoAction;

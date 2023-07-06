@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Weapons/CSubAction.h"
 
 void UCAnimInstance::NativeBeginPlay()
 {
@@ -39,6 +40,14 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		Pitch = UKismetMathLibrary::FInterpTo(Pitch, OwnerCharacter->GetBaseAimRotation().Pitch, DeltaSeconds, 25);
 	}
 
+	//활 조준
+	CheckNull(Weapon);//무기가 있는지 확인
+	if (!!Weapon->GetSubAction())
+	{
+		bBow_Aiming = true;
+		bBow_Aiming &= WeaponType == EWeaponType::Bow;
+		bBow_Aiming &= Weapon->GetSubAction()->GetInAction();
+	}
 }
 
 void UCAnimInstance::OnWeaponTypeChanged(EWeaponType InPrevType, EWeaponType InNewType)

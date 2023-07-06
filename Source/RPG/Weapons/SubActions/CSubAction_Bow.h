@@ -43,8 +43,8 @@ public:
     UCSubAction_Bow();
 
 public:
-    //virtual void Pressed() override;
-    //virtual void Released() override;
+    virtual void Pressed() override;
+    virtual void Released() override;
 
 public:
     void BeginPlay(class ACharacter* InOwner, class ACAttachment* InAttachment, class UCDoAction* InDoAction) override;
@@ -62,6 +62,9 @@ private:
 
 private:
     FTimeline Timeline;
+    //SubAction는 Actor가 아니기 때문에 Component를 가질 수 없다. SubAction은 UObject 상속이다.
+    //그래서 TimelineComponent가 아닌 Timeline으로 작업한다.
+
+private:
+    FAimData OriginData;
 };
-//SubAction는 Actor가 아니기 때문에 Component를 가질 수 없다. SubAction은 UObject 상속이다.
-//그래서 TimelineComponent가 아닌 Timeline으로 작업한다.

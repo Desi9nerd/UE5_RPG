@@ -10,10 +10,6 @@ class RPG_API UCAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 
-private:
-    class ACharacter* OwnerCharacter;
-    class UCWeaponComponent* Weapon;
-
 protected:
     UPROPERTY(BlueprintReadOnly, Category = "Animation")
         float Speed;
@@ -23,6 +19,9 @@ protected:
 
     UPROPERTY(BlueprintReadOnly, Category = "Animation")
         float Direction;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Animation")
+        bool bBow_Aiming;
 
     UPROPERTY(BlueprintReadOnly, Category = "Animation")
         class UCharacterMovementComponent* CharacterMovement;
@@ -42,6 +41,9 @@ private:
     UFUNCTION()
         void OnWeaponTypeChanged(EWeaponType InPrevType, EWeaponType InNewType);
 
+private:
+    class ACharacter* OwnerCharacter;
+    class UCWeaponComponent* Weapon;
 
 private:
     FRotator PrevRotation;
