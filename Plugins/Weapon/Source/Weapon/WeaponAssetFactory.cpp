@@ -13,7 +13,9 @@ UWeaponAssetFactory::UWeaponAssetFactory()
 UObject* UWeaponAssetFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags,
 	UObject* Context, FFeedbackContext* Warn, FName CallingContext)
 {
-	UCWeaponAsset* asset = NewObject<UCWeaponAsset>(InParent, InClass, InName, Flags);
+	//UCWeaponAsset* asset = NewObject<UCWeaponAsset>(InParent, InClass, InName, Flags);
+	//
+	//return nullptr;
 
-	return nullptr;
+	return NewObject<UCWeaponAsset>(InParent, InClass, InName, Flags);
 }

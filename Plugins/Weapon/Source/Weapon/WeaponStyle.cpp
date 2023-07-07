@@ -33,7 +33,7 @@ FWeaponStyle::FWeaponStyle()
     FSlateStyleRegistry::RegisterSlateStyle(*StyleSet.Get());
 
 
-    path = FPaths::EngineConfigDir() / "Editor" / "Slate" / "Common/Selection.png";//Engine이 설치된 Config 경로에 있는 해당 png 이미지의 파일 경로
+    path = FPaths::EngineContentDir() / "Editor" / "Slate" / "Common/Selection.png";//Engine이 설치된 Config 경로에 있는 해당 png 이미지의 파일 경로
     Array_Image = MakeShareable(new FSlateImageBrush(path, FVector2D(8, 8), FLinearColor(1, 1, 1, 0.1f)));//path 경로의 이미지를 (8, 8)사이즈로 해당 색과 alpha값으로 생성한다. 
 }
 
