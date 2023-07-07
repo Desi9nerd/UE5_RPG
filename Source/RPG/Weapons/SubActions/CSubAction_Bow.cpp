@@ -68,6 +68,11 @@ void UCSubAction_Bow::BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment,
 
 	Timeline.AddInterpVector(Curve, timeline);
 	Timeline.SetPlayRate(AimingSpeed);
+
+	ACAttachment_Bow* bow = Cast<ACAttachment_Bow>(InAttachment);//CAttachment_Bow의 멤버를 사용하기 위해 캐스팅한다.
+
+	if (!!bow)
+		Bend = bow->GetBend();//CSubAction_Bow에서 선언한 Bend 변수에 CAttachment_Bow의 Bend값을 GetBend()로 가져와서 넣어준다.
 }
 
 void UCSubAction_Bow::Tick_Implementation(float InDeltaTime)
@@ -81,4 +86,7 @@ void UCSubAction_Bow::Tick_Implementation(float InDeltaTime)
 void UCSubAction_Bow::onAiming(FVector Output)
 {
 	Camera->FieldOfView = Output.X;//조준 활성화와 해제에 앞뒤 ZoomIn&Out에 Output.X값이 쓰인다.
+
+	if (!!Bend)
+		*Bend = Output.Y;//에디터의 Curve_Aiming에서 설정한 Y값. 0~100까지 나온다.
 }

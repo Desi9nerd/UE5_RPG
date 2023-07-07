@@ -18,19 +18,19 @@ public:
 	virtual void BeginPlay(class ACharacter* InOwner, class ACAttachment* InAttachment, class UCDoAction* InDoAction);
 
 public:
-	virtual void Pressed() {}
-	virtual void Released() {}
+	virtual void Pressed();
+	virtual void Released();
 
 public:
 	//NativeEvent는 가상화. 정의할테니 원하면 가져다가 써라는 의미.
 	//Implementation는 추상화. 함수 호출 해줄테니 필요하면 재정의해서 써라.
 	UFUNCTION(BlueprintNativeEvent)
 		void Begin_SubAction();
-	virtual void Begin_SubAction_Implementation();
+	virtual void Begin_SubAction_Implementation() {}
 
 	UFUNCTION(BlueprintNativeEvent)
 		void End_SubAction();
-	virtual void End_SubAction_Implementation();
+	virtual void End_SubAction_Implementation() {}
 
 	UFUNCTION(BlueprintNativeEvent)
 		void Tick(float InDeltaTime);

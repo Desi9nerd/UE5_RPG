@@ -21,6 +21,9 @@ private:
         class UPoseableMeshComponent* PoseableMesh;
 
 public:
+    float* GetBend();
+
+public:
     ACAttachment_Bow();
 
 protected:

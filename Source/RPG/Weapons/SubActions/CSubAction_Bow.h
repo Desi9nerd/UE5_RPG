@@ -67,4 +67,7 @@ private:
 
 private:
     FAimData OriginData;
+
+private:
+    float* Bend;
 };

@@ -1,11 +1,13 @@
 #include "Weapons/Attachments/CAttachment_Bow.h"
 #include "Global.h"
-//#include "Characters/CAnimInstance_Bow.h"
+#include "Weapons/AnimInstances/CAnimInstance_Bow.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/PoseableMeshComponent.h"
 
 ACAttachment_Bow::ACAttachment_Bow()
 {
+	PrimaryActorTick.bCanEverTick = true;//실시간 적용이 되도록 넣어준다. 안 넣어주면 활 시위가 구부러지는것이 업데이트 되지 않을 수도 있다.
+
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &SkeletalMesh, "SkeletalMesh", Root);
 	CHelpers::CreateComponent<UPoseableMeshComponent>(this, &PoseableMesh, "PoseableMesh", Root);
 
@@ -14,6 +16,10 @@ ACAttachment_Bow::ACAttachment_Bow()
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Character/Weapons/ElvenBow/SK_ElvenBow.SK_ElvenBow'");
 	SkeletalMesh->SetSkeletalMesh(mesh);
 	SkeletalMesh->SetCollisionProfileName("NoCollision");
+
+	TSubclassOf<UCAnimInstance_Bow> animInstacne;
+	CHelpers::GetClass<UCAnimInstance_Bow>(&animInstacne, "AnimBlueprint'/Game/Weapons/Bow/ABP_ElvenBow.ABP_ElvenBow_C'");//ABP_ElvenBow 레퍼런스 복사하여 생성.
+	SkeletalMesh->SetAnimInstanceClass(animInstacne);
 }
 
 void ACAttachment_Bow::BeginPlay()
@@ -66,4 +72,9 @@ void ACAttachment_Bow::OnUnequip_Implementation()
 		controller->PlayerCameraManager->ViewPitchMin = OriginViewPitchRange.X;
 		controller->PlayerCameraManager->ViewPitchMax = OriginViewPitchRange.Y;
 	}
+}
+
+float* ACAttachment_Bow::GetBend()
+{
+	return Cast<UCAnimInstance_Bow>(SkeletalMesh->GetAnimInstance())->GetBend();//UCAnimInstance_Bow 안의 GetBend() 함수로 Bend값 리턴. UCAnimInstance_Bow 안의 Bend값을 사용한다.
 }
