@@ -17,5 +17,6 @@ public class RPG : ModuleRules
         PrivateDependencyModuleNames.Add("InputCore");
 
         PublicDependencyModuleNames.Add("Niagara");
+        PublicDependencyModuleNames.Add("UMG");
     }
 }
