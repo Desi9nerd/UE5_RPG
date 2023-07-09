@@ -5,7 +5,7 @@
 #include "Components/CStateComponent.h"
 #include "CBaseCharacter.generated.h"
 
-class AWeapon;
+class ACWeapon;
 class UAnimMontage;
 
 UCLASS()
@@ -28,6 +28,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 		class UCStatusComponent* Status;
+
+	//무기 장착 및 해제를 위한 변수
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	ACWeapon* EquippedWeapon;
 
 public:
 	ACBaseCharacter();

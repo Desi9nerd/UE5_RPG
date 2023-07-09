@@ -8,6 +8,8 @@
 #include "Weapons/CDoAction.h"
 #include "Weapons/CSubAction.h"
 
+#include "Weapons/CWeapon.h"
+
 UCWeaponComponent::UCWeaponComponent()
 {
 	//Tick을 실행시켜주는 코드
@@ -169,4 +171,28 @@ void UCWeaponComponent::SubAction_Released()
 {
 	if (!!GetSubAction())
 		GetSubAction()->Released();
+}
+
+void UCWeaponComponent::FKeyPressed()
+{
+	ACWeapon* OverlappingWeapon = Cast<ACWeapon>(OverlappingItem);
+	if (OverlappingWeapon)
+	{
+		if (EquippedWeapon)
+		{
+			EquippedWeapon->Destroy();
+		}
+		EquipWeapon(OverlappingWeapon);
+	}
+	else
+	{
+		if (CanDisarm())
+		{
+			Disarm();
+		}
+		else if (CanArm())
+		{
+			Arm();
+		}
+	}
 }

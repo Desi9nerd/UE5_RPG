@@ -4,6 +4,8 @@
 #include "Components/ActorComponent.h"
 #include "CWeaponComponent.generated.h"
 
+class ACItem;
+
 UENUM(BlueprintType)
 enum class EWeaponType : uint8
 {
@@ -47,7 +49,8 @@ public:
 	class UCDoAction* GetDoAction();
 	class UCSubAction* GetSubAction();
 
-public: //무기 세팅
+public:
+	//무기 세팅
 	void SetUnarmedMode();
 	void SetFistMode();
 	void SetSwordMode();
@@ -59,6 +62,13 @@ public: //무기 세팅
 	void DoAction();
 	void SubAction_Pressed();
 	void SubAction_Released();
+
+	//무기 줍기
+	void FKeyPressed();
+	FORCEINLINE void SetOverlappingItem(ACItem* Item) { OverlappingItem = Item; }
+
+	UPROPERTY(VisibleInstanceOnly)
+	ACItem* OverlappingItem;
 
 private:
 	void SetMode(EWeaponType InType);

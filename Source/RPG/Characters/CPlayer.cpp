@@ -77,6 +77,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Pressed, Weapon,&UCWeaponComponent::SubAction_Pressed);
 	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Released, Weapon, &UCWeaponComponent::SubAction_Released);
+
+	PlayerInputComponent->BindAction("Equip", EInputEvent::IE_Released, Weapon, &UCWeaponComponent::FKeyPressed);
 }
 
 void ACPlayer::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
