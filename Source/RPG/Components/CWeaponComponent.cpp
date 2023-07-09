@@ -175,24 +175,24 @@ void UCWeaponComponent::SubAction_Released()
 
 void UCWeaponComponent::FKeyPressed()
 {
-	ACWeapon* OverlappingWeapon = Cast<ACWeapon>(OverlappingItem);
-	if (OverlappingWeapon)
-	{
-		if (EquippedWeapon)
-		{
-			EquippedWeapon->Destroy();
-		}
-		EquipWeapon(OverlappingWeapon);
-	}
-	else
-	{
-		if (CanDisarm())
-		{
-			Disarm();
-		}
-		else if (CanArm())
-		{
-			Arm();
-		}
-	}
+	//ACWeapon* OverlappingWeapon = Cast<ACWeapon>(OverlappingItem);
+	//if (OverlappingWeapon)
+	//{
+	//	if (EquippedWeapon)
+	//	{
+	//		EquippedWeapon->Destroy();
+	//	}
+	//	EquipWeapon(OverlappingWeapon);
+	//}
+	//else
+	//{
+	//	if (CanDisarm())
+	//	{
+	//		Disarm();
+	//	}
+	//	else if (CanArm())
+	//	{
+	//		Arm();
+	//	}
+	//}
 }

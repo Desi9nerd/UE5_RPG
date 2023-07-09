@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/IHit.h"
 #include "Components/CStateComponent.h"
 #include "CBaseCharacter.generated.h"
 
@@ -9,7 +10,7 @@ class ACWeapon;
 class UAnimMontage;
 
 UCLASS()
-class RPG_API ACBaseCharacter : public ACharacter
+class RPG_API ACBaseCharacter : public ACharacter, public IIHit
 {
 	GENERATED_BODY()
 

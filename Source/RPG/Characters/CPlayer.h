@@ -5,11 +5,12 @@
 #include "Components/CStateComponent.h"
 #include "Characters/CBaseCharacter.h"
 #include "Characters/ICharacter.h"
+#include "Interfaces/IPickup.h"
 #include "CPlayer.generated.h"
 
 UCLASS()
 class RPG_API ACPlayer
-	: public ACBaseCharacter, public IICharacter //다중상속
+	: public ACBaseCharacter, public IICharacter, public IIPickup //다중상속
 {
 	GENERATED_BODY()
 
