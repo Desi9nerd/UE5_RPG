@@ -83,7 +83,7 @@ void UCSubAction_Bow::Tick_Implementation(float InDeltaTime)
 	Timeline.TickTimeline(InDeltaTime);
 }
 
-void UCSubAction_Bow::onAiming(FVector Output)
+void UCSubAction_Bow::OnAiming(FVector Output)
 {
 	Camera->FieldOfView = Output.X;//조준 활성화와 해제에 앞뒤 ZoomIn&Out에 Output.X값이 쓰인다.
 

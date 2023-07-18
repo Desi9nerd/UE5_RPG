@@ -2,13 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Characters/ECharacterTypes.h"//Enum
 #include "CStateComponent.generated.h"
 
-UENUM()
-enum class EStateType : uint8
-{
-	Idle = 0, BackStep, Equip, Hitted, Dead, Action, Max,
-};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStateTypeChanged, EStateType, InPrevType, EStateType, InNewType);
 
 UCLASS()

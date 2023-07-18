@@ -54,7 +54,7 @@ public:
 
 private:
     UFUNCTION()
-        void onAiming(FVector Output);
+        void OnAiming(FVector Output);
 
 private:
     class USpringArmComponent* SpringArm;

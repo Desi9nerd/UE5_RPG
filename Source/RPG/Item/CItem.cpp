@@ -1,6 +1,6 @@
 #include "CItem.h"
 #include "Components/SphereComponent.h"
-//#include "Interfaces/PickupInterface.h"
+#include "Interfaces/IPickup.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -10,18 +10,20 @@ ACItem::ACItem()
 	PrimaryActorTick.bCanEverTick = true;
 
 	ItemMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ItemMeshComponent"));
-	ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);//Collision Response를 Ignore로 설정.
+	ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);//Collision Respon를 ///Ignore로 설정.
 	ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);//Collsion을 NoCollision으로 설정.
-	RootComponent = ItemMesh;
+	ItemMesh->SetupAttachment(RootComponent);
+
 	//SphereComponent
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-	Sphere->SetupAttachment(GetRootComponent());
+	Sphere->AttachToComponent(ItemMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	//Sphere->SetupAttachment(ItemMesh);
 	//NiagaraComponent
 	ItemEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Embers"));
-	ItemEffect->SetupAttachment(GetRootComponent());
+	ItemEffect->SetupAttachment(ItemMesh); 
 }
 
-void ACItem::BeginPlay()
+void ACItem::BeginPlay() 
 {
 	Super::BeginPlay();
 
@@ -41,23 +43,23 @@ float ACItem::TransformedCos()
 }
 
 //Item 충돌 시작
-void ACItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ACItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//IPickupInterface* PickupInterface = Cast<IPickupInterface>(OtherActor);//OtherActor 캐스팅
-	//if (PickupInterface)//PickupInterface가 있다면(=OtherActor가 있다면)
-	//{
-	//	PickupInterface->SetOverlappingItem(this);//PickupInterface와 아이템이 Overlapping된다면 this를 반환한다.
-	//}
+	IIPickup* PickupInterface = Cast<IIPickup>(OtherActor);//OtherActor 캐스팅
+	if (PickupInterface)//PickupInterface가 있다면(=OtherActor가 있다면)
+	{
+		PickupInterface->SetOverlappingItem(this);//PickupInterface와 아이템이 Overlapping된다면 this환//한다.
+	}
 }
 
 //Item 충돌 끝
-void ACItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void ACItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	//IPickupInterface* PickupInterface = Cast<IPickupInterface>(OtherActor);//OtherActor 캐스팅
-	//if (PickupInterface)//PickupInterface가 있다면(=OtherActor가 있다면)
-	//{
-	//	PickupInterface->SetOverlappingItem(nullptr);//nullptr 반환
-	//}
+	IIPickup* PickupInterface = Cast<IIPickup>(OtherActor);//OtherActor 캐스팅
+	if (PickupInterface)//PickupInterface가 있다면(=OtherActor가 있다면)
+	{
+		PickupInterface->SetOverlappingItem(nullptr);//nullptr 반환
+	}
 }
 
 void ACItem::SpawnPickupSystem()

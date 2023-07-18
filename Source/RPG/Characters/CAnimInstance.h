@@ -29,6 +29,9 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Animation")
         bool IsFalling;
 
+    UPROPERTY(BlueprintReadOnly, Category = "Animation")
+		int JumpCnt;
+
 protected:
     UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
         EWeaponType WeaponType = EWeaponType::Max;
@@ -44,7 +47,9 @@ private:
 private:
     class ACharacter* OwnerCharacter;
     class UCWeaponComponent* Weapon;
+    class UCMovementComponent* Movement;
 
 private:
     FRotator PrevRotation;
+    
 };

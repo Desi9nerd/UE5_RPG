@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Item/CItem.h"
 #include "CAttachment.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttachmentBeginCollision);
@@ -11,7 +12,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAttachmentBeginOverlap, class AC
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAttachmentEndOverlap, class ACharacter*, InAttacker, class ACharacter*, InOther);
 
 UCLASS()
-class RPG_API ACAttachment : public AActor
+class RPG_API ACAttachment : public ACItem
 {
 	GENERATED_BODY()
 
@@ -44,8 +45,8 @@ private:
 
 	UFUNCTION()
 		void OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-protected:
+	
+public:
 	UFUNCTION(BlueprintCallable, Category = "Attach")
 		void AttachTo(FName InSocketName);
 
@@ -66,4 +67,28 @@ protected:
 	//UShapeComponent는 UBox,Capsule,SphereComponent의 상위클래스
 	UPROPERTY(BlueprintReadOnly, Category = "Game")
 		TArray<class UShapeComponent*> Collisions;
+
+/** Pick Up
+ * ////////////////////////////////////////////////////////
+ */ 
+
+public:
+	FORCEINLINE FName GetHolsterSocketName() { return HolsterSocketName; }
+	
+public:
+	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
+	void PlayEquipSound();
+	void DisableSphereCollision();
+	void DeactivateEmbers();
+
+private:
+	UPROPERTY(EditAnywhere, Category = "PickUp")
+	USoundBase* EquipSound;
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "PickUp")
+	FName HolsterSocketName;
+
+	//UPROPERTY(EditAnywhere, Category = "PickUp")
+	//FVector SpawnLocation;
 };

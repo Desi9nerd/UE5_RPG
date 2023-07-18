@@ -41,9 +41,7 @@ void UCSubAction_Around::Begin_SubAction_Implementation()
 void UCSubAction_Around::End_SubAction_Implementation()
 {
 	Super::End_SubAction_Implementation();
-
-	if(State->IsActionMode())
-
+	
 	State->OffSubActionMode();
 	State->SetIdleMode();
 	Movement->Move();

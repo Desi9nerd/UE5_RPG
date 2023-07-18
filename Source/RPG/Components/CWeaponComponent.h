@@ -63,13 +63,6 @@ public:
 	void SubAction_Pressed();
 	void SubAction_Released();
 
-	//무기 줍기
-	void FKeyPressed();
-	FORCEINLINE void SetOverlappingItem(ACItem* Item) { OverlappingItem = Item; }
-
-	UPROPERTY(VisibleInstanceOnly)
-	ACItem* OverlappingItem;
-
 private:
 	void SetMode(EWeaponType InType);
 	void ChangeType(EWeaponType InType);
@@ -82,4 +75,6 @@ private:
 
 	EWeaponType Type = EWeaponType::Max;
 
+public:
+	TArray<ACItem*> ItemsArray;
 };

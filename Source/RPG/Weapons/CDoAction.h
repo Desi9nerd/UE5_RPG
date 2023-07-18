@@ -31,6 +31,15 @@ public:
 	virtual void End_DoAction();
 
 public:
+	//CDoAction_Bow에서 재정의 시키기위해 virtual로 만든다.
+	//BeginEquip될 때 충돌체를 꺼주고 Unequip될 때 충돌체를 켜준다.	
+	UFUNCTION()
+		virtual void OnBeginEquip() { }
+
+	UFUNCTION()
+		virtual void OnUnequip() { }
+
+public:
 	UFUNCTION()
 		virtual void OnAttachmentBeginCollision() {}
 

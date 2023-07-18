@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Characters/ECharacterTypes.h"
 #include "Components/CStateComponent.h"
 #include "Engine/DataTable.h"
 #include "CMontagesComponent.generated.h"

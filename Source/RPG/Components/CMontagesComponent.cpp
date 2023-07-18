@@ -56,7 +56,6 @@ void UCMontagesComponent::BeginPlay()
 //}
 //#endif
 
-
 void UCMontagesComponent::PlayBackStepMode()
 {
 	PlayAnimMontage(EStateType::BackStep);

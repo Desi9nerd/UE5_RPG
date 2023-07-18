@@ -1,6 +1,10 @@
 #pragma once
 
 //TODO:
+//StateComponent Enum 옮기기
+//StatusComponent Enum 옮기기
+
+//TODO:
 //ActionMode 기준
 //if(State->IsAction())
 //WeaponType과 HitReactionType을 조합하여
@@ -11,7 +15,17 @@
 //if(State->IsSubActionMode())
 //Player가 SubActionMode일 때 위와 같은 방법으로 구현.
 
-UENUM(BlueprintType)
+UENUM() //CStateComponent.h에 있던것 옮김
+enum class EStateType : uint8
+{
+	Idle = 0, BackStep, Equip, Hitted, Dead, Action, Max,
+};
+
+
+
+//////////////////////////////////////////////////////////
+
+UENUM(BlueprintType) //BP에 리플렉션 해준다.
 enum class ECharacterState : uint8
 {
 	ECS_Unequipped UMETA(DisplayName = "Unequipped"),
@@ -19,10 +33,10 @@ enum class ECharacterState : uint8
 	ECS_EquippedTwoHandedWeapon UMETA(DisplayName = "Equipped Two-Handed Weapon")
 };
 
-UENUM(BlueprintType)
+UENUM(BlueprintType) //BP에 리플렉션 해준다.
 enum class EActionState : uint8
 {
-	EAS_Unoccupied UMETA(DisplayName = "Unoccupied"),
+	EAS_Unoccupied UMETA(DisplayName = "Unocuppied"),
 	EAS_HitReaction UMETA(DisplayName = "HitReaction"),
 	EAS_Attacking UMETA(DisplayName = "Attacking"),
 	EAS_EquippingWeapon UMETA(DisplayName = "Equipping Weapon"),
@@ -30,7 +44,7 @@ enum class EActionState : uint8
 	EAS_Dead UMETA(DisplayName = "Dead")
 };
 
-UENUM(BlueprintType)
+UENUM(BlueprintType) //BP에 리플렉션 해준다.
 enum EDeathPose
 {
 	EDP_Death1 UMETA(DisplayName = "Death1"),
@@ -43,7 +57,7 @@ enum EDeathPose
 	EDP_MAX UMETA(DisplayName = "DefaultMAX")
 };
 
-UENUM(BlueprintType)
+UENUM(BlueprintType) //BP에 리플렉션 해준다.
 enum class EEnemyState : uint8
 {
 	EES_NoState UMETA(DisplayName = "NoState"),
@@ -53,5 +67,4 @@ enum class EEnemyState : uint8
 	EES_Chasing UMETA(DisplayName = "Chasing"),
 	EES_Attacking UMETA(DisplayName = "Attacking"),
 	EES_Engaged UMETA(DisplayName = "Engaged")
-
 };

@@ -15,7 +15,7 @@ class RPG_API IIPickup
 	GENERATED_BODY()
 		
 public:
-	virtual void SetOverlappingItem(class AItem* Item);
+	virtual void SetOverlappingItem(class ACItem* Item);
 	virtual void AddSouls(class ASoul* Soul);
 	virtual void AddGold(class ATreasure* Treasure);
 };

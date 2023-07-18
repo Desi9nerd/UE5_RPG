@@ -31,6 +31,8 @@ public:
 	FORCEINLINE void Move() { bCanMove = true; }
 	FORCEINLINE void Stop() { bCanMove = false; }
 
+	FORCEINLINE int DoubleJumpCount() const { return JumpCount; }
+
 	FORCEINLINE float GetWalkSpeed() { return Speed[(int32)ESpeedType::Walk]; }
 	FORCEINLINE float GetRunSpeed() { return Speed[(int32)ESpeedType::Run]; }
 	FORCEINLINE float GetSprintSpeed() { return Speed[(int32)ESpeedType::Sprint]; }
@@ -53,6 +55,7 @@ private:
 
 public:
 	void OnJump();
+	void OnStopJumping();
 	void OnSprint();
 	void OnRun();
 	void OnWalk();
@@ -73,4 +76,6 @@ private:
 	bool bCanMove = true; //이동할 수 있는가
 	bool bFixedCamera; //카메라 고정인가
 	bool bTopViewCamera;//(Warp)TopView 카메라 사용할건가
+
+	int JumpCount;//더블점프 구현을 위해 점프 횟수 카운트하는 변수
 };

@@ -2,11 +2,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Characters/ECharacterTypes.h"
 #include "Components/CStateComponent.h"
 #include "Characters/CBaseCharacter.h"
 #include "Characters/ICharacter.h"
+#include "Parkour/CParkourComponent.h"
 #include "Interfaces/IPickup.h"
+#include "Weapons/CAttachment.h"//Pickup
+#include "Weapons/Attachments/CAttachment_Bow.h"//Pickup
 #include "CPlayer.generated.h"
+
+class ACItem;
 
 UCLASS()
 class RPG_API ACPlayer
@@ -20,7 +26,19 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 		class UCameraComponent* Camera;
-	
+
+/** 파쿠르 */
+private:
+	UPROPERTY(VisibleDefaultsOnly)
+		class USceneComponent* ArrowGroup;//파쿠르를 위한 ArrowGroup
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UArrowComponent* Arrows[(int32)EParkourArrowType::Max];
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCParkourComponent* Parkour;
+/** 파쿠르 */
+
 public:
 	ACPlayer();
 
@@ -42,4 +60,13 @@ private:
 
 public:
 	void End_BackStep() override;//ICharacter의 함수 오버라이드
+
+
+public:
+	//무기 줍기
+	void FKeyPressed();
+	virtual void SetOverlappingItem(ACItem* Item) override;
+
+	UPROPERTY(VisibleInstanceOnly)
+	ACItem* OverlappingItem;	
 };

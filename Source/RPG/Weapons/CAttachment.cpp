@@ -3,6 +3,11 @@
 #include "GameFramework/Character.h"
 #include "Components/SceneComponent.h"
 #include "Components/ShapeComponent.h"
+//////////////////////////////////////
+#include "NiagaraComponent.h"
+#include "Components/SphereComponent.h"
+#include "Item/CItem.h"
+#include "Interfaces/IHit.h"
 
 ACAttachment::ACAttachment()
 {
@@ -30,8 +35,10 @@ void ACAttachment::BeginPlay()
 		OffCollisions();//처음 시작할 때 collision을 꺼준다.
 	}
 
+	
+
 	//ACharacter를 먼저 Cast 한 후에 Super::BeginPlay() 호출.
-	Super::BeginPlay();
+	Super::BeginPlay();	
 }
 
 void ACAttachment::OnCollisions()
@@ -77,6 +84,13 @@ void ACAttachment::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponen
 void ACAttachment::AttachTo(FName InSocketName)
 {
 	AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), InSocketName);
+
+	//무기 줍기 추가
+	ItemState = EItemState::EIS_Equipped;
+
+	DisableSphereCollision();
+	PlayEquipSound();
+	DeactivateEmbers();
 }
 
 void ACAttachment::AttachToCollision(FName InCollisionName)
@@ -89,5 +103,52 @@ void ACAttachment::AttachToCollision(FName InCollisionName)
 
 			return;
 		}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ACAttachment::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
+{
+	ItemState = EItemState::EIS_Equipped;
+	SetOwner(NewOwner);
+	SetInstigator(NewInstigator);
+
+
+	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
+	ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
+
+	DisableSphereCollision();
+	PlayEquipSound();
+	DeactivateEmbers();
+}
+
+void ACAttachment::PlayEquipSound()
+{
+	if (EquipSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			EquipSound,
+			GetActorLocation()
+		);
+	}
+}
+
+//Pickup을 위한 충돌체를 꺼줌.
+void ACAttachment::DisableSphereCollision()
+{
+	if (Sphere)
+	{
+		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
+
+//Item주위로 나오는 이펙트 꺼줌.
+void ACAttachment::DeactivateEmbers()
+{
+	if (ItemEffect)
+	{
+		ItemEffect->Deactivate();
 	}
 }

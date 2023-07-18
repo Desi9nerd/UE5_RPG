@@ -3,10 +3,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/IHit.h"
+#include "Characters/ECharacterTypes.h"
 #include "Components/CStateComponent.h"
 #include "CBaseCharacter.generated.h"
 
-class ACWeapon;
 class UAnimMontage;
 
 UCLASS()
@@ -31,8 +31,8 @@ protected:
 		class UCStatusComponent* Status;
 
 	//무기 장착 및 해제를 위한 변수
-	UPROPERTY(VisibleAnywhere, Category = Weapon)
-	ACWeapon* EquippedWeapon;
+	//UPROPERTY(VisibleAnywhere, Category = Weapon)
+	//ACWeapon* EquippedWeapon;
 
 public:
 	ACBaseCharacter();

@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "GameFramework/Character.h"
 #include "Components/CMovementComponent.h"
+#include "Characters/ECharacterTypes.h"
 #include "Components/CStateComponent.h"
 #include "CEquipment.h"
 
@@ -17,6 +18,10 @@ void UCEquipment::BeginPlay(ACharacter* InOwner, const FEquipmentData& InData)
 void UCEquipment::Equip_Implementation()
 {
 	State->SetEquipMode();
+
+	//isBound()는 delegate가 현재 bind되어 있는지 확인하는 함수이고, broadcast()는 delegate를 호출하는 함수다.
+	if (OnEquipmentEquip.IsBound())
+		OnEquipmentEquip.Broadcast();
 
 	if (Data.bCanMove == false)
 		Movement->Stop();

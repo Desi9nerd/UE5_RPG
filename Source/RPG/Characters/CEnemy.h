@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "ICharacter.h"
+#include "Characters/ECharacterTypes.h"
 #include "Components/CStateComponent.h"
 #include "GameFramework/Character.h"
 #include "Characters/CBaseCharacter.h"

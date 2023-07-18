@@ -3,6 +3,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Weapons/CSubAction.h"
+#include "Components/CMovementComponent.h"
 
 void UCAnimInstance::NativeBeginPlay()
 {
@@ -12,6 +13,8 @@ void UCAnimInstance::NativeBeginPlay()
 	CheckNull(OwnerCharacter);
 
 	CharacterMovement = OwnerCharacter->GetCharacterMovement();
+
+	Movement = CHelpers::GetComponent<UCMovementComponent>(OwnerCharacter);
 
 	Weapon = CHelpers::GetComponent<UCWeaponComponent>(OwnerCharacter);
 	if (!!Weapon)
@@ -48,6 +51,9 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bBow_Aiming &= WeaponType == EWeaponType::Bow;
 		bBow_Aiming &= Weapon->GetSubAction()->GetInAction();
 	}
+
+	//더블 점프, MovementComponent의 JumpCount를 받아오는 함수 호출.
+	JumpCnt = Movement->DoubleJumpCount();
 }
 
 void UCAnimInstance::OnWeaponTypeChanged(EWeaponType InPrevType, EWeaponType InNewType)

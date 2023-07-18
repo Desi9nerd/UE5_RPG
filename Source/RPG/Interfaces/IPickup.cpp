@@ -1,6 +1,6 @@
 #include "Interfaces/IPickup.h"
 
-void IIPickup::SetOverlappingItem(AItem* Item)
+void IIPickup::SetOverlappingItem(ACItem* Item)
 {
 }
 

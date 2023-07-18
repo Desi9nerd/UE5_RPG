@@ -6,6 +6,7 @@
 #include "CEquipment.generated.h"
 
 //직렬화하여 BP에서 사용가능하도록 DYNAMIC, 여러함수를 받을 수 있도록 MULTICAST 사용.
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEquipmentEquip);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEquipmentBeginEquip);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEquipmentUnequip);
 
@@ -13,6 +14,10 @@ UCLASS()
 class RPG_API UCEquipment : public UObject
 {
 	GENERATED_BODY()
+
+public:
+	//실시간으로 bEquipped로 가져온다. 주소로 가져온다.
+	FORCEINLINE const bool* GetEquipped() { return &bEquipped; }
 
 public:
 	void BeginPlay(class ACharacter* InOwner, const FEquipmentData& InData);
@@ -35,6 +40,7 @@ public:
 		void Unequip_Implementation();
 
 public:
+	FEquipmentEquip OnEquipmentEquip;//DECLARE_DYNAMIC_MULTICAST_DELEGATE 하였다.
 	FEquipmentBeginEquip OnEquipmentBeginEquip;//DECLARE_DYNAMIC_MULTICAST_DELEGATE 하였다.
 	FEquipmentUnequip OnEquipmentUnequip;//DECLARE_DYNAMIC_MULTICAST_DELEGATE 하였다.
 

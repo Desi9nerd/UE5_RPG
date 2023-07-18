@@ -9,6 +9,12 @@
 #include "Components/CMontagesComponent.h"
 #include "Components/CMovementComponent.h"
 #include "Components/CWeaponComponent.h"
+#include "Components/ArrowComponent.h"//파쿠르 Arrow 생성을 위한 헤더
+
+//무기 Pickup
+#include "Item/CItem.h"
+#include "Weapons/CAttachment.h"
+#include "Weapons/Attachments/CAttachment_Bow.h"
 
 ACPlayer::ACPlayer()
 {
@@ -19,6 +25,7 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateActorComponent<UCMontagesComponent>(this, &Montages, "Montages");
 	CHelpers::CreateActorComponent<UCMovementComponent>(this, &Movement, "Movement");
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &State, "State");
+	CHelpers::CreateActorComponent<UCParkourComponent>(this, &Parkour, "Parkour");
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -40,6 +47,48 @@ ACPlayer::ACPlayer()
 
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
 
+	/** 파쿠르 */
+	CHelpers::CreateComponent<USceneComponent>(this, &ArrowGroup, "ArrowGroup", GetCapsuleComponent());//ArrowGroup을 생성하고 GetCapsuleComponent 아래로 붙여준다.
+	//파쿠르에 활용한 Arrows들을 생성한다. 
+	for (int32 i = 0; i < (int32)EParkourArrowType::Max; i++)
+	{
+		FString name = StaticEnum<EParkourArrowType>()->GetNameStringByIndex(i);
+		CHelpers::CreateComponent<UArrowComponent>(this, &Arrows[i], FName(name), ArrowGroup);
+
+		switch ((EParkourArrowType)i)
+		{
+		case EParkourArrowType::Center:
+			Arrows[i]->ArrowColor = FColor::Red;
+			break;
+
+		case EParkourArrowType::Ceil:
+			Arrows[i]->ArrowColor = FColor::Green;
+			Arrows[i]->SetRelativeLocation(FVector(0, 0, 100));
+			break;
+
+		case EParkourArrowType::Floor:
+			Arrows[i]->ArrowColor = FColor::Blue;
+			Arrows[i]->SetRelativeLocation(FVector(0, 0, -80));
+			break;
+
+		case EParkourArrowType::Left:
+			Arrows[i]->ArrowColor = FColor::Magenta;
+			Arrows[i]->SetRelativeLocation(FVector(0, -30, 0));
+			break;
+
+		case EParkourArrowType::Right:
+			Arrows[i]->ArrowColor = FColor::Magenta;
+			Arrows[i]->SetRelativeLocation(FVector(0, 30, 0));
+			break;
+
+		case EParkourArrowType::Land:
+			Arrows[i]->ArrowColor = FColor::Yellow;
+			Arrows[i]->SetRelativeLocation(FVector(200, 0, 100));
+			Arrows[i]->SetRelativeRotation(FRotator(-90, 0, 0));
+			break;
+		}
+	}
+	/** 파쿠르 */
 }
 
 void ACPlayer::BeginPlay()
@@ -61,6 +110,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("VerticalLook", Movement, &UCMovementComponent::OnVerticalLook);
 	PlayerInputComponent->BindAxis("HorizontalLook", Movement, &UCMovementComponent::OnHorizontalLook);
 
+	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::OnJump);
+	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnStopJumping);
+
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::OnSprint);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnRun);
 
@@ -78,7 +130,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Pressed, Weapon,&UCWeaponComponent::SubAction_Pressed);
 	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Released, Weapon, &UCWeaponComponent::SubAction_Released);
 
-	PlayerInputComponent->BindAction("Equip", EInputEvent::IE_Released, Weapon, &UCWeaponComponent::FKeyPressed);
+	PlayerInputComponent->BindAction("Equip", EInputEvent::IE_Pressed, this, &ACPlayer::FKeyPressed);
 }
 
 void ACPlayer::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
@@ -111,4 +163,39 @@ void ACPlayer::End_BackStep()
 	Movement->DisableControlRotation();//Backstep이 끝나면 원래대로 돌려준다.
 
 	State->SetIdleMode();//Idle상태로 돌려줌.
+}
+
+void ACPlayer::FKeyPressed()
+{
+	CLog::Print(L"F Key Pressed!");
+
+	ACAttachment* OverlappingWeapon = Cast<ACAttachment>(OverlappingItem);
+	if (!!OverlappingWeapon)
+	{
+		Weapon->ItemsArray.Add(OverlappingWeapon);
+		OverlappingWeapon->AttachTo(OverlappingWeapon->GetHolsterSocketName());
+
+		OverlappingWeapon = nullptr;
+		OverlappingItem = nullptr;
+	}
+
+	//else
+	//{
+	//	if (CanDisarm())
+	//	{
+	//		Disarm();
+	//	}
+	//	else if (CanArm())
+	//	{
+	//		Arm();
+	//	}
+	//}
+}
+
+void ACPlayer::SetOverlappingItem(ACItem* Item)
+{
+	if(Weapon->ItemsArray.Find(Item))
+	{
+		OverlappingItem = Item;		
+	}
 }
