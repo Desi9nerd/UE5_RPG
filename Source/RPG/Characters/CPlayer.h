@@ -68,5 +68,8 @@ public:
 	virtual void SetOverlappingItem(ACItem* Item) override;
 
 	UPROPERTY(VisibleInstanceOnly)
-	ACItem* OverlappingItem;	
+	ACItem* OverlappingItem;
+
+public:
+	void Click_RightButton();
 };

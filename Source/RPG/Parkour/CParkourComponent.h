@@ -71,7 +71,7 @@ private:
 		TEnumAsByte<EDrawDebugTrace::Type> DebugType;
 
 	UPROPERTY(EditAnywhere, Category = "Trace")
-		float AvailableFrontAngle = 15;
+		float AvailableFrontAngle = 15;//파쿠르 수행 제한각도
 
 public:
 	UCParkourComponent();
@@ -86,7 +86,24 @@ private:
 	void LineTrace(EParkourArrowType InType);
 
 private:
+	//Arrow로 쏜 LineTrace를 체크하는 함수들
 	void CheckTrace_Center();
+	void CheckTrace_Ceil();
+	void CheckTrace_Floor();
+	void CheckTrace_LeftRight();
+
+private:
+	bool Check_Obstacle();
+
+public:
+	//파쿠르 수행 함수
+	void DoParkour(bool bLanded = false);
+	void End_DoParkour();
+
+private:
+	bool Check_ClimbMode();
+	void DoParkour_Climb();
+	void End_DoParkour_Climb();
 
 private:
 	TMap<EParkourType, TArray<FParkourData>> DataMap;//TMap에 Key와 Key를 넣으면 배열이 리턴된다.		
@@ -101,5 +118,8 @@ private:
 	AActor* HitObstacle;
 	FVector HitObstacleExtent;
 	float HitDistance;
-	float ToFrontYaw;		
+	float ToFrontYaw;
+
+private:
+	EParkourType Type = EParkourType::Max;//현재 수행중인 파쿠프 타입. 기본값을 Max로 설정하여 아무것도 하지 않는 타입을 기본값으로 만들어준다. 
 };

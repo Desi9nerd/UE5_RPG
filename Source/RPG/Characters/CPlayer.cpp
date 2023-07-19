@@ -127,7 +127,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, Weapon, &UCWeaponComponent::DoAction);
 
-	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Pressed, Weapon,&UCWeaponComponent::SubAction_Pressed);
+	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Pressed, this, &ACPlayer::Click_RightButton);
 	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Released, Weapon, &UCWeaponComponent::SubAction_Released);
 
 	PlayerInputComponent->BindAction("Equip", EInputEvent::IE_Pressed, this, &ACPlayer::FKeyPressed);
@@ -198,4 +198,16 @@ void ACPlayer::SetOverlappingItem(ACItem* Item)
 	{
 		OverlappingItem = Item;		
 	}
+}
+
+void ACPlayer::Click_RightButton()
+{
+	if (Weapon->IsUnarmedMode())
+	{
+		Parkour->DoParkour();
+
+		return;
+	}
+
+	Weapon->SubAction_Pressed();
 }
