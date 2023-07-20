@@ -74,6 +74,9 @@ private:
 		float AvailableFrontAngle = 15;//파쿠르 수행 제한각도
 
 public:
+	FORCEINLINE bool IsExecuting() { return Type != EParkourType::Max; }
+
+public:
 	UCParkourComponent();
 
 protected:
@@ -91,6 +94,7 @@ private:
 	void CheckTrace_Ceil();
 	void CheckTrace_Floor();
 	void CheckTrace_LeftRight();
+	void CheckTrace_Land();
 
 private:
 	bool Check_Obstacle();
@@ -104,6 +108,19 @@ private:
 	bool Check_ClimbMode();
 	void DoParkour_Climb();
 	void End_DoParkour_Climb();
+
+	bool Check_FallMode();
+	void DoParkour_Fall();
+	void End_DoParkour_Fall();
+
+	bool Check_SlideMode();
+	void DoParkour_Slide();
+	void End_DoParkour_Slide();
+
+	//Short, Normal, Wall
+	bool Check_ObstacleMode(EParkourType InType, FParkourData& OutData);
+	void DoParkour_Obstacle(EParkourType InType, FParkourData& InData);
+	void End_DoParkour_Obstacle();
 
 private:
 	TMap<EParkourType, TArray<FParkourData>> DataMap;//TMap에 Key와 Key를 넣으면 배열이 리턴된다.		
@@ -121,5 +138,11 @@ private:
 	float ToFrontYaw;
 
 private:
-	EParkourType Type = EParkourType::Max;//현재 수행중인 파쿠프 타입. 기본값을 Max로 설정하여 아무것도 하지 않는 타입을 기본값으로 만들어준다. 
+	EParkourType Type = EParkourType::Max;//현재 수행중인 파쿠프 타입. 기본값을 Max로 설정하여 아무것도 하지 않는 타입을 기본값으로 만들어준다.
+
+private:
+	bool bFalling;
+
+private:
+	AActor* BackupObstacle;//장애물을 정보를 잠시 담는 변수
 };

@@ -72,4 +72,7 @@ public:
 
 public:
 	void Click_RightButton();
+
+public:
+	void Landed(const FHitResult& Hit) override;//BPÀÇ OnLanded C++¹öÁ¯.
 };

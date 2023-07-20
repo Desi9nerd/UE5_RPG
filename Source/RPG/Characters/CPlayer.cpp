@@ -211,3 +211,8 @@ void ACPlayer::Click_RightButton()
 
 	Weapon->SubAction_Pressed();
 }
+
+void ACPlayer::Landed(const FHitResult& Hit)
+{
+	Parkour->DoParkour(true);//땅에 떨어졌을때 파쿠르동작 수행
+}
