@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
 #include "Components/CWeaponComponent.h"
+#include "Components/CFeetComponent.h"
 #include "CAnimInstance.generated.h"
 
 UCLASS()
@@ -32,7 +33,14 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Animation")
 		int JumpCnt;
 
-protected:
+    //Feet IK
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "InverseKinemetics")
+        bool bFeet;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "InverseKinemetics")
+        FFeetData FeetData;
+    
+	//Parkour
     UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
         EWeaponType WeaponType = EWeaponType::Max;
 

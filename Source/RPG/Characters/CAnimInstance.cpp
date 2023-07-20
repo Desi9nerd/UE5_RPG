@@ -4,6 +4,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Weapons/CSubAction.h"
 #include "Components/CMovementComponent.h"
+#include "Parkour/CParkourComponent.h"
+#include "Components/CFeetComponent.h"
 
 void UCAnimInstance::NativeBeginPlay()
 {
@@ -43,8 +45,30 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		Pitch = UKismetMathLibrary::FInterpTo(Pitch, OwnerCharacter->GetBaseAimRotation().Pitch, DeltaSeconds, 25);
 	}
 
-	//활 조준
+	
 	CheckNull(Weapon);//무기가 있는지 확인
+
+	//파쿠르, Feet IK
+	UCParkourComponent* parkour = CHelpers::GetComponent<UCParkourComponent>(OwnerCharacter);
+	UCFeetComponent* feet = CHelpers::GetComponent<UCFeetComponent>(OwnerCharacter);
+
+	bFeet = false;
+
+	if (Weapon->IsUnarmedMode())
+	{
+		if (!!parkour && !!feet)
+		{
+			bFeet = parkour->IsExecuting() == false;//EParkourType::Max라면 false==false가 되어 bFeet은 true, EParkourType::Max가 아닌 상황이라면 true==false가 되어 bFeet은 false.
+			FeetData = feet->GetData();//FFeetData를 넣어준다.
+		}
+		else if (!!feet)
+		{
+			bFeet = true;
+			FeetData = feet->GetData();
+		}
+	}
+
+	//활 조준
 	if (!!Weapon->GetSubAction())
 	{
 		bBow_Aiming = true;
