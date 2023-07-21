@@ -39,6 +39,9 @@ private:
 		class UCParkourComponent* Parkour;
 /** 파쿠르 */
 
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCZoomComponent* Zoom;
+
 public:
 	ACPlayer();
 
@@ -75,4 +78,7 @@ public:
 
 public:
 	void Landed(const FHitResult& Hit) override;//BP의 OnLanded C++버젼.
+
+private:
+	void SetZooming(float InValue);
 };

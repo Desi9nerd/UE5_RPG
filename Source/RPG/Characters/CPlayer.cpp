@@ -9,6 +9,7 @@
 #include "Components/CMontagesComponent.h"
 #include "Components/CMovementComponent.h"
 #include "Components/CWeaponComponent.h"
+#include "Components/CZoomComponent.h"
 #include "Components/ArrowComponent.h"//파쿠르 Arrow 생성을 위한 헤더
 
 //무기 Pickup
@@ -26,6 +27,7 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateActorComponent<UCMovementComponent>(this, &Movement, "Movement");
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &State, "State");
 	CHelpers::CreateActorComponent<UCParkourComponent>(this, &Parkour, "Parkour");
+	CHelpers::CreateActorComponent<UCZoomComponent>(this, &Zoom, "Zoom");
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -117,6 +119,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnRun);
 
 	PlayerInputComponent->BindAction("Avoid", EInputEvent::IE_Pressed, this, &ACPlayer::OnAvoid);
+
+	//PlayerInputComponent->BindAxis("Zoom", Zoom, &UCZoomComponent::SetZoomValue);//Value로 연동되게하면 Bow 모드 시 문제가 될 수 있다.
+	PlayerInputComponent->BindAxis("Zoom", this, &ACPlayer::SetZooming);//Bow 모드가 아닐 때만 사용하려고 SetZooming으로 설정하여 만들었다.
 
 	PlayerInputComponent->BindAction("Fist", EInputEvent::IE_Pressed, Weapon, &UCWeaponComponent::SetFistMode);
 	PlayerInputComponent->BindAction("Sword", EInputEvent::IE_Pressed, Weapon, &UCWeaponComponent::SetSwordMode);
@@ -215,4 +220,11 @@ void ACPlayer::Click_RightButton()
 void ACPlayer::Landed(const FHitResult& Hit)
 {
 	Parkour->DoParkour(true);//땅에 떨어졌을때 파쿠르동작 수행
+}
+
+void ACPlayer::SetZooming(float InValue)
+{
+	CheckTrue(Weapon->IsBowMode());//BowMode이면 바로 리턴
+
+	Zoom->SetZoomValue(InValue);//BowMode가 아닌 경우 Zoom In&Out 가능.
 }
