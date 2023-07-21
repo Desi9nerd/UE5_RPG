@@ -32,6 +32,7 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		Speed = OwnerCharacter->GetVelocity().Size2D();
 		IsFalling = CharacterMovement->IsFalling();
+		bFalling = OwnerCharacter->GetCharacterMovement()->IsFalling();
 	}
 
 	//È¸Àü

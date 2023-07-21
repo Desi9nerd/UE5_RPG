@@ -21,16 +21,19 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Animation")
         float Direction;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Animation")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+        bool bFalling;//추락중 여부
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
         bool bBow_Aiming;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Animation")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
         class UCharacterMovementComponent* CharacterMovement;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Animation")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
         bool IsFalling;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Animation")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 		int JumpCnt;
 
     //Feet IK
