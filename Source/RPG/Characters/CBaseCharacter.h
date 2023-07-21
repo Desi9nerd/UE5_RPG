@@ -16,9 +16,6 @@ class RPG_API ACBaseCharacter : public ACharacter, public IIHit
 
 protected:
 	UPROPERTY(VisibleAnywhere)
-		class UCWeaponComponent* Weapon;
-
-	UPROPERTY(VisibleAnywhere)
 		class UCMontagesComponent* Montages;
 
 	UPROPERTY(VisibleAnywhere)

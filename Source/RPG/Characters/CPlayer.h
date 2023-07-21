@@ -20,6 +20,10 @@ class RPG_API ACPlayer
 {
 	GENERATED_BODY()
 
+protected:
+	UPROPERTY(VisibleAnywhere)
+		class UCWeaponComponent* Weapon;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 		class USpringArmComponent* SpringArm;

@@ -16,6 +16,7 @@ private:
 
 public:
     FORCEINLINE float GetHealth() { return Health; }
+    FORCEINLINE float GetMaxHealth() { return MaxHealth; }
     FORCEINLINE bool IsDead() { return Health <= 0.0f; }
 
 public:

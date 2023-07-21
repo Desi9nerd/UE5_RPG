@@ -6,13 +6,11 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/CMontagesComponent.h"
 #include "Components/CMovementComponent.h"
-#include "Components/CWeaponComponent.h"
 #include "Components/CStatusComponent.h"
 #include "Weapons/CWeaponStructures.h"
 
 ACEnemy::ACEnemy()
 {
-	CHelpers::CreateActorComponent<UCWeaponComponent>(this, &Weapon, "Weapon");
 	CHelpers::CreateActorComponent<UCMontagesComponent>(this, &Montages, "Montage");
 	CHelpers::CreateActorComponent<UCMovementComponent>(this, &Movement, "Movement");
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &State, "State");

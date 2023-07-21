@@ -19,6 +19,8 @@ public class RPG : ModuleRules
         PublicDependencyModuleNames.Add("Niagara");
         PublicDependencyModuleNames.Add("UMG");
 
+        PublicDependencyModuleNames.Add("AIModule");
+
         PublicDependencyModuleNames.Add("HeadMountedDisplay");
         PublicDependencyModuleNames.Add("OnlineSubsystemSteam");
         PublicDependencyModuleNames.Add("OnlineSubsystem");
