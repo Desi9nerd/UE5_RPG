@@ -45,4 +45,7 @@ public:
 
 private:
 	TArray<AActor*> Ignores;
+
+public:
+	UParticleSystem* ArrowParticle;
 };

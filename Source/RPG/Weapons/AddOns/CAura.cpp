@@ -11,7 +11,7 @@ ACAura::ACAura()
 	CHelpers::CreateComponent<UBoxComponent>(this, &Box, "Box", Root);
 
 	UNiagaraSystem* niagara;
-	CHelpers::GetAsset<UNiagaraSystem>(&niagara, "NiagaraSystem'/Game/sA_StylizedSwordSet/Fx/NS_Ulti_lv1.NS_Ulti_lv1'");//나이아가라 에셋 할당.
+	CHelpers::GetAsset<UNiagaraSystem>(&niagara, "NiagaraSystem'/Game/Assets/sA_StylizedSwordSet/Fx/NS_Ulti_lv1.NS_Ulti_lv1'");//나이아가라 에셋 할당.
 	Niagara->SetAsset(niagara);
 }
 
