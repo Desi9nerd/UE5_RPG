@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Weapons/CSubAction.h"
 #include "Components/TimelineComponent.h"
+#include "Widgets/CUserWidget_CrossHair.h"
 #include "CSubAction_Bow.generated.h"
 
 USTRUCT()
@@ -70,4 +71,11 @@ private:
 
 private:
     float* Bend;
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+        TSubclassOf<UCUserWidget_CrossHair> crosshairClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+        class UWidgetComponent* CrossHair;
 };

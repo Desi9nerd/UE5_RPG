@@ -5,11 +5,21 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CStateComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Weapons/Attachments/CAttachment_Bow.h"
 
 UCSubAction_Bow::UCSubAction_Bow()
 {
 	CHelpers::GetAsset<UCurveVector>(&Curve, "CurveVector'/Game/Weapons/Bow/Curve_Aiming.Curve_Aiming'");//Editor에서 만든 CurveVector를 할당한다.
+
+
+	//CrossHair Widget 생성
+	//CrossHair = CreateWidget<UWidgetComponent>(this, UCUserWidget_CrossHair::StaticClass(), "CrossHair");
+
+	CHelpers::GetClass<UCUserWidget_CrossHair>(&crosshairClass, "WidgetBlueprint'/Game/Widgets/WB_CrossHair.WB_CrossHair_C'");
+
+	//CrossHair->SetWidgetClass(crosshairClass);
+
 }
 
 void UCSubAction_Bow::Pressed()
@@ -73,6 +83,9 @@ void UCSubAction_Bow::BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment,
 
 	if (!!bow)
 		Bend = bow->GetBend();//CSubAction_Bow에서 선언한 Bend 변수에 CAttachment_Bow의 Bend값을 GetBend()로 가져와서 넣어준다.
+
+	//CrossHair Widget 띄우기
+	
 }
 
 void UCSubAction_Bow::Tick_Implementation(float InDeltaTime)
