@@ -1,5 +1,6 @@
 #include "Weapons/DoActions/CDoAction_Bow.h"
 #include "Global.h"
+#include "Characters/CPlayer.h"
 #include "Weapons/CEquipment.h"
 #include "Weapons/Attachments/CAttachment_Bow.h"
 #include "Weapons/AddOns/CArrow.h"
@@ -8,6 +9,8 @@
 #include "Characters/ECharacterTypes.h"
 #include "Components/CStateComponent.h"
 #include "Components/CMovementComponent.h"
+#include "Components/SplineMeshComponent.h"
+
 
 UCDoAction_Bow::UCDoAction_Bow()
 {
@@ -28,12 +31,16 @@ void UCDoAction_Bow::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipm
 	OriginLocation = PoseableMesh->GetBoneLocationByName("bow_string_mid", EBoneSpaces::ComponentSpace);
 
 	bEquipped = InEquipment->GetEquipped();//헤더에 만든 bEquipped변수에 장착 상태를 받아와서 넣어준다.
+
+	//Player cast하기
+	PlayerCharacter = Cast<ACPlayer>(OwnerCharacter);
+
 }
 
 void UCDoAction_Bow::DoAction()
 {
 	CheckFalse(State->IsIdleMode());
-	CheckFalse(State->IsSubActionMode());
+	//CheckFalse(State->IsSubActionMode());//Zoom이 안된 상태에서도 발사가 되도록 하려면 주석을 치거나 지워야 한다.
 
 	Super::DoAction();
 
@@ -162,4 +169,90 @@ void UCDoAction_Bow::OnArrowHit(AActor* InCauser, ACharacter* InOtherCharacter)
 void UCDoAction_Bow::OnArrowEndPlay(ACArrow* InDestroyer)
 {
 	Arrows.Remove(InDestroyer);
+}
+
+/** 화살 궤적
+ *
+ */
+
+void UCDoAction_Bow::GetStartAndEndforTrace()
+{
+	APlayerCameraManager* camManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
+	
+	CrosshairWorldLocation = camManager->GetCameraLocation();
+	ImpactPoint = camManager->GetCameraRotation().Vector();
+}
+
+void UCDoAction_Bow::GetArrowSpawnLocationAndRotation()
+{
+	TArray<AActor*> ignores;
+	ignores.Add(OwnerCharacter);
+
+	//start에 CrosshairWorldLocation, end에 ImpactPoint를 넣어준다. TraceTypeQuery1은 Visibility
+	UKismetSystemLibrary::LineTraceSingle(GetWorld(), CrosshairWorldLocation, ImpactPoint, ETraceTypeQuery::TraceTypeQuery1, false, ignores, EDrawDebugTrace::ForOneFrame, HitResult, true);
+
+	if(HitResult.bBlockingHit)
+	{
+		ImpactPoint = HitResult.ImpactPoint;
+	}
+
+	TargetArrowSpawnLocation = PlayerCharacter->GetMesh()->GetSocketTransform(FName("arrow_socket"), RTS_World).GetLocation();
+	TargetArrowSpawnRotation = UKismetMathLibrary::MakeRotFromX((ImpactPoint - TargetArrowSpawnLocation));
+
+	ArrowSpawnLocation = UKismetMathLibrary::VInterpTo(ArrowSpawnLocation, TargetArrowSpawnLocation, World->GetDeltaSeconds(), 30.0f);
+	ArrowSpawnRotation = UKismetMathLibrary::RInterpTo(ArrowSpawnRotation, TargetArrowSpawnRotation, World->GetDeltaSeconds(), 30.0f);
+	
+}
+
+void UCDoAction_Bow::ClearArc()
+{
+	if (SplineMeshes.IsValidIndex(0))
+	{
+		while (SplineMeshes.IsValidIndex(0))
+		{
+			//SplineMeshes[0]->DestroyComponent();
+			SplineMeshes.RemoveAt(0);
+		}
+	}
+
+	SplineMeshes.Empty();
+	
+	PlayerCharacter->ArrowPathSpline->ClearSplinePoints(true);
+}
+
+void UCDoAction_Bow::ProjectilePath()
+{
+	FVector StartLocation = ArrowSpawnLocation;
+	FVector LaunchVelocity = UKismetMathLibrary::GetForwardVector(ArrowSpawnRotation) * ArrowSpeed;//ArrowSpawnRotation.Vector().ForwardVector * ArrowSpeed;
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(OwnerCharacter);
+
+	//FPredictProjectilePathParams PredictProjectilePathParams = UGameplayStatics::Blueprint_PredictProjectilePath_Advanced();
+
+	////UGameplayStatics::PredictProjectilePath()
+
+
+	//FCollisionResponseParams ResponseParam;
+	//TArray<FVector> OutPathPositions;
+	//float SimFrequency = 20.0f; // How frequently to sample the path (in Hz)
+	//float MaxSimTime = 2.0f; // Maximum time to simulate the path (in seconds)
+
+
+
+	//UGameplayStatics::PredictProjectilePath(
+	//	this,
+	//	OutPathPositions,
+	//	StartLocation,
+	//	LaunchVelocity,
+	//	false,
+	//	SimFrequency,
+	//	MaxSimTime,
+	//	ECC_Visibility,
+	//	ActorsToIgnore,
+	//	ResponseParam
+	//);
+}
+
+void UCDoAction_Bow::UpdateArcSpline()
+{
 }

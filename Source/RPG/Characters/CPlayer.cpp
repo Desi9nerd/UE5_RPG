@@ -28,6 +28,7 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &State, "State");
 	CHelpers::CreateActorComponent<UCParkourComponent>(this, &Parkour, "Parkour");
 	CHelpers::CreateActorComponent<UCZoomComponent>(this, &Zoom, "Zoom");
+	CHelpers::CreateActorComponent<USplineComponent>(this, &ArrowPathSpline, "ArrowPathSpline");
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));

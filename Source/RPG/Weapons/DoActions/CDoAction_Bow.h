@@ -4,6 +4,9 @@
 #include "Weapons/CDoAction.h"
 #include "CDoAction_Bow.generated.h"
 
+class ACPlayer;
+class USplineMeshComponent;
+
 UCLASS(Blueprintable)
 class RPG_API UCDoAction_Bow : public UCDoAction
 {
@@ -66,4 +69,33 @@ private:
      
 private:
     TArray<class ACArrow*> Arrows;//화살들(=화살 목록)
+
+
+/** 화살 궤적
+ * 
+ */
+private:
+    void GetStartAndEndforTrace();
+    void GetArrowSpawnLocationAndRotation();
+    void ClearArc();
+    void ProjectilePath();
+    void UpdateArcSpline();
+
+protected:
+    FVector CrosshairWorldLocation;
+    FVector ImpactPoint;
+    FVector TargetArrowSpawnLocation;
+    FRotator TargetArrowSpawnRotation;
+
+    FVector ArrowSpawnLocation;
+    FRotator ArrowSpawnRotation;
+    
+    TArray<USplineMeshComponent*> SplineMeshes;
+
+    UPROPERTY(EditAnywhere, Category = "ArrowSpeed")
+        float ArrowSpeed;
+
+private:
+    ACPlayer* PlayerCharacter;
+    FHitResult HitResult;//Arrow 경로 LineTrace의 HitResults
 };

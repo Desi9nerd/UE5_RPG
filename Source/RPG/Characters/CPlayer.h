@@ -10,6 +10,7 @@
 #include "Interfaces/IPickup.h"
 #include "Weapons/CAttachment.h"//Pickup
 #include "Weapons/Attachments/CAttachment_Bow.h"//Pickup
+#include "Components/SplineComponent.h"
 #include "CPlayer.generated.h"
 
 class ACItem;
@@ -45,6 +46,10 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCZoomComponent* Zoom;
+
+public:
+	UPROPERTY(VisibleDefaultsOnly)
+		USplineComponent* ArrowPathSpline;
 
 public:
 	ACPlayer();
