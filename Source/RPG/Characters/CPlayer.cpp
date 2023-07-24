@@ -33,13 +33,13 @@ ACPlayer::ACPlayer()
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 
-	USkeletalMesh* mesh;
-	CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Character/Mesh/SK_Mannequin.SK_Mannequin'");
-	GetMesh()->SetSkeletalMesh(mesh);
-
-	TSubclassOf<UCAnimInstance> animInstance;
-	CHelpers::GetClass<UCAnimInstance>(&animInstance, "AnimBlueprint'/Game/ABP_Character.ABP_Character_C'");
-	GetMesh()->SetAnimClass(animInstance);
+	//USkeletalMesh* mesh;
+	//CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Character//Mesh///SK_Mannequin.SK_Mannequin'");
+	//GetMesh()->SetSkeletalMesh(mesh);
+	//
+	//TSubclassOf<UCAnimInstance> animInstance;
+	//CHelpers::GetClass<UCAnimInstance>(&animInstance, "AnimBlueprint'/Game////ABP_Character.ABP_Character_C'");
+	//GetMesh()->SetAnimClass(animInstance);
 
 	SpringArm->SetRelativeLocation(FVector(0, 0, 140));
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));

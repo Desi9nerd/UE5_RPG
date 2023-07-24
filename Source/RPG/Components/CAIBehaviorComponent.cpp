@@ -54,6 +54,12 @@ bool UCAIBehaviorComponent::IsDeadMode()
 	return GetType() == EAIStateType::Dead;
 }
 
+ACharacter* UCAIBehaviorComponent::GetTarget()
+{
+	//Blackboard 내의 TargetKey를 리턴해준다.
+	return Cast<ACharacter>(Blackboard->GetValueAsObject(TargetKey));
+}
+
 void UCAIBehaviorComponent::SetWaitMode()
 {
 	ChangeType(EAIStateType::Wait);

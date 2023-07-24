@@ -49,6 +49,11 @@ public:
 	}
 
 	//CreateActorComponent Ãß°¡
+	/*template<typename T>
+	static void CreateActorComponent(AActor* InActor, TObjectPtr<T>* OutComponent, FName InName)
+	{
+		*OutComponent = InActor->CreateDefaultSubobject<T>(InName);
+	}*/
 	template<typename T>
 	static void CreateActorComponent(AActor* InActor, T** OutComponent, FName InName)
 	{
