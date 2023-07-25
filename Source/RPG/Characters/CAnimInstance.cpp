@@ -7,9 +7,9 @@
 #include "Parkour/CParkourComponent.h"
 #include "Components/CFeetComponent.h"
 
-void UCAnimInstance::NativeBeginPlay()
+void UCAnimInstance::NativeInitializeAnimation()
 {
-	Super::NativeBeginPlay();
+	Super::NativeInitializeAnimation();
 
 	OwnerCharacter = Cast<ACharacter>(TryGetPawnOwner());
 	CheckNull(OwnerCharacter);
@@ -21,6 +21,11 @@ void UCAnimInstance::NativeBeginPlay()
 	Weapon = CHelpers::GetComponent<UCWeaponComponent>(OwnerCharacter);
 	if (!!Weapon)
 		Weapon->OnWeaponTypeChange.AddDynamic(this, &UCAnimInstance::OnWeaponTypeChanged);
+}
+
+void UCAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
+{
+	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
 }
 
 void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)

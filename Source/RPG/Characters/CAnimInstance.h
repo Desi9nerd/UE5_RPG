@@ -12,7 +12,7 @@ class RPG_API UCAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 protected:
-    UPROPERTY(BlueprintReadOnly, Category = "Animation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
         float Speed;
 
     UPROPERTY(BlueprintReadOnly, Category = "Animation")
@@ -30,7 +30,7 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
         class UCharacterMovementComponent* CharacterMovement;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
         bool IsFalling;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
@@ -48,19 +48,61 @@ protected:
         EWeaponType WeaponType = EWeaponType::Max;
 
 public:
-    void NativeBeginPlay() override;
+    void NativeInitializeAnimation() override;
     void NativeUpdateAnimation(float DeltaSeconds) override;
-
+    
 private:
     UFUNCTION()
         void OnWeaponTypeChanged(EWeaponType InPrevType, EWeaponType InNewType);
 
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+		class ACharacter* OwnerCharacter;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+        class UCMovementComponent* Movement;
+
 private:
-    class ACharacter* OwnerCharacter;
-    class UCWeaponComponent* Weapon;
-    class UCMovementComponent* Movement;
+	class UCWeaponComponent* Weapon;
 
 private:
     FRotator PrevRotation;
-    
+
+/** Bow 변수 추가*/
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        FVector Velocity;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        bool ShouldMove;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        FRotator BaseAimRotation;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        float YawOffset;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        float RootYawOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+		FRotator MovingRotation;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        FRotator LastMovingRotation;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        float DistanceCurve;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        float LastDistanceCurve;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        float DeltaDistanceCurve;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        float AbsRootYawOffset;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
+        float YawExcess;
 };

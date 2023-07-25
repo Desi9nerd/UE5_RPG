@@ -4,6 +4,9 @@
 #include "Weapons/CAttachment.h"
 #include "CAttachment_Bow.generated.h"
 
+class ACPlayer;
+class USplineMeshComponent;
+
 UCLASS()
 class RPG_API ACAttachment_Bow : public ACAttachment
 {
@@ -35,4 +38,33 @@ public:
 
 private:
     FVector2D OriginViewPitchRange;
+
+
+/** 화살 궤적
+ *
+ */
+private:
+    void GetStartAndEndforTrace();
+    void GetArrowSpawnLocationAndRotation();
+    void ClearArc();
+    void ProjectilePath();
+    void UpdateArcSpline();
+
+protected:
+    FVector CrosshairWorldLocation;
+    FVector ImpactPoint;
+    FVector TargetArrowSpawnLocation;
+    FRotator TargetArrowSpawnRotation;
+
+    FVector ArrowSpawnLocation;
+    FRotator ArrowSpawnRotation;
+
+    TArray<USplineMeshComponent*> SplineMeshes;
+
+    UPROPERTY(EditAnywhere, Category = "ArrowSpeed")
+        float ArrowSpeed;
+
+private:
+    ACPlayer* PlayerCharacter;
+    FHitResult HitResult;//Arrow 경로 LineTrace의 HitResults
 };
