@@ -72,10 +72,10 @@ private:
 private:
     float* Bend;
 
-public:
+public:    
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-        TSubclassOf<UCUserWidget_CrossHair> crosshairClass;
+        TSubclassOf<UCUserWidget_CrossHair> CrossHairClass;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-        class UWidgetComponent* CrossHair;
+        class UCUserWidget_CrossHair* CrossHair;
 };

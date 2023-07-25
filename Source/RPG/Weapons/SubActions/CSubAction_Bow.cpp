@@ -11,15 +11,9 @@
 UCSubAction_Bow::UCSubAction_Bow()
 {
 	CHelpers::GetAsset<UCurveVector>(&Curve, "CurveVector'/Game/Weapons/Bow/Curve_Aiming.Curve_Aiming'");//Editor에서 만든 CurveVector를 할당한다.
-
-
+	
 	//CrossHair Widget 생성
-	//CrossHair = CreateWidget<UWidgetComponent>(this, UCUserWidget_CrossHair::StaticClass(), "CrossHair");
-
-	CHelpers::GetClass<UCUserWidget_CrossHair>(&crosshairClass, "WidgetBlueprint'/Game/Widgets/WB_CrossHair.WB_CrossHair_C'");
-
-	//CrossHair->SetWidgetClass(crosshairClass);
-
+	CHelpers::GetClass<UCUserWidget_CrossHair>(&CrossHairClass, "WidgetBlueprint'/Game/Widgets/WB_CrossHair.WB_CrossHair_C'");	
 }
 
 void UCSubAction_Bow::Pressed()
@@ -44,6 +38,13 @@ void UCSubAction_Bow::Pressed()
 	Camera->SetRelativeLocation(AimData.CameraLocation);
 
 	Timeline.PlayFromStart();//Timeline 동작 시작.
+
+
+	//CrossHair Widget
+	if (!!CrossHairClass)
+	{
+		CrossHair->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void UCSubAction_Bow::Released()
@@ -63,6 +64,12 @@ void UCSubAction_Bow::Released()
 	Camera->SetRelativeLocation(OriginData.CameraLocation);
 
 	Timeline.ReverseFromEnd();//Timeline 뒤집기
+
+	//CrossHair Widget
+	if (!!CrossHairClass)
+	{
+		CrossHair->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void UCSubAction_Bow::BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment, UCDoAction* InDoAction)
@@ -84,8 +91,13 @@ void UCSubAction_Bow::BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment,
 	if (!!bow)
 		Bend = bow->GetBend();//CSubAction_Bow에서 선언한 Bend 변수에 CAttachment_Bow의 Bend값을 GetBend()로 가져와서 넣어준다.
 
-	//CrossHair Widget 띄우기
-	
+	//CrossHair Widget
+	if (!!CrossHairClass)
+	{
+		CrossHair = CreateWidget<UCUserWidget_CrossHair, APlayerController>(Owner->GetController<APlayerController>(), CrossHairClass);
+		CrossHair->AddToViewport();
+		CrossHair->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void UCSubAction_Bow::Tick_Implementation(float InDeltaTime)
