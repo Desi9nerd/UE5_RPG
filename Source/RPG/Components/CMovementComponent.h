@@ -50,7 +50,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-private:
+public:
 	void SetSpeed(ESpeedType InType);
 
 public:
