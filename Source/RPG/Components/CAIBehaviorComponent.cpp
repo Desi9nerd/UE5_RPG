@@ -60,6 +60,16 @@ ACharacter* UCAIBehaviorComponent::GetTarget()
 	return Cast<ACharacter>(Blackboard->GetValueAsObject(TargetKey));
 }
 
+FVector UCAIBehaviorComponent::GetPatrolLocation()
+{
+	return Blackboard->GetValueAsVector(PatrolLocationKey);
+}
+
+void UCAIBehaviorComponent::SetPatrolLocation(const FVector& InLocation)
+{
+	Blackboard->SetValueAsVector(PatrolLocationKey, InLocation);
+}
+
 void UCAIBehaviorComponent::SetWaitMode()
 {
 	ChangeType(EAIStateType::Wait);

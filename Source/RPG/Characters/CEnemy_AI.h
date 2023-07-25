@@ -19,7 +19,11 @@ private:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Label")
 		float LabelViewAmount = 3000.0f;
-	
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Patrol")
+		class ACPatrolPath* PatrolPath;//클래스 밖에서도 지정할 수 있어야 한다. 서로간 만들어진 객체를 참조할것이라서 softObjectPtr 사용
+
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UWidgetComponent* LabelWidget;
@@ -34,6 +38,7 @@ private:
 public:
 	FORCEINLINE uint8 GetTeamID() { return TeamID; }
 	FORCEINLINE class UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
+	FORCEINLINE class ACPatrolPath* GetPatrolPath() { return PatrolPath; }
 
 public:
 	ACEnemy_AI();

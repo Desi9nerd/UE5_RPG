@@ -21,6 +21,7 @@ public class RPG : ModuleRules
 
         PublicDependencyModuleNames.Add("AIModule");
         PublicDependencyModuleNames.Add("GameplayTasks");
+        PublicDependencyModuleNames.Add("NavigationSystem");
 
         PublicDependencyModuleNames.Add("HeadMountedDisplay");
         PublicDependencyModuleNames.Add("OnlineSubsystemSteam");
