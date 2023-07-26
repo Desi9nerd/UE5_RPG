@@ -22,6 +22,9 @@ private://DataAsset을 받아온다.
 	UPROPERTY(EditAnywhere, Category = "DataAsset")
 		class UCWeaponAsset* DataAssets[(int32)EWeaponType::Max];
 
+public:
+	FORCEINLINE EWeaponType GetWeaponType() { return Type; }
+
 public: //무기 Type이 맞는지 확인해주는 함수들
 	FORCEINLINE bool IsUnarmedMode() { return Type == EWeaponType::Max; }
 	FORCEINLINE bool IsFistMode() { return Type == EWeaponType::Fist; }
