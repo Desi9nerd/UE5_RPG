@@ -1,0 +1,2 @@
+#include "Weapons/CWeaponData.h"
+

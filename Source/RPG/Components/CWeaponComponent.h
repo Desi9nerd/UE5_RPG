@@ -78,6 +78,11 @@ private:
 
 	EWeaponType Type = EWeaponType::Max;
 
+private:
+	//가비지 콜랙터가 삭제하지 않도록 UPROPERTY를 붙여 직렬화 시켜준다. 직렬화되면 가비지 콜렉터가 삭제하지 않는다. UPROPERTY가 없으면 터진다.
+	UPROPERTY()
+		class UCWeaponData* Datas[(int32)EWeaponType::Max];//실제로 생성된 데이터
+
 public:
 	TArray<ACItem*> ItemsArray;
 };

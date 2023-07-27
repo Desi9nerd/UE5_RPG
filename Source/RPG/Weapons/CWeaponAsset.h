@@ -32,31 +32,10 @@ private:
 		TSubclassOf<class UCSubAction> SubActionClass;
 
 public:
-	FORCEINLINE class ACAttachment* GetAttachment() { return Attachment; }//외부에 생성된 것을 리턴해줌. 
-	FORCEINLINE class UCEquipment* GetEquipment() { return Equipment; }//외부에 생성된 것을 리턴해줌.
-	FORCEINLINE class UCDoAction* GetDoAction() { return DoAction; }//외부에 생성된 것을 리턴해줌.
-	FORCEINLINE class UCSubAction* GetSubAction() { return SubAction; }//외부에 생성된 것을 리턴해줌.
-
-public:
 	UCWeaponAsset();
 
-	void BeginPlay(class ACharacter* InOwner);
-
-private:
-	//UPROPERTY를 붙여 가비지 콜렉터가 제거하기 전까지 물고 있게 만든다.
-	//UWeaponAsset은 UObject로부터 상속받아 Actor의 생성주기에 영향을 받지 않아 가비지 콜렉터에 영향을 받는다.
-	UPROPERTY()
-		class ACAttachment* Attachment;
-
-	UPROPERTY()
-		class UCEquipment* Equipment;
-
-	UPROPERTY()
-		class UCDoAction* DoAction;
-
-	UPROPERTY()
-		class UCSubAction* SubAction;
-
+	void BeginPlay(class ACharacter* InOwner, class UCWeaponData** OutWeaponData);//매개변수 class UCWeaponData** OutWeaponData를 사용. 객체를 생성해서 리턴한다. 생성 리턴이기 때문에 이차 포인터를 사용하였다.
+	
 #if WITH_EDITOR //Editor 내에서만 수행
 	void PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent) override;
 #endif
