@@ -11,6 +11,9 @@ class RPG_API UCDoAction : public UObject
 	GENERATED_BODY()
 
 public:
+	FORCEINLINE bool GetInAction() { return bInAction; }
+
+public:
 	UCDoAction();
 
 	virtual void BeginPlay //재정의 할 수 있도록 virtual로 만든다.
