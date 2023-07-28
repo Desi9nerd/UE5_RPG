@@ -41,7 +41,7 @@ void UCDoAction_Combo::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 {
 	Super::OnAttachmentBeginOverlap(InAttacker, InAttackCauser, InOther);//CDoAction.h의 OnAttachmentBeginOverlap
 	CheckNull(InOther);
-
+	CheckTrue(OwnerCharacter == InOther);//2023.07.28 Blade 추가하면서 추가함.with 현중씨.
 	//TakeDamage 체크용 디버그
 	//CLog::Log(InOther->GetName());
 	//FActionDamageEvent e;

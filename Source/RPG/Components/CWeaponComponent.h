@@ -9,7 +9,7 @@ class ACItem;
 UENUM(BlueprintType)
 enum class EWeaponType : uint8
 {
-	Fist, Sword, Hammer, Warp, Around, Bow, Max,
+	Fist, Sword, Hammer, Warp, Around, Bow, Blade, Max,
 };
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWeaponTypeChanged, EWeaponType, InPrevType, EWeaponType, InNewType);
 
@@ -33,6 +33,7 @@ public: //무기 Type이 맞는지 확인해주는 함수들
 	FORCEINLINE bool IsWarpMode() { return Type == EWeaponType::Warp; }
 	FORCEINLINE bool IsAroundMode() { return Type == EWeaponType::Around; }
 	FORCEINLINE bool IsBowMode() { return Type == EWeaponType::Bow; }
+	FORCEINLINE bool IsBladeMode() { return Type == EWeaponType::Bow; }
 
 public:
 	UCWeaponComponent();
@@ -61,6 +62,7 @@ public:
 	void SetWarpMode();
 	void SetAroundMode();
 	void SetBowMode();
+	void SetBladeMode();
 
 	void DoAction();
 	void SubAction_Pressed();

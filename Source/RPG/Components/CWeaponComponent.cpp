@@ -124,6 +124,13 @@ void UCWeaponComponent::SetBowMode()
 	SetMode(EWeaponType::Bow);
 }
 
+void UCWeaponComponent::SetBladeMode()
+{
+	CheckFalse(IsIdleMode());
+
+	SetMode(EWeaponType::Blade);
+}
+
 void UCWeaponComponent::SetMode(EWeaponType InType)
 {
 	if (Type == InType)
