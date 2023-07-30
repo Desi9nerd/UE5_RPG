@@ -10,6 +10,9 @@ class RPG_API UCDoAction_Combo : public UCDoAction
 	GENERATED_BODY()
 
 public:
+	UCDoAction_Combo();
+
+public:
 	FORCEINLINE void EnableCombo() { bEnable = true; }
 	FORCEINLINE void DisableCombo() { bEnable = false; }
 
@@ -17,6 +20,8 @@ public:
 	void DoAction() override;
 	void Begin_DoAction() override;
 	void End_DoAction() override;
+
+	void AirborneInitATK() override;
 
 public:
 	void OnAttachmentBeginOverlap(class ACharacter* InAttacker, AActor* InAttackCauser, class ACharacter* InOther) override;
@@ -30,4 +35,10 @@ private:
 
 private:
 	TArray<class ACharacter*> Hitted;
+
+
+//°øÁßÄÞº¸
+private:
+	UAnimMontage* InitialLaunchATKMontage;
+	
 };

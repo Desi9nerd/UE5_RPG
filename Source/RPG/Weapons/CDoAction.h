@@ -33,6 +33,13 @@ public:
 	virtual void Begin_DoAction();
 	virtual void End_DoAction();
 
+	virtual void AirborneInitATK();//공중콤보
+
+	virtual void DoAction_Airborne();
+	virtual void Begin_DoAction_Airborne();
+	virtual void End_DoAction_Airborne();
+
+
 public:
 	//CDoAction_Bow에서 재정의 시키기위해 virtual로 만든다.
 	//BeginEquip될 때 충돌체를 꺼주고 Unequip될 때 충돌체를 켜준다.	

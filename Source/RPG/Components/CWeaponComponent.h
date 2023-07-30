@@ -53,6 +53,8 @@ public:
 	class UCDoAction* GetDoAction();
 	class UCSubAction* GetSubAction();
 
+	class UCDoAction* GetAirborneInitATK();
+
 public:
 	//무기 세팅
 	void SetUnarmedMode();
@@ -67,6 +69,10 @@ public:
 	void DoAction();
 	void SubAction_Pressed();
 	void SubAction_Released();
+
+	//Airborne 공격
+	void AirborneInitATK();
+	
 
 private:
 	void SetMode(EWeaponType InType);

@@ -36,6 +36,9 @@ void UCWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	if (!!GetSubAction())//SubAction이 있다면
 		GetSubAction()->Tick(DeltaTime);//SubAction의 Tick을 콜 해준다.
+
+	if (!!GetAirborneInitATK())//AirborneInitATK이 있다면
+		GetAirborneInitATK()->Tick(DeltaTime);//AirborneInitATK의 Tick을 콜 해준다.
 }
 
 bool UCWeaponComponent::IsIdleMode()
@@ -73,6 +76,14 @@ UCSubAction* UCWeaponComponent::GetSubAction()
 	CheckFalseResult(!!Datas[(int32)Type], nullptr);
 
 	return Datas[(int32)Type]->GetSubAction();//실제 데이터를 리턴
+}
+
+UCDoAction* UCWeaponComponent::GetAirborneInitATK()
+{
+	CheckTrueResult(IsUnarmedMode(), nullptr);
+	CheckFalseResult(!!Datas[(int32)Type], nullptr);
+
+	return Datas[(int32)Type]->GetAirborneInitATK();
 }
 
 void UCWeaponComponent::SetUnarmedMode()
@@ -177,4 +188,11 @@ void UCWeaponComponent::SubAction_Released()
 {
 	if (!!GetSubAction())
 		GetSubAction()->Released();
+}
+
+void UCWeaponComponent::AirborneInitATK()
+{
+	if (!!GetAirborneInitATK())
+		GetAirborneInitATK()->AirborneInitATK();
+
 }

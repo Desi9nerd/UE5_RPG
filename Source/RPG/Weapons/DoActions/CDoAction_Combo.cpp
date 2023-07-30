@@ -3,6 +3,11 @@
 #include "GameFramework/Character.h"
 #include "Components/CStateComponent.h"
 
+UCDoAction_Combo::UCDoAction_Combo()
+{
+	CHelpers::GetAsset<UAnimMontage>(&InitialLaunchATKMontage, "AnimMontage'/Game/ABP/PP/Montages/Airborne/AM_PP_AirborneATKontage.AM_PP_AirborneATKontage'");
+}
+
 void UCDoAction_Combo::DoAction()
 {
 	CheckTrue(DoActionDatas.Num() < 1);
@@ -35,6 +40,12 @@ void UCDoAction_Combo::End_DoAction()
 	Super::End_DoAction();
 
 	Index = 0;
+}
+
+void UCDoAction_Combo::AirborneInitATK()
+{	
+	if (OwnerCharacter)
+		OwnerCharacter->PlayAnimMontage(InitialLaunchATKMontage, 1);
 }
 
 void UCDoAction_Combo::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InAttackCauser, ACharacter* InOther)
@@ -93,4 +104,3 @@ void UCDoAction_Combo::OnAttachmentEndCollision()
 
 	Hitted.Empty();
 }
-

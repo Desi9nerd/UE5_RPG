@@ -44,3 +44,19 @@ void UCDoAction::End_DoAction()
 	Movement->Move();
 	Movement->DisableFixedCamera();
 }
+
+void UCDoAction::AirborneInitATK()
+{
+}
+
+void UCDoAction::DoAction_Airborne()
+{
+}
+
+void UCDoAction::Begin_DoAction_Airborne()
+{
+}
+
+void UCDoAction::End_DoAction_Airborne()
+{
+}
