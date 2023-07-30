@@ -15,7 +15,7 @@ class RPG_API IICharacter
 	GENERATED_BODY()
 
 public:
-	virtual void End_BackStep() { }
+	virtual void End_Dodge() { }
 	virtual void End_Hitted() { }
 	virtual void End_Dead() { }
 

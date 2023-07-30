@@ -56,9 +56,9 @@ void UCMontagesComponent::BeginPlay()
 //}
 //#endif
 
-void UCMontagesComponent::PlayBackStepMode()
+void UCMontagesComponent::PlayDodgeMode()
 {
-	PlayAnimMontage(EStateType::BackStep);
+	PlayAnimMontage(EStateType::Dodge);
 }
 
 void UCMontagesComponent::PlayDeadMode()

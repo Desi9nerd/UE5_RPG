@@ -17,9 +17,9 @@ void UCStateComponent::SetIdleMode()
 	ChangeType(EStateType::Idle);
 }
 
-void UCStateComponent::SetBackStepMode()
+void UCStateComponent::SetDodgeMode()
 {
-	ChangeType(EStateType::BackStep);
+	ChangeType(EStateType::Dodge);
 }
 
 void UCStateComponent::SetEquipMode()

@@ -14,7 +14,7 @@ class RPG_API UCStateComponent : public UActorComponent
 
 public:
 	FORCEINLINE bool IsIdleMode() { return Type == EStateType::Idle; }
-	FORCEINLINE bool IsBackstepMode() { return Type == EStateType::BackStep; }
+	FORCEINLINE bool IsDodgeMode() { return Type == EStateType::Dodge; }
 	FORCEINLINE bool IsEquipMode() { return Type == EStateType::Equip; }
 	FORCEINLINE bool IsHittedMode() { return Type == EStateType::Hitted; }
 	FORCEINLINE bool IsDeadMode() { return Type == EStateType::Dead; }
@@ -29,7 +29,7 @@ protected:
 
 public:
 	void SetIdleMode();
-	void SetBackStepMode();
+	void SetDodgeMode();
 	void SetEquipMode();
 	void SetHittedMode();
 	void SetDeadMode();

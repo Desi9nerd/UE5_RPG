@@ -144,7 +144,7 @@ void ACPlayer::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
 {
 	switch (InNewType)
 	{
-		case EStateType::BackStep: BackStep(); break;
+		case EStateType::Dodge: Dodge(); break;
 	}
 }
 
@@ -155,17 +155,17 @@ void ACPlayer::OnAvoid()
 
 	CheckTrue(InputComponent->GetAxisValue("MoveForward") >= 0.0f);//뒷방향을 입력했다면
 
-	State->SetBackStepMode();//State을 BackStepMode로 변경한다.
+	State->SetDodgeMode();//State을 BackStepMode로 변경한다.
 }
 
-void ACPlayer::BackStep()
+void ACPlayer::Dodge()
 {
 	Movement->EnableControlRotation();//정면을 바라본 상태로 뒤로 뛰어야하기 때문에 EnableControlRotation으로 만들어준다.
 
-	Montages->PlayBackStepMode();//PlayBackStepMode()를 통해 몽타주 재생.
+	Montages->PlayDodgeMode();//PlayBackStepMode()를 통해 몽타주 재생.
 }
 
-void ACPlayer::End_BackStep()
+void ACPlayer::End_Dodge()
 {
 	Movement->DisableControlRotation();//Backstep이 끝나면 원래대로 돌려준다.
 

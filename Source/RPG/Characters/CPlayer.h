@@ -74,10 +74,10 @@ private:
 	void OnAvoid();
 
 private:
-	void BackStep();
+	void Dodge();
 
 public:
-	void End_BackStep() override;//ICharacter의 함수 오버라이드
+	void End_Dodge() override;//ICharacter의 함수 오버라이드
 
 
 public:
