@@ -30,17 +30,17 @@ void UCMovementComponent::OnJump()
 		OwnerCharacter->Jump();
 		JumpCount++;
 	}
-	else
+	else if (JumpCount == 1)
 	{
-		if(JumpCount < 2)
-		{
-			OwnerCharacter->Jump();//Jump를 콜하여도 되는 이유는? ABP_Character에서 JumpCount를 활용하여 조건 설정을 하고 State을 만들어 다른 애니메이션이 나온다.
-			
-			OwnerCharacter->LaunchCharacter(FVector(0.0f, 0.0f, 700.0f), false, true);
-			JumpCount++;
-		}
+		OwnerCharacter->Jump();//Jump를 콜하여도 되는 이유는? ABP_Character에서 JumpCount를 활용하여 조건 설정을 하고 State을 만들어 다른 애니메이션이 나온다.
+		
+		OwnerCharacter->LaunchCharacter(FVector(0.0f, 0.0f, 700.0f), false, true);
 	}
+}
 
+void UCMovementComponent::SetJumpCountZero()
+{
+	JumpCount = 0;
 }
 
 void UCMovementComponent::OnStopJumping()

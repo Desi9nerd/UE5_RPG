@@ -55,6 +55,7 @@ public:
 
 public:
 	void OnJump();
+	void SetJumpCountZero();
 	void OnStopJumping();
 	void OnSprint();
 	void OnRun();

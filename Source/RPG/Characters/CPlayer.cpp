@@ -229,6 +229,8 @@ void ACPlayer::Click_RightButton()
 void ACPlayer::Landed(const FHitResult& Hit)
 {
 	Parkour->DoParkour(true);//¶¥¿¡ ¶³¾îÁ³À»¶§ ÆÄÄí¸£µ¿ÀÛ ¼öÇà
+
+	Movement->SetJumpCountZero();
 }
 
 void ACPlayer::SetZooming(float InValue)
