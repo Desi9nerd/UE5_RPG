@@ -72,9 +72,35 @@ void UCMontagesComponent::PlayAnimMontage(EStateType InType)
 
 	FMontageData* data = Datas[(int32)InType];
 
-	if(data == nullptr || data->Montage == nullptr)
+	if(data == nullptr || data->Montage == nullptr)//데이터가 없을 경우
 	{
 		GLog->Log(ELogVerbosity::Error, "None montages data");
+
+		return;
+	}
+
+	//Dodge 4방향 움직임
+	if(InType == EStateType::Dodge)
+	{
+		if (OwnerCharacter->InputComponent->GetAxisValue("MoveForward") < 0.0f && 
+			abs(OwnerCharacter->InputComponent->GetAxisValue("MoveForward")) > abs(OwnerCharacter->InputComponent->GetAxisValue("MoveRight")))
+		{
+			OwnerCharacter->PlayAnimMontage(data->Montage, data->PlayRate, FName("Backward"));
+		}
+		else if (OwnerCharacter->InputComponent->GetAxisValue("MoveForward") > 0.0f &&
+			OwnerCharacter->InputComponent->GetAxisValue("MoveForward") > abs(OwnerCharacter->InputComponent->GetAxisValue("MoveRight")))
+		{
+			OwnerCharacter->PlayAnimMontage(data->Montage, data->PlayRate, FName("Forward"));
+		}
+		else if (OwnerCharacter->InputComponent->GetAxisValue("MoveRight") < 0.0f &&
+			abs(OwnerCharacter->InputComponent->GetAxisValue("MoveRight")) > abs(OwnerCharacter->InputComponent->GetAxisValue("MoveForward")))
+		{
+			OwnerCharacter->PlayAnimMontage(data->Montage, data->PlayRate, FName("Left"));
+		}
+		else
+		{
+			OwnerCharacter->PlayAnimMontage(data->Montage, data->PlayRate, FName("Right"));
+		}
 
 		return;
 	}

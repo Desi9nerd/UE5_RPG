@@ -96,4 +96,7 @@ public:
 
 private:
 	void SetZooming(float InValue);
+
+private:
+	APlayerController* PlayerController;//PlayerController º¯¼ö
 };

@@ -102,6 +102,8 @@ void ACPlayer::BeginPlay()
 	Movement->DisableControlRotation();//Movement의 기본을 DisableControlRotation으로 설정
 
 	State->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
+
+	PlayerController = Cast<APlayerController>(GetController());//PlayerController 캐스팅
 }
 
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -153,20 +155,25 @@ void ACPlayer::OnAvoid()
 	CheckFalse(State->IsIdleMode());
 	CheckFalse(Movement->CanMove());
 
-	CheckTrue(InputComponent->GetAxisValue("MoveForward") >= 0.0f);//뒷방향을 입력했다면
+	CheckTrue(InputComponent->GetAxisValue("MoveForward") == 0.0f && InputComponent->GetAxisValue("MoveRight") == 0.0f);
+	
 
-	State->SetDodgeMode();//State을 BackStepMode로 변경한다.
+	State->SetDodgeMode();//State을 DodgeMode로 변경한다.
 }
 
 void ACPlayer::Dodge()
-{
-	Movement->EnableControlRotation();//정면을 바라본 상태로 뒤로 뛰어야하기 때문에 EnableControlRotation으로 만들어준다.
+{	
+	DisableInput(PlayerController);//Dodge가 시작되면 키 입력이 안 되게 만들어준다.
 
-	Montages->PlayDodgeMode();//PlayBackStepMode()를 통해 몽타주 재생.
+	Movement->EnableControlRotation();//정면을 바라본 상태로 뒤로 뛰어야하기 때문에 EnableControlRotation으로 만들어준다.
+	
+	Montages->PlayDodgeMode();//PlayDodgeMode()를 통해 몽타주 재생.
 }
 
 void ACPlayer::End_Dodge()
 {
+	EnableInput(PlayerController);//Dodge가 끝날때 키 입력이 다시 되게 되돌려준다.
+
 	Movement->DisableControlRotation();//Backstep이 끝나면 원래대로 돌려준다.
 
 	State->SetIdleMode();//Idle상태로 돌려줌.
