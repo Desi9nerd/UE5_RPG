@@ -51,4 +51,10 @@ public:
 
 private:
 	void UpdateLabelRenderScale();
+
+protected:
+	void Hitted() override;//CEnemy의 Hitted 재정의
+
+public:
+	void End_Hitted() override;//CEnemy의 End_Hitted 재정의
 };

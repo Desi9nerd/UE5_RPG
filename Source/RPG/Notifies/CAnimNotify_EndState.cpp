@@ -18,8 +18,9 @@ void UCAnimNotify_EndState::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 
 	switch(StateType)
 	{
+		//Dead를 Hitted보다 먼저 검사할 수 있게 순서를 맞춰준다.
 		case EStateType::Dodge: character->End_Dodge(); break;
-		case EStateType::Hitted: character->End_Hitted(); break;
 		case EStateType::Dead: character->End_Dead(); break;
+		case EStateType::Hitted: character->End_Hitted(); break;
 	}
 }

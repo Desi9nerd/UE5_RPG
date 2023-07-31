@@ -31,11 +31,11 @@ private:
 	UFUNCTION()
 		void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);
 
-private:
-	void Hitted();
+protected:
+	virtual void Hitted();//자식(Enemy_AI)에서 재정의 할 수 있도록 virtual을 붙인다.
 
 public:
-	void End_Hitted() override;//ICharacter의 가상함수 오버라이드.
+	virtual void End_Hitted() override;//ICharacter의 가상함수 오버라이드. CEnemy_AI에서 재정의하도록 virtual을 붙인다.
 
 private:
 	UFUNCTION()

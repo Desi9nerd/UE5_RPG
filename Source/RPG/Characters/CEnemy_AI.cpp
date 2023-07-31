@@ -74,3 +74,19 @@ void ACEnemy_AI::UpdateLabelRenderScale()
 	label->SetVisibility(ESlateVisibility::Visible);
 	label->SetRenderScale(FVector2D(sizeRate, sizeRate));
 }
+
+void ACEnemy_AI::Hitted()
+{
+	Super::Hitted();
+
+	CheckTrue(State->IsDeadMode());//이미 DeadMode면 Hitted 처리할 필요없다.
+
+	Behavior->SetHittedMode();//HittedMode로 만들어준다.
+}
+
+void ACEnemy_AI::End_Hitted()
+{
+	Super::End_Hitted();
+
+	Behavior->SetWaitMode();//Hitted가 끝나면 Behavior를 WaitMode로 만들어준다.
+}
