@@ -16,7 +16,8 @@ class RPG_API UCEquipment : public UObject
 	GENERATED_BODY()
 
 public:
-	//실시간으로 bEquipped로 가져온다. 주소로 가져온다.
+	//실시간으로 bBeginEquip, bEquipped로 가져온다. bEquipped은 주소로 가져온다.
+	FORCEINLINE bool GetBeginEquip() { return bBeginEquip; }
 	FORCEINLINE const bool* GetEquipped() { return &bEquipped; }
 
 public:

@@ -52,3 +52,27 @@ void UCBTTaskNode_Equip::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 		return;
 	}
 }
+
+EBTNodeResult::Type UCBTTaskNode_Equip::AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+{
+	Super::AbortTask(OwnerComp, NodeMemory);
+
+	ACAIController* controller = Cast<ACAIController>(OwnerComp.GetOwner());
+	ACEnemy_AI* ai = Cast<ACEnemy_AI>(controller->GetPawn());
+
+	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(ai);
+	if (weapon == nullptr)//무기가 없다면
+	{
+		FinishLatentAbort(OwnerComp);//중단으로 끝낸다.
+
+		return EBTNodeResult::Failed;//실패 리턴
+	}
+
+	bool bBeginEquip = weapon->GetEquipment()->GetBeginEquip();//GetBeginEquip()으로 CEquipment의 bBeginEquip를 넣어준다. bBeginEquip=true면 Equip이 시작되었다는 의미다.
+	if (bBeginEquip == false)
+		weapon->GetEquipment()->Begin_Equip();
+
+	weapon->GetEquipment()->End_Equip();
+
+	return EBTNodeResult::Aborted;//Aborted는 취소 마감, 위(Root)로 올라감. Succeeded는 성공종료.
+}
