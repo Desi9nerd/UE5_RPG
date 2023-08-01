@@ -6,6 +6,7 @@
 UCDoAction_Combo::UCDoAction_Combo()
 {
 	CHelpers::GetAsset<UAnimMontage>(&InitialLaunchATKMontage, "AnimMontage'/Game/ABP/PP/Montages/Airborne/AM_PP_AirborneATKontage.AM_PP_AirborneATKontage'");
+	CHelpers::GetAsset<UAnimMontage>(&InitialLaunchAttackedMontage, "AnimMontage'/Game/Character/Montages/Warp/AM_Airborne_TestMontage.AM_Airborne_TestMontage'");
 }
 
 void UCDoAction_Combo::DoAction()
@@ -45,7 +46,45 @@ void UCDoAction_Combo::End_DoAction()
 void UCDoAction_Combo::AirborneInitATK()
 {	
 	if (OwnerCharacter)
+	{
 		OwnerCharacter->PlayAnimMontage(InitialLaunchATKMontage, 1);
+	}
+}
+
+void UCDoAction_Combo::DoAction_AirCombo()
+{
+	CheckTrue(DoActionDatas_AirCombo.Num() < 1);
+	
+	if (bEnable) //bEnable이라면 Combo 구간
+	{
+		bEnable = false;
+		bExist = true;
+
+		return;
+	}
+
+	CheckFalse(State->IsIdleMode());
+
+
+	Super::DoAction_AirCombo();//첫 타격이 들어간 후에 Combo의 bEnable이 호출되어야 한다. 그래서 맨 위가 아닌 여기에 위치한다.//첫 타격 시 IsIdleMode()를 체크 통과한 후 부모의 DoAction으로 들어가 State->ActionMode()로 변경한다.
+
+	DoActionDatas_AirCombo[Index_AirCombo].DoAction_AirCombo(OwnerCharacter);
+}
+
+void UCDoAction_Combo::Begin_DoAction_AirCombo()
+{
+	Super::Begin_DoAction_AirCombo();
+	CheckFalse(bExist);//다음 Combo가 없으면 바로 End_DoAction으로 이동.
+
+	bExist = false;
+	DoActionDatas_AirCombo[++Index_AirCombo].DoAction_AirCombo(OwnerCharacter);
+}
+
+void UCDoAction_Combo::End_DoAction_AirCombo()
+{
+	Super::End_DoAction_AirCombo();
+
+	Index_AirCombo = 0;
 }
 
 void UCDoAction_Combo::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InAttackCauser, ACharacter* InOther)
@@ -53,12 +92,6 @@ void UCDoAction_Combo::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 	Super::OnAttachmentBeginOverlap(InAttacker, InAttackCauser, InOther);//CDoAction.h의 OnAttachmentBeginOverlap
 	CheckNull(InOther);
 	CheckTrue(OwnerCharacter == InOther);//2023.07.28 Blade 추가하면서 추가함.with 현중씨.
-	//TakeDamage 체크용 디버그
-	//CLog::Log(InOther->GetName());
-	//FActionDamageEvent e;
-	//e.HitData = &HitDatas[0];
-	//InOther->TakeDamage(20, FDamageEvent(), InAttacker->GetController(), InAttackCauser);//데미지 적용.
-	//InOther->TakeDamage(e.HitData->Power, e, InAttacker->GetController(), InAttackCauser);//업캐스팅. 업캐스팅은 항상 성립한다.
 
 	for (ACharacter* hitted : Hitted)
 		CheckTrue(hitted == InOther);
@@ -67,7 +100,30 @@ void UCDoAction_Combo::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 
 	CheckTrue(HitDatas.Num() - 1 < Index);
 
-	HitDatas[Index].SendDamage(InAttacker, InAttackCauser, InOther);
+	if (false == bInAction_AirCombo)//일반 공격
+	{
+		if (InitialLaunchATK)//공중 띄우기 공격
+		{
+			InitialLaunchATK = false;
+
+			FActionDamageEvent e;
+			e.HitData->Montage = InitialLaunchAttackedMontage;
+			e.HitData->Power = 5.0f;
+			e.HitData->Launch = FVector(50.0f, 0.0f, 2000.0f);
+
+			e.HitData->SendDamage(InAttacker, InAttackCauser, InOther);
+
+			InAttacker->LaunchCharacter(FVector(0, 0, 1200), false, false);//Player 띄우기
+		}
+		else //지상 일반공격
+		{
+			HitDatas[Index].SendDamage(InAttacker, InAttackCauser, InOther);
+		}
+	}
+	else //true == bInAction_AirCombo 공중콤보 공격
+	{
+		HitDatas_AirCombo[Index_AirCombo].SendDamage(InAttacker, InAttackCauser, InOther);
+	}
 }
 
 void UCDoAction_Combo::OnAttachmentEndCollision()

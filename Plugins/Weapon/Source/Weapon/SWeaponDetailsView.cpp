@@ -127,4 +127,71 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 			}
 		}//if(bRefreshByCheckBoxes)
 	}
+
+	//DoActionData_AirCombo
+	{
+		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
+		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("DoActionData_AirCombo", FText::FromString("DoAction Data AirCombo"));
+		IDetailPropertyRow& row = category.AddProperty("DoActionDatas_AirCombo", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. DoActionDatas_AirCombo
+
+		if (bRefreshByCheckBoxes == false)
+		{
+			uint32 count = 0;
+			row.GetPropertyHandle()->GetNumChildren(count);//전체 개수를 구한다.
+
+			SWeaponDoActionData::EmptyCheckBoxes();//비워놓고 시작.
+
+			FDoActionData data;//기본값 사용할 변수
+			for (uint32 i = 0; i < count; i++)//자식Handle를 for문 돌리기
+			{
+				TSharedPtr<IPropertyHandle> handle = row.GetPropertyHandle()->GetChildHandle(i);//헤더의 handle
+
+				TSharedPtr<SWeaponCheckBoxes> checkBoxes = SWeaponDoActionData::AddCheckBoxes();//카테고리가 처음에 만들어질 때 checkBox를 만든다.
+				checkBoxes->AddProperties(handle);
+
+				int32 index = 0;
+				checkBoxes->CheckDefaultObject(index++, data.Montage);
+				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
+				checkBoxes->CheckDefaultValue(index++, data.bCanMove);
+				checkBoxes->CheckDefaultValue(index++, data.bFixedCamera);
+				checkBoxes->CheckDefaultObject(index++, data.Effect);
+				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
+				checkBoxes->CheckDefaultValue(index++, data.EffectScale);
+			}
+		}//if(bRefreshByCheckBoxes)
+	}
+	//HitData_AirCombo
+	{
+		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
+		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("HitData_AirCombo", FText::FromString("Hit Data AirCombo"));
+		IDetailPropertyRow& row = category.AddProperty("HitDatas_AirCombo", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. DoActionDatas
+
+		if (bRefreshByCheckBoxes == false)
+		{
+			uint32 count = 0;
+			row.GetPropertyHandle()->GetNumChildren(count);//전체 개수를 구한다.
+
+			SWeaponHitData::EmptyCheckBoxes();//비워놓고 시작.
+
+			FHitData data;//기본값 사용할 변수
+			for (uint32 i = 0; i < count; i++)//자식Handle를 for문 돌리기
+			{
+				TSharedPtr<IPropertyHandle> handle = row.GetPropertyHandle()->GetChildHandle(i);//헤더의 handle
+
+				TSharedPtr<SWeaponCheckBoxes> checkBoxes = SWeaponHitData::AddCheckBoxes();//카테고리가 처음에 만들어질 때 checkBox를 만든다.
+				checkBoxes->AddProperties(handle);
+
+				int32 index = 0;
+				checkBoxes->CheckDefaultObject(index++, data.Montage);
+				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
+				checkBoxes->CheckDefaultValue(index++, data.Power);
+				checkBoxes->CheckDefaultValue(index++, data.Launch);
+				checkBoxes->CheckDefaultValue(index++, data.StopTime);
+				checkBoxes->CheckDefaultObject(index++, data.Sound);
+				checkBoxes->CheckDefaultObject(index++, data.Effect);
+				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
+				checkBoxes->CheckDefaultValue(index++, data.EffectScale);
+			}
+		}//if(bRefreshByCheckBoxes)
+	}
 }

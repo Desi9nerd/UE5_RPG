@@ -12,6 +12,7 @@ class RPG_API UCDoAction : public UObject
 
 public:
 	FORCEINLINE bool GetInAction() { return bInAction; }
+	FORCEINLINE bool GetInAction_AirCombo() { return bInAction_AirCombo; }
 
 public:
 	UCDoAction();
@@ -21,8 +22,15 @@ public:
 		class ACAttachment* InAttachment,
 		class UCEquipment* InEquipment,
 		class ACharacter* InOwner,
-		const TArray<FDoActionData>& InDoActionDatas,//CWeaponStucture내의 FDoActionData 
+		const TArray<FDoActionData>& InDoActionDatas,//CWeaponStucture내의 //FDoActionData 
 		const TArray<FHitData>& InHitDatas //CWeaponStucture내의 FHitData
+
+	);
+
+	virtual void BeginPlay //재정의 할 수 있도록 virtual로 만든다.
+	(
+		class ACAttachment* InAttachment, class UCEquipment* InEquipment, ACharacter* InOwner, const TArray<FDoActionData>& InDoActionDatas, const TArray<FHitData>& InHitDatas, const TArray<FDoActionData>& InDoAirActionDatas, const TArray<FHitData>& InAirHitDatas
+
 	);
 
 	virtual void Tick(float InDeltaTime) { }
@@ -33,11 +41,11 @@ public:
 	virtual void Begin_DoAction();
 	virtual void End_DoAction();
 
-	virtual void AirborneInitATK();//공중콤보
+	virtual void AirborneInitATK() {};//공중으로 띄우는 공격
 
-	virtual void DoAction_Airborne();
-	virtual void Begin_DoAction_Airborne();
-	virtual void End_DoAction_Airborne();
+	virtual void DoAction_AirCombo();
+	virtual void Begin_DoAction_AirCombo();
+	virtual void End_DoAction_AirCombo();
 
 
 public:
@@ -61,10 +69,13 @@ public:
 
 	UFUNCTION()
 		virtual void OnAttachmentEndOverlap(class ACharacter* InAttacker, class ACharacter* InOther) { }
-
+	
 protected:
 	bool bInAction;//Action 중인지 체크하는 변수.DoAction에 true, End_DoAction에 false로 만들어준다.
 	bool bBeginAction;
+
+	bool bInAction_AirCombo;//AirCombo 공격중인지 체크하는 변수. DoAction_AirCombo에 true, End_DoAction_AirCombo에 false로 만들어준다.
+	bool bBeginAction_AirCombo;
 
 	class ACharacter* OwnerCharacter;
 	class UWorld* World;
@@ -74,4 +85,8 @@ protected:
 
 	TArray<FDoActionData> DoActionDatas;
 	TArray<FHitData> HitDatas;
+
+	//공중콤보 Data
+	TArray<FDoActionData> DoActionDatas_AirCombo;
+	TArray<FHitData> HitDatas_AirCombo;
 };

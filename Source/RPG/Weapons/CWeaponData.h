@@ -21,7 +21,8 @@ public:
 	FORCEINLINE class UCDoAction* GetDoAction() { return DoAction; }//외부에 생성된 것을 리턴해줌.
 	FORCEINLINE class UCSubAction* GetSubAction() { return SubAction; }//외부에 생성된 것을 리턴해줌.
 
-	FORCEINLINE class UCDoAction* GetAirborneInitATK() { return DoAction; }//외부에 생성된 것을 리턴해줌.
+	FORCEINLINE class UCDoAction* GetDoAction_AirborneInitATK() { return DoAction_AirCombo; }//외부에 생성된 것을 리턴해줌.
+	FORCEINLINE class UCDoAction* GetDoAction_AirCombo() { return DoAction_AirCombo; }//외부에 생성된 것을 리턴해줌.
 
 private:
 	//UPROPERTY를 붙여 가비지 콜렉터가 제거하기 전까지 물고 있게 만든다.
@@ -38,5 +39,9 @@ private:
 
 	UPROPERTY()
 		class UCSubAction* SubAction;
+
+	//AirCombo
+	UPROPERTY()
+		class UCDoAction* DoAction_AirCombo;
 	
 };

@@ -11,6 +11,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttachmentEndCollision);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAttachmentBeginOverlap, class ACharacter*, InAttacker, AActor*, InAttackCauser, class ACharacter*, InOther);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAttachmentEndOverlap, class ACharacter*, InAttacker, class ACharacter*, InOther);
 
+//공중콤보 Delegate, 사용할지 결정 후 지금 주석 지우기
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttachmentBeginCollision_AirCombo);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttachmentEndCollision_AirCombo);
+//
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams/(FAttachmentBeginOverlap_AirCombo,/ class ACharacter*, InAttacker, AActor*, /InAttackCauser, class ACharacter*, /InOther);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAttachmentEndOverlap_AirCombo, class ACharacter*, InAttacker, class ACharacter*, InOther);
+
 UCLASS()
 class RPG_API ACAttachment : public ACItem
 {
@@ -59,6 +66,14 @@ public:
 
 	FAttachmentBeginOverlap OnAttachmentBeginOverlap;
 	FAttachmentEndOverlap OnAttachmentEndOverlap;
+
+
+	//공중콤보 Delegate, 사용할지 결정 후 지금 주석 지우기
+	//FAttachmentBeginCollision_AirCombo OnAttachmentBeginCollision_AirCombo;
+	//FAttachmentEndCollision_AirCombo OnAttachmentEndCollision_AirCombo;
+	//
+	//FAttachmentBeginOverlap_AirCombo OnAttachmentBeginOverlap_AirCombo;
+	//FAttachmentEndOverlap_AirCombo OnAttachmentEndOverlap_AirCombo;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Game")

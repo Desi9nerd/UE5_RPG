@@ -6,6 +6,7 @@
 //////////////////////////////////////
 #include "NiagaraComponent.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "Item/CItem.h"
 #include "Interfaces/IHit.h"
 
@@ -68,7 +69,7 @@ void ACAttachment::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedCompon
 	CheckTrue(OwnerCharacter->GetClass() == OtherActor->GetClass());//GetClass()가 같다는 것은 아군이라는 의미
 
 	if (OnAttachmentBeginOverlap.IsBound())
-		OnAttachmentBeginOverlap.Broadcast(OwnerCharacter, this, Cast<ACharacter>(OtherActor));
+		OnAttachmentBeginOverlap.Broadcast(OwnerCharacter, this, Cast<ACharacter>(OtherActor));	
 }
 
 void ACAttachment::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -79,6 +80,7 @@ void ACAttachment::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponen
 
 	if (OnAttachmentEndOverlap.IsBound())
 		OnAttachmentEndOverlap.Broadcast(OwnerCharacter, Cast<ACharacter>(OtherActor));
+
 }
 
 void ACAttachment::AttachTo(FName InSocketName)

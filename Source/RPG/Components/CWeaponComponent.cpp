@@ -46,6 +46,16 @@ bool UCWeaponComponent::IsIdleMode()
 	return CHelpers::GetComponent<UCStateComponent>(OwnerCharacter)->IsIdleMode();
 }
 
+bool UCWeaponComponent::IsDoActionMode()
+{
+	return CHelpers::GetComponent<UCDoAction>(OwnerCharacter)->GetInAction();
+}
+
+bool UCWeaponComponent::IsDoAction_AirComboMode()
+{
+	return CHelpers::GetComponent<UCDoAction>(OwnerCharacter)->GetInAction_AirCombo();
+}
+
 ACAttachment* UCWeaponComponent::GetAttachment()
 {
 	CheckTrueResult(IsUnarmedMode(), nullptr);
@@ -83,7 +93,7 @@ UCDoAction* UCWeaponComponent::GetAirborneInitATK()
 	CheckTrueResult(IsUnarmedMode(), nullptr);
 	CheckFalseResult(!!Datas[(int32)Type], nullptr);
 
-	return Datas[(int32)Type]->GetAirborneInitATK();
+	return Datas[(int32)Type]->GetDoAction_AirborneInitATK();
 }
 
 void UCWeaponComponent::SetUnarmedMode()
@@ -194,5 +204,10 @@ void UCWeaponComponent::AirborneInitATK()
 {
 	if (!!GetAirborneInitATK())
 		GetAirborneInitATK()->AirborneInitATK();
+}
 
+void UCWeaponComponent::DoAction_AirCombo()
+{
+	if (!!GetDoAction())
+		GetDoAction()->DoAction_AirCombo();
 }

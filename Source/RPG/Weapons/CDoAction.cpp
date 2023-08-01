@@ -9,7 +9,6 @@
 UCDoAction::UCDoAction()
 {
 }
-
 void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment, ACharacter* InOwner, const TArray<FDoActionData>& InDoActionDatas, const TArray<FHitData>& InHitDatas)
 {
 	OwnerCharacter = InOwner;
@@ -20,6 +19,21 @@ void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment,
 
 	DoActionDatas = InDoActionDatas;
 	HitDatas = InHitDatas;
+}
+
+void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment, ACharacter* InOwner, const TArray<FDoActionData>& InDoActionDatas, const TArray<FHitData>& InHitDatas, const TArray<FDoActionData>& InDoAirActionDatas, const TArray<FHitData>& InAirHitDatas)
+{
+	OwnerCharacter = InOwner;
+	World = OwnerCharacter->GetWorld();
+
+	State = CHelpers::GetComponent<UCStateComponent>(OwnerCharacter);
+	Movement = CHelpers::GetComponent<UCMovementComponent>(OwnerCharacter);
+
+	DoActionDatas = InDoActionDatas;
+	HitDatas = InHitDatas;
+	DoActionDatas_AirCombo = InDoAirActionDatas;
+	HitDatas_AirCombo = InAirHitDatas;
+
 }
 
 void UCDoAction::DoAction()
@@ -45,18 +59,25 @@ void UCDoAction::End_DoAction()
 	Movement->DisableFixedCamera();
 }
 
-void UCDoAction::AirborneInitATK()
+void UCDoAction::DoAction_AirCombo()
 {
+	bInAction_AirCombo = true;
+
+	State->SetActionMode();
 }
 
-void UCDoAction::DoAction_Airborne()
+void UCDoAction::Begin_DoAction_AirCombo()
 {
+	bBeginAction_AirCombo = true;
 }
 
-void UCDoAction::Begin_DoAction_Airborne()
+void UCDoAction::End_DoAction_AirCombo()
 {
-}
+	bInAction_AirCombo = false;
+	bBeginAction_AirCombo = false;
 
-void UCDoAction::End_DoAction_Airborne()
-{
+	State->SetIdleMode();
+
+	Movement->Move();
+	Movement->DisableFixedCamera();
 }

@@ -17,7 +17,7 @@ ACRotate_Object::ACRotate_Object()
 
 	InitialLifeSpan = 5;
 
-	HitData.Launch = 0;//HitData 초기값 설정.
+	HitData.Launch.X = 0;//HitData 초기값 설정.
 	HitData.Power = 5;//HitData 초기값 설정.
 
 	CHelpers::GetAsset<UAnimMontage>(&HitData.Montage, "AnimMontage'/Game/Character/Montages/Common/HitReaction_Stop_Montage.HitReaction_Stop_Montage'");//HitReaction 몽타주 

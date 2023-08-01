@@ -225,7 +225,8 @@ void ACPlayer::Click_RightButton()
 		return;
 	}
 
-	Weapon->SubAction_Pressed();
+	Weapon->DoAction_AirCombo();//°øÁßÄÞº¸
+	//Weapon->SubAction_Pressed();
 }
 
 void ACPlayer::Landed(const FHitResult& Hit)

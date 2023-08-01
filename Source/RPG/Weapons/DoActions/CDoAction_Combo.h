@@ -21,12 +21,16 @@ public:
 	void Begin_DoAction() override;
 	void End_DoAction() override;
 
-	void AirborneInitATK() override;
+	void AirborneInitATK() override;//CDoAction.h의 함수 재정의. 공중으로 띄우는 공격
+
+	void DoAction_AirCombo() override;
+	void Begin_DoAction_AirCombo() override;
+	void End_DoAction_AirCombo() override;
 
 public:
-	void OnAttachmentBeginOverlap(class ACharacter* InAttacker, AActor* InAttackCauser, class ACharacter* InOther) override;
+	void OnAttachmentBeginOverlap(class ACharacter* InAttacker, AActor*InAttackCauser, class ACharacter* InOther) override;
 	void OnAttachmentEndCollision() override;
-
+	
 private:
 	int32 Index;
 
@@ -40,5 +44,7 @@ private:
 //공중콤보
 private:
 	UAnimMontage* InitialLaunchATKMontage;
-	
+	UAnimMontage* InitialLaunchAttackedMontage;
+	int32 Index_AirCombo;
+	bool InitialLaunchATK;
 };

@@ -31,6 +31,14 @@ private:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class UCSubAction> SubActionClass;
 
+
+	////AirCombo
+	UPROPERTY(EditAnywhere)
+		TArray<FDoActionData> DoActionDatas_AirCombo; //CWeaopnStructure내의 FDoActionData
+
+	UPROPERTY(EditAnywhere)
+		TArray<FHitData> HitDatas_AirCombo; //CWeaopnStructure내의 FHitData
+
 public:
 	UCWeaponAsset();
 

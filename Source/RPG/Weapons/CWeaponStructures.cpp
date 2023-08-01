@@ -22,6 +22,23 @@ void FDoActionData::DoAction(ACharacter* InOwner)
 		InOwner->PlayAnimMontage(Montage, PlayRate);
 }
 
+void FDoActionData::DoAction_AirCombo(ACharacter* InOwner)
+{
+	UCMovementComponent* movement = CHelpers::GetComponent<UCMovementComponent>(InOwner);
+
+	if (!!movement)
+	{
+		if (bFixedCamera)
+			movement->EnableFixedCamera();
+
+		if (bCanMove == false)
+			movement->Stop();
+	}
+
+	if (!!Montage)
+		InOwner->PlayAnimMontage(Montage, PlayRate);
+}
+
 void FDoActionData::PlayEffect(UWorld* InWorld, const FVector& InLocation)
 {
 	CheckNull(Effect);

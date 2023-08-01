@@ -52,6 +52,7 @@ public:
 
 public:
 	void DoAction(class ACharacter* InOwner);
+	void DoAction_AirCombo(class ACharacter* InOwner);
 
 	void PlayEffect(UWorld* InWorld, const FVector& InLocation);
 	void PlayEffect(UWorld* InWorld, const FVector& InLocation, const FRotator& InRotation);
@@ -72,7 +73,7 @@ struct FHitData
 		float Power;
 
 	UPROPERTY(EditAnywhere)
-		float Launch = 100;
+		FVector Launch = FVector(100.0f, 0.0f, 0.0f);
 
 	UPROPERTY(EditAnywhere)
 		float StopTime;

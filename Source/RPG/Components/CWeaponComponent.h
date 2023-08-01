@@ -48,11 +48,16 @@ private:
 	bool IsIdleMode();//StateComponent, WeaponComponent 둘 다 같은 레벨이다. 서로 소유할 수 없는 관계이기 때문에 참조만해서 리턴받기 위해 IsIdleMode를 사용한다.
 
 public:
+	bool IsDoActionMode();
+	bool IsDoAction_AirComboMode();
+
+public:
 	class ACAttachment* GetAttachment();
 	class UCEquipment* GetEquipment();
 	class UCDoAction* GetDoAction();
 	class UCSubAction* GetSubAction();
 
+	//공중 콤보
 	class UCDoAction* GetAirborneInitATK();
 
 public:
@@ -70,9 +75,9 @@ public:
 	void SubAction_Pressed();
 	void SubAction_Released();
 
-	//Airborne 공격
-	void AirborneInitATK();
-	
+	//공중 콤보
+	void AirborneInitATK();//Airborne 띄우기 공격
+	void DoAction_AirCombo();//AirCombo 공격
 
 private:
 	void SetMode(EWeaponType InType);

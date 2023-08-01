@@ -43,7 +43,7 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 	if (!!DoActionClass)
 	{
 		doAction = NewObject<UCDoAction>(this, DoActionClass);
-		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas);
+		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas, DoActionDatas_AirCombo, HitDatas_AirCombo);
 
 		if (!!attachment)
 		{
@@ -59,6 +59,16 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 			equipment->OnEquipmentBeginEquip.AddDynamic(doAction, &UCDoAction::OnBeginEquip);
 			equipment->OnEquipmentUnequip.AddDynamic(doAction, &UCDoAction::OnUnequip);
 		}
+
+		//공중콤보
+		if (!!attachment)
+		{
+			attachment->OnAttachmentBeginCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentBeginCollision);
+			attachment->OnAttachmentEndCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentEndCollision);
+
+			attachment->OnAttachmentBeginOverlap.AddDynamic(doAction, &UCDoAction::OnAttachmentBeginOverlap);
+			attachment->OnAttachmentEndOverlap.AddDynamic(doAction, &UCDoAction::OnAttachmentEndOverlap);
+		}
 	}
 
 	UCSubAction* subAction = nullptr;
@@ -67,6 +77,7 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 		subAction = NewObject<UCSubAction>(this, SubActionClass);
 		subAction->BeginPlay(InOwner, attachment, doAction);
 	}
+	
 
 	//매개변수 class UCWeaponData** OutWeaponData를 사용하였다. 객체를 생성해서 리턴한다. 생성 리턴이기 때문에 이차 포인터를 사용하였다.
 	*OutWeaponData = NewObject<UCWeaponData>();//동적할당
