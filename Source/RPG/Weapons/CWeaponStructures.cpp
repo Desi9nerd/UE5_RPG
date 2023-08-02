@@ -19,7 +19,9 @@ void FDoActionData::DoAction(ACharacter* InOwner)
 	}
 
 	if (!!Montage)
+	{
 		InOwner->PlayAnimMontage(Montage, PlayRate);
+	}
 }
 
 void FDoActionData::DoAction_AirCombo(ACharacter* InOwner)

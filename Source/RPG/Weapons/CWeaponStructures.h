@@ -42,6 +42,9 @@ public:
 		bool bFixedCamera;
 
 	UPROPERTY(EditAnywhere)
+		FVector Launch = FVector(0.0f, 0.0f, 0.0f);
+
+	UPROPERTY(EditAnywhere)
 		class UFXSystemAsset* Effect; //사용할 Effect 변수
 
 	UPROPERTY(EditAnywhere)

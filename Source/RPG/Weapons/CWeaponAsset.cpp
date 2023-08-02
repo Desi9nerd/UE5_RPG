@@ -45,6 +45,8 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 		doAction = NewObject<UCDoAction>(this, DoActionClass);
 		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas, DoActionDatas_AirborneATK, HitDatas_AirborneATK,DoActionDatas_AirCombo, HitDatas_AirCombo);
 
+			
+
 		if (!!attachment)
 		{
 			attachment->OnAttachmentBeginCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentBeginCollision);

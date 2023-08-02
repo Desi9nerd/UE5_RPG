@@ -87,9 +87,15 @@ void ACEnemy::Hitted()
 			FVector direction = target - start;//direction=target을 바라보는 방향
 			direction.Normalize();
 
-			FVector LaunchedVector = FVector(-direction.X * data->Launch.X, -direction.Y * data->Launch.Y, data->Launch.Z);
+			//FVector LaunchedVector = FVector(-direction.X * data->Launch.X, -direction.Y * data->Launch.Y, data->Launch.Z);
+			
+			FVector LaunchF = FVector(-direction.X, -direction.Y, 0) * data->Launch.X;
+			FVector LaunchR = FVector(0, 0, 0);
+			FVector LaunchU = FVector(0, 0, 1) * data->Launch.Z;
 
-			LaunchCharacter(LaunchedVector, false, false);
+			FVector LaunchedVector = LaunchF + LaunchR + LaunchU;
+
+			LaunchCharacter(LaunchedVector, false, true);
 			SetActorRotation(UKismetMathLibrary::FindLookAtRotation(start, target));
 		}
 	}

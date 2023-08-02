@@ -28,6 +28,14 @@ void UCDoAction_Combo::Begin_DoAction()
 
 	bExist = false;
 	DoActionDatas[++Index].DoAction(OwnerCharacter);
+
+	//Player LaunchCharacter 적용
+	FVector LaunchF = OwnerCharacter->GetActorForwardVector() * DoActionDatas[Index].Launch.X;
+	FVector LaunchR = OwnerCharacter->GetActorRightVector() * DoActionDatas[Index].Launch.Y;
+	FVector LaunchU = OwnerCharacter->GetActorUpVector() * DoActionDatas[Index].Launch.Z;
+	FVector LaunchPlayerVector = LaunchF + LaunchR + LaunchU;
+
+	OwnerCharacter->LaunchCharacter(LaunchPlayerVector, true, true);
 }
 
 void UCDoAction_Combo::End_DoAction()
@@ -44,6 +52,9 @@ void UCDoAction_Combo::AirborneInitATK()
 	InitialLaunchATK = true;
 
 	DoActionDatas_AirborneInitATK[0].DoAction(OwnerCharacter);
+
+
+	
 }
 
 void UCDoAction_Combo::DoAction_AirCombo()
@@ -73,6 +84,14 @@ void UCDoAction_Combo::Begin_DoAction_AirCombo()
 
 	bExist = false;
 	DoActionDatas_AirCombo[++Index_AirCombo].DoAction_AirCombo(OwnerCharacter);
+
+	//Player LaunchCharacter 적용
+	FVector LaunchF = OwnerCharacter->GetActorForwardVector() * DoActionDatas_AirCombo[Index_AirCombo].Launch.X;
+	FVector LaunchR = OwnerCharacter->GetActorRightVector() * DoActionDatas_AirCombo[Index_AirCombo].Launch.Y;
+	FVector LaunchU = OwnerCharacter->GetActorUpVector() * DoActionDatas_AirCombo[Index_AirCombo].Launch.Z;
+	FVector LaunchPlayerVector = LaunchF + LaunchR + LaunchU;
+
+	OwnerCharacter->LaunchCharacter(LaunchPlayerVector, true, true);
 }
 
 void UCDoAction_Combo::End_DoAction_AirCombo()
@@ -87,7 +106,8 @@ void UCDoAction_Combo::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 	Super::OnAttachmentBeginOverlap(InAttacker, InAttackCauser, InOther);//CDoAction.h의 OnAttachmentBeginOverlap
 	CheckNull(InOther);
 	CheckTrue(OwnerCharacter == InOther);//2023.07.28 Blade 추가하면서 추가함.with 현중씨.
-
+	
+	
 	for (ACharacter* hitted : Hitted)
 		CheckTrue(hitted == InOther);
 
@@ -101,7 +121,15 @@ void UCDoAction_Combo::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 		{
 			InitialLaunchATK = false;
 						
-			InAttacker->LaunchCharacter(FVector(0, 0, 1200), false, false);//Player 띄우기
+			//InAttacker->LaunchCharacter(FVector(0, 0, 1200), false, false);//Player 띄우기
+			//Player LaunchCharacter 적용
+			FVector LaunchF = OwnerCharacter->GetActorForwardVector() * DoActionDatas_AirborneInitATK[0].Launch.X;
+			FVector LaunchR = OwnerCharacter->GetActorRightVector() * DoActionDatas_AirborneInitATK[0].Launch.Y;
+			FVector LaunchU = OwnerCharacter->GetActorUpVector() * DoActionDatas_AirborneInitATK[0].Launch.Z;
+			FVector LaunchPlayerVector = LaunchF + LaunchR + LaunchU;
+
+			OwnerCharacter->LaunchCharacter(LaunchPlayerVector, true, true);
+
 
 			HitDatas_AirborneInitATK[0].SendDamage(InAttacker, InAttackCauser, InOther);
 		}
