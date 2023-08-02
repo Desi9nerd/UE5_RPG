@@ -3,12 +3,6 @@
 #include "GameFramework/Character.h"
 #include "Components/CStateComponent.h"
 
-UCDoAction_Combo::UCDoAction_Combo()
-{
-	CHelpers::GetAsset<UAnimMontage>(&InitialLaunchATKMontage, "AnimMontage'/Game/ABP/PP/Montages/Airborne/AM_PP_AirborneATKontage.AM_PP_AirborneATKontage'");
-	CHelpers::GetAsset<UAnimMontage>(&InitialLaunchAttackedMontage, "AnimMontage'/Game/Character/Montages/Warp/AM_Airborne_TestMontage.AM_Airborne_TestMontage'");
-}
-
 void UCDoAction_Combo::DoAction()
 {
 	CheckTrue(DoActionDatas.Num() < 1);
@@ -44,11 +38,12 @@ void UCDoAction_Combo::End_DoAction()
 }
 
 void UCDoAction_Combo::AirborneInitATK()
-{	
-	if (OwnerCharacter)
-	{
-		OwnerCharacter->PlayAnimMontage(InitialLaunchATKMontage, 1);
-	}
+{
+	CheckFalse(State->IsIdleMode());
+
+	InitialLaunchATK = true;
+
+	DoActionDatas_AirborneInitATK[0].DoAction(OwnerCharacter);
 }
 
 void UCDoAction_Combo::DoAction_AirCombo()
@@ -105,15 +100,10 @@ void UCDoAction_Combo::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 		if (InitialLaunchATK)//공중 띄우기 공격
 		{
 			InitialLaunchATK = false;
-
-			FActionDamageEvent e;
-			e.HitData->Montage = InitialLaunchAttackedMontage;
-			e.HitData->Power = 5.0f;
-			e.HitData->Launch = FVector(50.0f, 0.0f, 2000.0f);
-
-			e.HitData->SendDamage(InAttacker, InAttackCauser, InOther);
-
+						
 			InAttacker->LaunchCharacter(FVector(0, 0, 1200), false, false);//Player 띄우기
+
+			HitDatas_AirborneInitATK[0].SendDamage(InAttacker, InAttackCauser, InOther);
 		}
 		else //지상 일반공격
 		{

@@ -18,8 +18,8 @@ void UCAnimNotify_BeginAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSeq
 	CheckNull(weapon);//weapon이 있는지 체크
 	CheckNull(weapon->GetDoAction());//weapon 내에 GetDoAction()함수가 있는지 체크
 
-	if (weapon->IsDoActionMode())
+	if (weapon->GetDoAction()->GetInAction())
 		weapon->GetDoAction()->Begin_DoAction();//Begin_DoAction 실행
-	else if (weapon->IsDoAction_AirComboMode())
+	else if (weapon->GetDoAction()->GetInAction_AirCombo())
 		weapon->GetDoAction()->Begin_DoAction_AirCombo();//Begin_DoAction_AirCombo 실행
 }

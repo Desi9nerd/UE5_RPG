@@ -18,8 +18,8 @@ void UCAnimNotify_EndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSeque
 	CheckNull(weapon);
 	CheckNull(weapon->GetDoAction());
 
-	if (weapon->IsDoActionMode())
+	if (weapon->GetDoAction()->GetInAction())
 		weapon->GetDoAction()->End_DoAction();//End_DoAction 실행
-	else if (weapon->IsDoAction_AirComboMode())
+	else if (weapon->GetDoAction()->GetInAction_AirCombo())
 		weapon->GetDoAction()->End_DoAction_AirCombo();//End_DoAction_AirCombo 실행
 }

@@ -32,7 +32,13 @@ private:
 		TSubclassOf<class UCSubAction> SubActionClass;
 
 
-	////AirCombo
+	//AirCombo
+	UPROPERTY(EditAnywhere)
+		TArray<FDoActionData> DoActionDatas_AirborneATK; //CWeaopnStructure내의 FDoActionData
+
+	UPROPERTY(EditAnywhere)
+		TArray<FHitData> HitDatas_AirborneATK; //CWeaopnStructure내의 FHitData
+	
 	UPROPERTY(EditAnywhere)
 		TArray<FDoActionData> DoActionDatas_AirCombo; //CWeaopnStructure내의 FDoActionData
 

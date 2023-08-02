@@ -21,7 +21,10 @@ void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment,
 	HitDatas = InHitDatas;
 }
 
-void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment, ACharacter* InOwner, const TArray<FDoActionData>& InDoActionDatas, const TArray<FHitData>& InHitDatas, const TArray<FDoActionData>& InDoAirActionDatas, const TArray<FHitData>& InAirHitDatas)
+void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment, ACharacter* InOwner,
+	const TArray<FDoActionData>& InDoActionDatas, const TArray<FHitData>& InHitDatas,
+	const TArray<FDoActionData>& InAirborneATKDatas, const TArray<FHitData>& InAirborneATKHitDatas,
+	const TArray<FDoActionData>& InDoAirActionDatas, const TArray<FHitData>& InAirHitDatas)
 {
 	OwnerCharacter = InOwner;
 	World = OwnerCharacter->GetWorld();
@@ -31,6 +34,8 @@ void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment,
 
 	DoActionDatas = InDoActionDatas;
 	HitDatas = InHitDatas;
+	DoActionDatas_AirborneInitATK = InAirborneATKDatas;
+	HitDatas_AirborneInitATK = InAirborneATKHitDatas;
 	DoActionDatas_AirCombo = InDoAirActionDatas;
 	HitDatas_AirCombo = InAirHitDatas;
 

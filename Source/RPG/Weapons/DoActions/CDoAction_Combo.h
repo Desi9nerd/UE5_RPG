@@ -8,10 +8,7 @@ UCLASS()
 class RPG_API UCDoAction_Combo : public UCDoAction
 {
 	GENERATED_BODY()
-
-public:
-	UCDoAction_Combo();
-
+		
 public:
 	FORCEINLINE void EnableCombo() { bEnable = true; }
 	FORCEINLINE void DisableCombo() { bEnable = false; }
@@ -43,8 +40,6 @@ private:
 
 //°øÁßÄÞº¸
 private:
-	UAnimMontage* InitialLaunchATKMontage;
-	UAnimMontage* InitialLaunchAttackedMontage;
 	int32 Index_AirCombo;
 	bool InitialLaunchATK;
 };

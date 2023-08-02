@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "CStateComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Weapons/CWeaponAsset.h"
 #include "Weapons/CWeaponData.h"
 #include "Weapons/CAttachment.h"
@@ -36,9 +37,6 @@ void UCWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	if (!!GetSubAction())//SubAction이 있다면
 		GetSubAction()->Tick(DeltaTime);//SubAction의 Tick을 콜 해준다.
-
-	if (!!GetAirborneInitATK())//AirborneInitATK이 있다면
-		GetAirborneInitATK()->Tick(DeltaTime);//AirborneInitATK의 Tick을 콜 해준다.
 }
 
 bool UCWeaponComponent::IsIdleMode()
@@ -86,14 +84,6 @@ UCSubAction* UCWeaponComponent::GetSubAction()
 	CheckFalseResult(!!Datas[(int32)Type], nullptr);
 
 	return Datas[(int32)Type]->GetSubAction();//실제 데이터를 리턴
-}
-
-UCDoAction* UCWeaponComponent::GetAirborneInitATK()
-{
-	CheckTrueResult(IsUnarmedMode(), nullptr);
-	CheckFalseResult(!!Datas[(int32)Type], nullptr);
-
-	return Datas[(int32)Type]->GetDoAction_AirborneInitATK();
 }
 
 void UCWeaponComponent::SetUnarmedMode()
@@ -185,7 +175,12 @@ void UCWeaponComponent::ChangeType(EWeaponType InType)
 void UCWeaponComponent::DoAction()
 {
 	if (!!GetDoAction())
-		GetDoAction()->DoAction();
+	{
+		if(false == OwnerCharacter->GetCharacterMovement()->IsFalling())
+			GetDoAction()->DoAction();
+		else
+			GetDoAction()->DoAction_AirCombo();//공중콤보
+	}
 }
 
 void UCWeaponComponent::SubAction_Pressed()
@@ -202,8 +197,8 @@ void UCWeaponComponent::SubAction_Released()
 
 void UCWeaponComponent::AirborneInitATK()
 {
-	if (!!GetAirborneInitATK())
-		GetAirborneInitATK()->AirborneInitATK();
+	if (!!GetDoAction())
+		GetDoAction()->AirborneInitATK();
 }
 
 void UCWeaponComponent::DoAction_AirCombo()

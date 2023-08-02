@@ -43,7 +43,7 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 	if (!!DoActionClass)
 	{
 		doAction = NewObject<UCDoAction>(this, DoActionClass);
-		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas, DoActionDatas_AirCombo, HitDatas_AirCombo);
+		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas, DoActionDatas_AirborneATK, HitDatas_AirborneATK,DoActionDatas_AirCombo, HitDatas_AirCombo);
 
 		if (!!attachment)
 		{
@@ -60,7 +60,17 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 			equipment->OnEquipmentUnequip.AddDynamic(doAction, &UCDoAction::OnUnequip);
 		}
 
-		//°øÁßÄÞº¸
+		//°øÁß ¶ç¿ì±â AirborneATK
+		if (!!attachment)
+		{
+			attachment->OnAttachmentBeginCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentBeginCollision);
+			attachment->OnAttachmentEndCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentEndCollision);
+
+			attachment->OnAttachmentBeginOverlap.AddDynamic(doAction, &UCDoAction::OnAttachmentBeginOverlap);
+			attachment->OnAttachmentEndOverlap.AddDynamic(doAction, &UCDoAction::OnAttachmentEndOverlap);
+		}
+
+		//°øÁßÄÞº¸ AirCombo
 		if (!!attachment)
 		{
 			attachment->OnAttachmentBeginCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentBeginCollision);

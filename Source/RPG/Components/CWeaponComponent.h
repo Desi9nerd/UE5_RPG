@@ -54,11 +54,8 @@ public:
 public:
 	class ACAttachment* GetAttachment();
 	class UCEquipment* GetEquipment();
-	class UCDoAction* GetDoAction();
-	class UCSubAction* GetSubAction();
-
-	//공중 콤보
-	class UCDoAction* GetAirborneInitATK();
+	class UCDoAction* GetDoAction();//일반공격, 공중띄우기, 공중콤보
+	class UCSubAction* GetSubAction();	
 
 public:
 	//무기 세팅

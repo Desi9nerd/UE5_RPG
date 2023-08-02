@@ -21,7 +21,7 @@ public:
 	FORCEINLINE class UCDoAction* GetDoAction() { return DoAction; }//외부에 생성된 것을 리턴해줌.
 	FORCEINLINE class UCSubAction* GetSubAction() { return SubAction; }//외부에 생성된 것을 리턴해줌.
 
-	FORCEINLINE class UCDoAction* GetDoAction_AirborneInitATK() { return DoAction_AirCombo; }//외부에 생성된 것을 리턴해줌.
+	FORCEINLINE class UCDoAction* GetDoAction_AirborneInitATK() { return DoAction_AirborneInitATK; }//임시
 	FORCEINLINE class UCDoAction* GetDoAction_AirCombo() { return DoAction_AirCombo; }//외부에 생성된 것을 리턴해줌.
 
 private:
@@ -41,6 +41,9 @@ private:
 		class UCSubAction* SubAction;
 
 	//AirCombo
+	UPROPERTY()
+		class UCDoAction* DoAction_AirborneInitATK;//임시
+
 	UPROPERTY()
 		class UCDoAction* DoAction_AirCombo;
 	
