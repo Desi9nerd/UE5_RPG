@@ -139,6 +139,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Pressed, this, &ACPlayer::Click_RightButton);
 	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Released, Weapon, &UCWeaponComponent::SubAction_Released);
 
+	PlayerInputComponent->BindAction("MiddleClick", EInputEvent::IE_Pressed, this, &ACPlayer::MiddleMouse_Pressed);
+	PlayerInputComponent->BindAction("MiddleClick", EInputEvent::IE_Released, this, &ACPlayer::MiddleMouse_Released);
+
 	PlayerInputComponent->BindAction("Airborne", EInputEvent::IE_Pressed, Weapon, &UCWeaponComponent::AirborneInitATK);
 
 	PlayerInputComponent->BindAction("Equip", EInputEvent::IE_Pressed, this, &ACPlayer::FKeyPressed);
@@ -226,6 +229,26 @@ void ACPlayer::Click_RightButton()
 	}
 
 	Weapon->SubAction_Pressed();
+}
+
+void ACPlayer::MiddleMouse_Pressed()
+{
+	if (Weapon->IsBladeMode())
+	{
+		Weapon->Parrying_Pressed();
+
+		return;
+	}
+}
+
+void ACPlayer::MiddleMouse_Released()
+{
+	if (Weapon->IsBladeMode())
+	{
+		Weapon->Parrying_Released();
+
+		return;
+	}
 }
 
 void ACPlayer::Landed(const FHitResult& Hit)

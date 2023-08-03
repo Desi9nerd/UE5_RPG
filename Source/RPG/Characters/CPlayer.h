@@ -90,6 +90,8 @@ public:
 
 public:
 	void Click_RightButton();
+	void MiddleMouse_Pressed();
+	void MiddleMouse_Released();
 
 public:
 	void Landed(const FHitResult& Hit) override;//BPÀÇ OnLanded C++¹öÁ¯.

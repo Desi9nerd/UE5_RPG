@@ -86,3 +86,11 @@ void UCDoAction::End_DoAction_AirCombo()
 	Movement->Move();
 	Movement->DisableFixedCamera();
 }
+
+void UCDoAction::Parrying_Start()
+{
+}
+
+void UCDoAction::Parrying_End()
+{
+}

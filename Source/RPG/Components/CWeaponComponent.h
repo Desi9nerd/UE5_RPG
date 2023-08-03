@@ -33,7 +33,7 @@ public: //무기 Type이 맞는지 확인해주는 함수들
 	FORCEINLINE bool IsWarpMode() { return Type == EWeaponType::Warp; }
 	FORCEINLINE bool IsAroundMode() { return Type == EWeaponType::Around; }
 	FORCEINLINE bool IsBowMode() { return Type == EWeaponType::Bow; }
-	FORCEINLINE bool IsBladeMode() { return Type == EWeaponType::Bow; }
+	FORCEINLINE bool IsBladeMode() { return Type == EWeaponType::Blade; }
 
 public:
 	UCWeaponComponent();
@@ -75,6 +75,10 @@ public:
 	//공중 콤보
 	void AirborneInitATK();//Airborne 띄우기 공격
 	void DoAction_AirCombo();//AirCombo 공격
+
+	//패링
+	void Parrying_Pressed();
+	void Parrying_Released();
 
 private:
 	void SetMode(EWeaponType InType);

@@ -50,12 +50,16 @@ public:
 	virtual void Begin_DoAction();
 	virtual void End_DoAction();
 
-	virtual void AirborneInitATK() {};//공중으로 띄우는 공격
-
+	//공중으로 띄우는 공격
+	virtual void AirborneInitATK() {};
+	//공중 콤보
 	virtual void DoAction_AirCombo();
 	virtual void Begin_DoAction_AirCombo();
 	virtual void End_DoAction_AirCombo();
 
+	//패링
+	virtual void Parrying_Start();
+	virtual void Parrying_End();
 
 public:
 	//CDoAction_Bow에서 재정의 시키기위해 virtual로 만든다.

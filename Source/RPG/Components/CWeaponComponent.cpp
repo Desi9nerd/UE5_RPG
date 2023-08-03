@@ -206,3 +206,15 @@ void UCWeaponComponent::DoAction_AirCombo()
 	if (!!GetDoAction())
 		GetDoAction()->DoAction_AirCombo();
 }
+
+void UCWeaponComponent::Parrying_Pressed()
+{
+	if (!!GetDoAction())
+		GetDoAction()->Parrying_Start();
+}
+
+void UCWeaponComponent::Parrying_Released()
+{
+	if (!!GetDoAction())
+		GetDoAction()->Parrying_End();
+}
