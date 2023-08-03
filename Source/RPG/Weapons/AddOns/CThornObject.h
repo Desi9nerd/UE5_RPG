@@ -42,7 +42,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void ReceiveParticleData_Implementation(const TArray<FBasicParticleData>& Data, UNiagaraSystem* NiagaraSystem);
+	void ReceiveParticleData_Implementation(const TArray<FBasicParticleData>& Data, UNiagaraSystem* NiagaraSystem, const FVector& SimulationPositionOffset) override;
 
 private:
 	UFUNCTION()

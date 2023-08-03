@@ -31,7 +31,7 @@ void ACGhostTrail::BeginPlay()
 	Mesh->CopyPoseFromSkeletalComponent(Owner->GetMesh());//BeginPlay 때 미리 한번 캡처 해줘야 한다.
 	Mesh->SetRelativeScale3D(Scale);
 
-	for (int32 i = 0; i < Owner->GetMesh()->SkeletalMesh->Materials.Num(); i++)
+	for (int32 i = 0; i < Owner->GetMesh()->SkeletalMesh->GetMaterials().Num(); i++)
 		Mesh->SetMaterial(i, Material);//Material 할당.
 
 

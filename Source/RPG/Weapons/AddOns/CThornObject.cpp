@@ -23,8 +23,12 @@ void ACThornObject::BeginPlay()
 	}
 }
 
-void ACThornObject::ReceiveParticleData_Implementation(const TArray<FBasicParticleData>& Data, UNiagaraSystem* NiagaraSystem)
+void ACThornObject::ReceiveParticleData_Implementation(const TArray<FBasicParticleData>& Data,
+	UNiagaraSystem* NiagaraSystem, const FVector& SimulationPositionOffset)
 {
+	INiagaraParticleCallbackHandler::ReceiveParticleData_Implementation(Data, NiagaraSystem, SimulationPositionOffset);
+
+
 	CheckFalse(Data.Num() > 0);
 
 	//박스 추적 //static을 사용하는이유?
@@ -55,7 +59,6 @@ void ACThornObject::ReceiveParticleData_Implementation(const TArray<FBasicPartic
 				HitData.SendDamage(Cast<ACharacter>(GetOwner()), this, character);
 		}
 	}
-
 }
 
 void ACThornObject::OnSystemFinished(UNiagaraComponent* PSystem)
