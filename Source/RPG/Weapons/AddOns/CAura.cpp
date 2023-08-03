@@ -42,7 +42,7 @@ void ACAura::OnSystemFinished(UNiagaraComponent* PSystem)
 	Destroy();//Box Ãæµ¹Ã¼ ¼Ò¸ê
 }
 
-void ACAura::ReceiveParticleData_Implementation(const TArray<FBasicParticleData>& Data, UNiagaraSystem* NiagaraSystem)
+void ACAura::ReceiveParticleData_Implementation(const TArray<FBasicParticleData>& Data, UNiagaraSystem* NiagaraSystem, const FVector& SimulationPositionOffset)
 {
 	Box->SetRelativeScale3D(Data[0].Position);
 

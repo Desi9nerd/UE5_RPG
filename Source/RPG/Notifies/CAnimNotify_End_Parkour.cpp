@@ -7,9 +7,11 @@ FString UCAnimNotify_End_Parkour::GetNotifyName_Implementation() const
 	return "Parkour";
 }
 
-void UCAnimNotify_End_Parkour::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UCAnimNotify_End_Parkour::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
 {
-	Super::Notify(MeshComp, Animation);
+	Super::Notify(MeshComp, Animation, EventReference);
+
 	CheckNull(MeshComp);
 	CheckNull(MeshComp->GetOwner());
 
@@ -18,4 +20,3 @@ void UCAnimNotify_End_Parkour::Notify(USkeletalMeshComponent* MeshComp, UAnimSeq
 
 	parkour->End_DoParkour();//End_DoParkour를 콜해 파쿠르를 끝낸다.
 }
-

@@ -8,9 +8,11 @@ FString UCAnimNotify_BowString::GetNotifyName_Implementation() const
 	return "End_BowString";
 }
 
-void UCAnimNotify_BowString::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UCAnimNotify_BowString::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
 {
-	Super::Notify(MeshComp, Animation);
+	Super::Notify(MeshComp, Animation, EventReference);
+
 	CheckNull(MeshComp);
 	CheckNull(MeshComp->GetOwner());
 

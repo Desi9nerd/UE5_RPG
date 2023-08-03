@@ -12,6 +12,5 @@ class RPG_API UCAnimNotify_BowString : public UAnimNotify
 public:
 	FString GetNotifyName_Implementation() const override;
 
-	void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
-
+	void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 };

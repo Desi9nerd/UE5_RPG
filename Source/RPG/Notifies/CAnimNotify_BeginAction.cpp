@@ -8,9 +8,11 @@ FString UCAnimNotify_BeginAction::GetNotifyName_Implementation() const
 	return "Begin_DoAction";//Notify이름을 Begin_DoAction으로 설정.
 }
 
-void UCAnimNotify_BeginAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UCAnimNotify_BeginAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
 {
-	Super::Notify(MeshComp, Animation);
+	Super::Notify(MeshComp, Animation, EventReference);
+
 	CheckNull(MeshComp);//MeshComp 있는지 체크
 	CheckNull(MeshComp->GetOwner());//MeshComp->GetOwner() 있는지 체크
 

@@ -16,9 +16,9 @@ FString UCAnimNotifyState_CameraAnim::GetNotifyName_Implementation() const
 	return "CameraAnim";
 }
 
-void UCAnimNotifyState_CameraAnim::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
+void UCAnimNotifyState_CameraAnim::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
-	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
 	CheckNull(MeshComp);
 	CheckNull(MeshComp->GetOwner());
@@ -50,9 +50,9 @@ void UCAnimNotifyState_CameraAnim::NotifyBegin(USkeletalMeshComponent* MeshComp,
 	controller->PlayerCameraManager->PlayCameraAnim(CameraAnim, PlayRatio, 1, BlendInTime, BlendOutTime, false, false, 0, ECameraShakePlaySpace::UserDefined, controller->GetControlRotation());//UserDefined는 우리공간 기준(우리가 Play하는 곳 기점), World는 월드위치, CameraLocal은 relative위치
 }
 
-void UCAnimNotifyState_CameraAnim::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UCAnimNotifyState_CameraAnim::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
-	Super::NotifyEnd(MeshComp, Animation);
+	Super::NotifyEnd(MeshComp, Animation, EventReference);
 
 	CheckNull(MeshComp);
 	CheckNull(MeshComp->GetOwner());

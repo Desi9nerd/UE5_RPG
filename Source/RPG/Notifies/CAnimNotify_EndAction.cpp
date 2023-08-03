@@ -8,9 +8,11 @@ FString UCAnimNotify_EndAction::GetNotifyName_Implementation() const
 	return "End_DoAction";
 }
 
-void UCAnimNotify_EndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UCAnimNotify_EndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
 {
-	Super::Notify(MeshComp, Animation);
+	Super::Notify(MeshComp, Animation, EventReference);
+
 	CheckNull(MeshComp);
 	CheckNull(MeshComp->GetOwner());
 
