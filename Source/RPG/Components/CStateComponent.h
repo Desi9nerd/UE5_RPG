@@ -19,6 +19,7 @@ public:
 	FORCEINLINE bool IsHittedMode() { return Type == EStateType::Hitted; }
 	FORCEINLINE bool IsDeadMode() { return Type == EStateType::Dead; }
 	FORCEINLINE bool IsActionMode() { return Type == EStateType::Action; }
+	FORCEINLINE bool IsParryingMode() { return Type == EStateType::Parrying; }
 	FORCEINLINE bool IsSubActionMode() { return bInSubActionMode; }
 
 public:
@@ -34,6 +35,7 @@ public:
 	void SetHittedMode();
 	void SetDeadMode();
 	void SetActionMode();
+	void SetParryingMode();
 	void OnSubActionMode();
 	void OffSubActionMode();
 

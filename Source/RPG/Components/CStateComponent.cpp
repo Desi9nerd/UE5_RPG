@@ -42,6 +42,11 @@ void UCStateComponent::SetActionMode()
 	ChangeType(EStateType::Action);
 }
 
+void UCStateComponent::SetParryingMode()
+{
+	ChangeType(EStateType::Parrying);
+}
+
 void UCStateComponent::OnSubActionMode()
 {
 	bInSubActionMode = true;

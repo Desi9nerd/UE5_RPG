@@ -18,7 +18,7 @@
 UENUM() //CStateComponent.h에 있던것 옮김
 enum class EStateType : uint8
 {
-	Idle = 0, Dodge, Equip, Hitted, Dead, Action, Max,
+	Idle = 0, Dodge, Equip, Hitted, Dead, Action, Parrying, Max,
 };
 
 

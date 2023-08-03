@@ -89,8 +89,10 @@ void UCDoAction::End_DoAction_AirCombo()
 
 void UCDoAction::Parrying_Start()
 {
+	State->SetParryingMode();
 }
 
 void UCDoAction::Parrying_End()
 {
+	State->SetIdleMode();
 }
