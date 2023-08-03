@@ -95,7 +95,7 @@ void ACEnemy::Hitted()
 
 			FVector LaunchedVector = LaunchF + LaunchR + LaunchU;
 
-			LaunchCharacter(LaunchedVector, false, true);
+			LaunchCharacter(LaunchedVector, true, true);
 			SetActorRotation(UKismetMathLibrary::FindLookAtRotation(start, target));
 		}
 	}
