@@ -30,9 +30,6 @@ private:
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
-		class UCWeaponComponent* Weapon;
-
-	UPROPERTY(VisibleDefaultsOnly)
 		class UCAIBehaviorComponent* Behavior;
 
 public:

@@ -12,7 +12,7 @@ ACEnemy_AI::ACEnemy_AI()
 
 	CHelpers::CreateComponent<UWidgetComponent>(this, &LabelWidget, "Label", GetMesh());
 
-	CHelpers::CreateActorComponent<UCWeaponComponent>(this, &Weapon, "Weapon");
+	//CHelpers::CreateActorComponent<UCWeaponComponent>(this, &Weapon, "Weapon");
 	CHelpers::CreateActorComponent<UCAIBehaviorComponent>(this, &Behavior, "Behavior");
 
 

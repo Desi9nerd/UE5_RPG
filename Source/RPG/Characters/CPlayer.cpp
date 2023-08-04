@@ -10,6 +10,7 @@
 #include "Components/CMovementComponent.h"
 #include "Components/CWeaponComponent.h"
 #include "Components/CZoomComponent.h"
+#include "Components/CStateComponent.h"
 #include "Components/ArrowComponent.h"//파쿠르 Arrow 생성을 위한 헤더
 
 //무기 Pickup
@@ -22,25 +23,17 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent<UCameraComponent>(this, &Camera, "Camera", SpringArm);
 
-	CHelpers::CreateActorComponent<UCWeaponComponent>(this, &Weapon, "Weapon");
-	CHelpers::CreateActorComponent<UCMontagesComponent>(this, &Montages, "Montages");
-	CHelpers::CreateActorComponent<UCMovementComponent>(this, &Movement, "Movement");
-	CHelpers::CreateActorComponent<UCStateComponent>(this, &State, "State");
+	//CHelpers::CreateActorComponent<UCWeaponComponent>(this, &Weapon, "Weapon");
+	//CHelpers::CreateActorComponent<UCMontagesComponent>(this, &Montages, "Montages");
+	//CHelpers::CreateActorComponent<UCMovementComponent>(this, &Movement, "Movement");
+	//CHelpers::CreateActorComponent<UCStateComponent>(this, &State, "State");
 	CHelpers::CreateActorComponent<UCParkourComponent>(this, &Parkour, "Parkour");
 	CHelpers::CreateActorComponent<UCZoomComponent>(this, &Zoom, "Zoom");
 	CHelpers::CreateActorComponent<USplineComponent>(this, &ArrowPathSpline, "ArrowPathSpline");
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
-
-	//USkeletalMesh* mesh;
-	//CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Character//Mesh///SK_Mannequin.SK_Mannequin'");
-	//GetMesh()->SetSkeletalMesh(mesh);
-	//
-	//TSubclassOf<UCAnimInstance> animInstance;
-	//CHelpers::GetClass<UCAnimInstance>(&animInstance, "AnimBlueprint'/Game////ABP_Character.ABP_Character_C'");
-	//GetMesh()->SetAnimClass(animInstance);
-
+	
 	SpringArm->SetRelativeLocation(FVector(0, 0, 140));
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
 	SpringArm->TargetArmLength = 200;
@@ -101,8 +94,10 @@ void ACPlayer::BeginPlay()
 	Movement->OnRun(); //Movement의 기본을 Run으로 설정
 	Movement->DisableControlRotation();//Movement의 기본을 DisableControlRotation으로 설정
 
+	CheckNull(State);
+	
 	State->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
-
+	
 	PlayerController = Cast<APlayerController>(GetController());//PlayerController 캐스팅
 }
 
@@ -151,27 +146,31 @@ void ACPlayer::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
 {
 	switch (InNewType)
 	{
-		case EStateType::Dodge: Dodge(); break;
+		case EStateType::Dodge:	 Dodge(); break;
+		case EStateType::Hitted: Hitted(); break;//실제처리는 아래의 Hitted()에서 일/어/난다.
+		case EStateType::Dead:   Dead(); break;//실제처리는 아래의 Dead()에서 일어난다.
+		default: break;
 	}
 }
 
 void ACPlayer::OnAvoid()
 {
+	CheckNull(State);
 	CheckFalse(State->IsIdleMode());
 	CheckFalse(Movement->CanMove());
 
 	CheckTrue(InputComponent->GetAxisValue("MoveForward") == 0.0f && InputComponent->GetAxisValue("MoveRight") == 0.0f);
-	
+
 
 	State->SetDodgeMode();//State을 DodgeMode로 변경한다.
 }
 
 void ACPlayer::Dodge()
-{	
+{
 	DisableInput(PlayerController);//Dodge가 시작되면 키 입력이 안 되게 만들어준다.
 
 	Movement->EnableControlRotation();//정면을 바라본 상태로 뒤로 뛰어야하기 때문에 EnableControlRotation으로 만들어준다.
-	
+
 	Montages->PlayDodgeMode();//PlayDodgeMode()를 통해 몽타주 재생.
 }
 
@@ -213,9 +212,9 @@ void ACPlayer::FKeyPressed()
 
 void ACPlayer::SetOverlappingItem(ACItem* Item)
 {
-	if(Weapon->ItemsArray.Find(Item))
+	if (Weapon->ItemsArray.Find(Item))
 	{
-		OverlappingItem = Item;		
+		OverlappingItem = Item;
 	}
 }
 

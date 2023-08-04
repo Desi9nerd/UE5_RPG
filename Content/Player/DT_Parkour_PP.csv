@@ -1,0 +1,16 @@
+,Type,Montage,PlayRatio,SectionName,MinDistance,MaxDistance,Extent,bFixedCamera
+1,Climb,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Run_Climb.AM_Run_Climb',2,,30,150,580,TRUE
+2,Slide,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_SingleSlider.AM_SingleSlider',1.25,,150,350,30,TRUE
+3,Short,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Short_HandSpring_To_Roll_ShortlVault.AM_Short_HandSpring_To_Roll_ShortlVault',1.25,,400,500,80,TRUE
+4,Short,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Short_Flip_And_Roll.AM_Short_Flip_And_Roll',1.25,,200,350,80,TRUE
+5,Short,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Short_Reverse_Vault_ShortVault.AM_Short_Reverse_Vault_ShortVault',1.25,,150,200,80,TRUE
+6,Short,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Short_Split_Vault_ShortVault.AM_Short_Split_Vault_ShortVault',1.25,,80,150,80,TRUE
+7,Normal,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Normal_HandSpring_To_Roll_NormalVault.AM_Normal_HandSpring_To_Roll_NormalVault',1.25,,380,600,340,TRUE
+8,Normal,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Normal_Roll_NormalVault.AM_Normal_Roll_NormalVault',1.25,,250,380,340,TRUE
+9,Normal,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Normal_Railflip_Vault_NormalVault.AM_Normal_Railflip_Vault_NormalVault',1.25,,150,250,340,TRUE
+10,Normal,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Normal_Spin_Bicycle_NormalVault.AM_Normal_Spin_Bicycle_NormalVault',1.25,,80,150,340,TRUE
+11,Wall,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Wall_HandSpring_To_Roll_ShortWalllVault.AM_Wall_HandSpring_To_Roll_ShortWalllVault',1.25,,350,390,40,TRUE
+12,Wall,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Wall_Fold_Flip_ShortWallVault.AM_Wall_Fold_Flip_ShortWallVault',1,,200,250,40,TRUE
+13,Wall,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Wall_Jump_Wheel_ShortWall.AM_Wall_Jump_Wheel_ShortWall',1,Start,150,200,40,TRUE
+14,Wall,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Wall_Double_Trick.AM_Wall_Double_Trick',1,Start,50,150,40,TRUE
+15,Fall,AnimMontage'/Game/ABP/PP/Montages/Parkour/AM_Falling_Roll.AM_Falling_Roll',1.5,,700,2000,2000,FALSE

@@ -3,9 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Characters/ECharacterTypes.h"
-#include "Components/CStateComponent.h"
 #include "Characters/CBaseCharacter.h"
-#include "Characters/ICharacter.h"
 #include "Parkour/CParkourComponent.h"
 #include "GenericTeamAgentInterface.h"
 #include "Interfaces/IPickup.h"
@@ -18,7 +16,7 @@ class ACItem;
 
 UCLASS()
 class RPG_API ACPlayer
-	: public ACBaseCharacter, public IICharacter, public IGenericTeamAgentInterface, public IIPickup //다중상속
+	: public ACBaseCharacter, public IGenericTeamAgentInterface, public IIPickup //다중상속
 {
 	GENERATED_BODY()
 
@@ -26,14 +24,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Team")
 		uint8 TeamID = 1;
 
-protected:
-	UPROPERTY(VisibleAnywhere)
-		class UCWeaponComponent* Weapon;
-
 private:
 	UPROPERTY(VisibleAnywhere)
 		class USpringArmComponent* SpringArm;
-
+	
 	UPROPERTY(VisibleAnywhere)
 		class UCameraComponent* Camera;
 
@@ -66,9 +60,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(TeamID); }
 
-private:
+public:
 	UFUNCTION()
-		void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);
+	void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);
 
 private:
 	void OnAvoid();

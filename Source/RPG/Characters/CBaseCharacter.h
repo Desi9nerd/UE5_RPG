@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "ICharacter.h"
 #include "Interfaces/IHit.h"
 #include "Characters/ECharacterTypes.h"
 #include "Components/CStateComponent.h"
@@ -10,11 +11,15 @@
 class UAnimMontage;
 
 UCLASS()
-class RPG_API ACBaseCharacter : public ACharacter, public IIHit
+class RPG_API ACBaseCharacter
+	: public ACharacter, public IIHit, public IICharacter //다중상속
 {
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(VisibleAnywhere)
+		class UCWeaponComponent* Weapon;
+
 	UPROPERTY(VisibleAnywhere)
 		class UCMontagesComponent* Montages;
 
@@ -31,9 +36,41 @@ protected:
 	//UPROPERTY(VisibleAnywhere, Category = Weapon)
 	//ACWeapon* EquippedWeapon;
 
+	UPROPERTY(EditAnywhere, Category = "Color")
+		FLinearColor OriginColor = FLinearColor::White;//색상 설정.
+
+	FTimerHandle RestoreColor_TimerHandle;//변한 색이 일정시간 후에 되돌아오도록 시간을 기록하는 변수.
+
 public:
 	ACBaseCharacter();
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;//TakeDamage 오버라이드하여 재정의.
+
+	virtual void End_Hitted() override;//ICharacter의 가상함수 오버라이드.
+	void End_Dead() override;//ICharacter의 가상함수 오버라이드.
+
+//public:
+//	virtual void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);`
+
+protected:
+	UFUNCTION()
+	void RestoreColor();
+
+	virtual void Hitted();//자식(Enemy_AI)에서 재정의 할 수 있도록 virtual을 붙인다.
+	void Dead();
+
+
+protected:
+	struct FDamageData
+	{
+		float Power;
+		class ACharacter* Character;
+		class AActor* Causer;
+
+		struct FActionDamageEvent* Event; //CWeaponStructure의 FActionDamageEvent
+	} Damage; //Damage란 이름으로 저장.
 };

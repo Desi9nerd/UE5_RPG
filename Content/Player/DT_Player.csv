@@ -1,2 +1,2 @@
 ,Type,Montage,PlayRate
-1,BackStep,AnimMontage'/Game/Character/Montages/Common/BackStep_Montage.BackStep_Montage',1
+1,Dodge,AnimMontage'/Game/ABP/PP/Montages/Dodge/AM_PP_Dodge.AM_PP_Dodge',1.5
