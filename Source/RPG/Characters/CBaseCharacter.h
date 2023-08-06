@@ -53,9 +53,6 @@ public:
 	virtual void End_Hitted() override;//ICharacter의 가상함수 오버라이드.
 	void End_Dead() override;//ICharacter의 가상함수 오버라이드.
 
-//public:
-//	virtual void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);`
-
 protected:
 	UFUNCTION()
 	void RestoreColor();
@@ -73,4 +70,13 @@ protected:
 
 		struct FActionDamageEvent* Event; //CWeaponStructure의 FActionDamageEvent
 	} Damage; //Damage란 이름으로 저장.
+
+	FVector ImpactPoint_Hit;
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category = Combat)
+	UAnimMontage* HitReactMontage;
+
+protected:
+	void DirectionalHitReact(const FVector& ImpactPoint);
 };
