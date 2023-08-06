@@ -79,17 +79,9 @@ void ACBaseCharacter::Hitted()
 	{
 		FHitData* data = Damage.Event->HitData;//FDamageData의 FActionDamageEvent* Event내의 HitData
 
-
-
-
-		//이거 수정
-		FVector HitExactLocation = ImpactPoint_Hit;//여기 체크!! 아마 수정 필요!!
-
-
-
-
-
-
+		
+		FVector HitExactLocation = ImpactPoint_Hit;
+				
 
 		if(data->Montage)//FHitData에 할당한 몽타주가 있다면
 		{
