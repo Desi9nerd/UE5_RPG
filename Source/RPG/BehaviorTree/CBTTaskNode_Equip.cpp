@@ -27,7 +27,8 @@ EBTNodeResult::Type UCBTTaskNode_Equip::ExecuteTask(UBehaviorTreeComponent& Owne
 
 	switch (Type)
 	{
-	case EWeaponType::Sword: weapon->SetSwordMode(); break;//Sword 장착
+		case EWeaponType::Sword: weapon->SetSwordMode(); break;//Sword 장착
+		case EWeaponType::Bow: weapon->SetBowMode(); break;//Bow 장착
 	}
 
 	return EBTNodeResult::InProgress;//장착 동작이 나올 수 있도록 InProgress 리턴
@@ -47,7 +48,7 @@ void UCBTTaskNode_Equip::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 	UCStateComponent* state = CHelpers::GetComponent<UCStateComponent>(ai);
 	if (state->IsIdleMode() && *bEquipped)
 	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);//Succeeded 종료. FinishLatentTask는 리턴이 없는 Tick 같은 곳에서 사용한다.
 
 		return;
 	}
@@ -62,11 +63,8 @@ EBTNodeResult::Type UCBTTaskNode_Equip::AbortTask(UBehaviorTreeComponent& OwnerC
 
 	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(ai);
 	if (weapon == nullptr)//무기가 없다면
-	{
-		FinishLatentAbort(OwnerComp);//중단으로 끝낸다.
-
-		return EBTNodeResult::Failed;//실패 리턴
-	}
+		return EBTNodeResult::Failed;//실패 종료.
+	
 
 	bool bBeginEquip = weapon->GetEquipment()->GetBeginEquip();//GetBeginEquip()으로 CEquipment의 bBeginEquip를 넣어준다. bBeginEquip=true면 Equip이 시작되었다는 의미다.
 	if (bBeginEquip == false)
