@@ -3,10 +3,13 @@
 #include "Components/CStatusComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/CMontagesComponent.h"
+#include "Components/CWeaponComponent.h"
+#include "Components/TextRenderComponent.h"
 #include "Weapons/CWeaponStructures.h"
+#include "Weapons/CAttachment.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Weapons/CAttachment.h"
+#include "Kismet/KismetTextLibrary.h"
 
 ACBaseCharacter::ACBaseCharacter()
 {
@@ -17,14 +20,39 @@ ACBaseCharacter::ACBaseCharacter()
 	CHelpers::CreateActorComponent<UCMovementComponent>(this, &Movement, "Movement");
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &State, "State");
 	CHelpers::CreateActorComponent<UCStatusComponent>(this, &Status, "Status");
+	CHelpers::CreateActorComponent<UTextRenderComponent>(this, &TextRender_State, "TextRender_State");
+	CHelpers::CreateActorComponent<UTextRenderComponent>(this, &TextRender_Weapon, "TextRender_Weapon");
 
 	CHelpers::CreateActorComponent<UAnimMontage>(this, &HitReactMontage, "HitReactMontage");
+
+	TextRender_State->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	TextRender_State->SetRelativeLocation(FVector(0, 0, 110));
+	TextRender_State->SetRelativeRotation(FRotator(0, 0, 0));
+
+	TextRender_Weapon->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	TextRender_Weapon->SetRelativeLocation(FVector(0, 0, 90));
+	TextRender_Weapon->SetRelativeRotation(FRotator(0, 0, 0));
 }
 
 void ACBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//디버깅용, 머리 위에 현재 State, Weapon Type 띄우기
+	TextRender_State->SetVisibility(true);
+	TextRender_Weapon->SetVisibility(true);
+}
+
+void ACBaseCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	//디버깅용, 머리 위에 현재 State, Weapon Type 띄우기
+	FString name = StaticEnum<EStateType>()->GetNameStringByValue((int32)State->GetStateType());
+	TextRender_State->SetText(FText::FromString(name));
+
+	FString WeaponTypeName = StaticEnum<EWeaponType>()->GetNameStringByValue((int32)Weapon->GetWeaponType());
+	TextRender_Weapon->SetText(UKismetTextLibrary::Conv_StringToText(WeaponTypeName));
 }
 
 float ACBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

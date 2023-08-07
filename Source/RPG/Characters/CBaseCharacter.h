@@ -32,6 +32,11 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		class UCStatusComponent* Status;
 
+	UPROPERTY(VisibleAnywhere)
+		class UTextRenderComponent* TextRender_State;
+	UPROPERTY(VisibleAnywhere)
+		class UTextRenderComponent* TextRender_Weapon;
+
 	//무기 장착 및 해제를 위한 변수
 	//UPROPERTY(VisibleAnywhere, Category = Weapon)
 	//ACWeapon* EquippedWeapon;
@@ -46,6 +51,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
 
 public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;//TakeDamage 오버라이드하여 재정의.
