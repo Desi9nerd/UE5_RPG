@@ -113,7 +113,10 @@ void UCDoAction_Combo::Parrying_Start()
 	Super::Parrying_Start();
 
 	if (!!Parrying_Start_Montage)
+	{
+		State->SetParryingMode();
 		OwnerCharacter->PlayAnimMontage(Parrying_Start_Montage, 3);
+	}
 }
 
 void UCDoAction_Combo::Parrying_End()
@@ -121,7 +124,10 @@ void UCDoAction_Combo::Parrying_End()
 	Super::Parrying_End();
 
 	if (!!Parrying_End_Montage)
+	{
+		State->SetIdleMode();
 		OwnerCharacter->PlayAnimMontage(Parrying_End_Montage, 3);
+	}
 }
 
 void UCDoAction_Combo::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InAttackCauser, ACharacter* InOther)
@@ -171,33 +177,34 @@ void UCDoAction_Combo::OnAttachmentEndCollision()
 {
 	Super::OnAttachmentEndCollision();
 
-	float angle = -2.0f;
-	ACharacter* candidate = nullptr;
-
-	for (ACharacter* hitted : Hitted)
-	{
-		FVector direction = hitted->GetActorLocation() - OwnerCharacter->GetActorLocation();
-		direction = direction.GetSafeNormal2D();
-
-
-		FVector forward = FQuat(OwnerCharacter->GetActorRotation()).GetForwardVector();
-
-		float dot = FVector::DotProduct(direction, forward);
-		if (dot >= angle)
-		{
-			angle = dot;
-			candidate = hitted;
-		}
-	}
-
-	if (!!candidate)
-	{
-		FRotator rotator = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), candidate->GetActorLocation());
-		FRotator target = FRotator(0, rotator.Yaw, 0);
-
-		AController* controller = OwnerCharacter->GetController<AController>();
-		controller->SetControlRotation(target);
-	}
+	//피격 시 공격자에게 피격체를 돌리는 코드
+	//float angle = -2.0f;
+	//ACharacter* candidate = nullptr;
+	//
+	//for (ACharacter* hitted : Hitted)
+	//{
+	//	FVector direction = hitted->GetActorLocation() - OwnerCharacter->GetActorLocation();
+	//	direction = direction.GetSafeNormal2D();
+	//
+	//
+	//	FVector forward = FQuat(OwnerCharacter->GetActorRotation()).GetForwardVector();
+	//
+	//	float dot = FVector::DotProduct(direction, forward);
+	//	if (dot >= angle)
+	//	{
+	//		angle = dot;
+	//		candidate = hitted;
+	//	}
+	//}
+	//
+	//if (!!candidate)
+	//{
+	//	FRotator rotator = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), //candidate->GetActorLocation());
+	//	FRotator target = FRotator(0, rotator.Yaw, 0);
+	//
+	//	AController* controller = OwnerCharacter->GetController<AController>();
+	//	controller->SetControlRotation(target);
+	//}
 
 	Hitted.Empty();
 }
