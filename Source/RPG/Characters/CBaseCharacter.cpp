@@ -68,8 +68,29 @@ float ACBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	ACAttachment* CustomDamageEvent = (ACAttachment*)&DamageEvent;
 	ImpactPoint_Hit = CustomDamageEvent->HitResult_CAttachment.ImpactPoint;// Access the impact point
 
-	//Parrying 상태일 때
-	if (State->IsParryingMode() && ACBaseCharacter::ParryingCnt < 5)
+
+	//** */ Hit 방향 판단
+	//Hit의 Impact Point를 계산해서 앞의 공격인지 판단한다. Parrying 적용 여부를 결정하기 위해
+	const FVector Forward = GetActorForwardVector();
+	const FVector ImpactLowered(ImpactPoint_Hit.X, ImpactPoint_Hit.Y, GetActorLocation().Z);//
+	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
+	//내적
+	const double CosTheta = FVector::DotProduct(Forward, ToHit);
+	double Theta = FMath::Acos(CosTheta);
+	Theta = FMath::RadiansToDegrees(Theta);
+	//외적
+	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
+	if (CrossProduct.Z < 0)
+		Theta *= -1.0f;
+
+	bool bFrontHitted = false;
+	if (Theta >= -60.0f && Theta < 60.0f)//전방 기준 120도 일때만 패링 방어 
+		bFrontHitted = true;
+	//** */
+
+
+	//Parrying 상태 + 앞 방향 피격 + 패링막기 5 미만일 때
+	if (State->IsParryingMode() && bFrontHitted == true && ACBaseCharacter::ParryingCnt < 5)
 	{
 		LaunchCharacter(GetActorForwardVector() * -200.0f, false, false);
 		ParryingCnt++;//패링카운트 증가
