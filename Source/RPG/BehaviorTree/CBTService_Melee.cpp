@@ -8,7 +8,7 @@
 
 UCBTService_Melee::UCBTService_Melee()
 {
-	NodeName = "Melee";
+	NodeName = "Melee,Archer";
 
 	Interval = 0.1f;//호출 간격. 0.1초 마다 호출
 	RandomDeviation = 0.0f;

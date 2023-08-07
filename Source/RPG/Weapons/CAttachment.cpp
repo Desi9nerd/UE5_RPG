@@ -7,7 +7,7 @@
 #include "NiagaraComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
-#include "Item/CItem.h"
+//#include "Item/CItem.h"
 #include "Interfaces/IHit.h"
 
 ACAttachment::ACAttachment()
@@ -68,6 +68,10 @@ void ACAttachment::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedCompon
 	CheckTrue(OwnerCharacter == OtherActor);//자기 자신
 	CheckTrue(OwnerCharacter->GetClass() == OtherActor->GetClass());//GetClass()가 같다는 것은 아군이라는 의미
 
+	//2023.08.07 ImpactPoint를 위해 추가함
+	ACAttachment* DamageEvent_CAttachment = NewObject<ACAttachment>();//Create instance of custom damage event
+	DamageEvent_CAttachment->HitResult_CAttachment = SweepResult; //Assign the hit result to custom damage event
+
 	if (OnAttachmentBeginOverlap.IsBound())
 		OnAttachmentBeginOverlap.Broadcast(OwnerCharacter, this, Cast<ACharacter>(OtherActor));	
 }
@@ -88,11 +92,11 @@ void ACAttachment::AttachTo(FName InSocketName)
 	AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), InSocketName);
 
 	//무기 줍기 추가
-	ItemState = EItemState::EIS_Equipped;
+	//ItemState = EItemState::EIS_Equipped;
 
-	DisableSphereCollision();
-	PlayEquipSound();
-	DeactivateEmbers();
+	//DisableSphereCollision();
+	//PlayEquipSound();
+	//DeactivateEmbers();
 }
 
 void ACAttachment::AttachToCollision(FName InCollisionName)
@@ -109,48 +113,48 @@ void ACAttachment::AttachToCollision(FName InCollisionName)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-void ACAttachment::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
-{
-	ItemState = EItemState::EIS_Equipped;
-	SetOwner(NewOwner);
-	SetInstigator(NewInstigator);
-
-
-	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
-	ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
-
-	DisableSphereCollision();
-	PlayEquipSound();
-	DeactivateEmbers();
-}
-
-void ACAttachment::PlayEquipSound()
-{
-	if (EquipSound)
-	{
-		UGameplayStatics::PlaySoundAtLocation(
-			this,
-			EquipSound,
-			GetActorLocation()
-		);
-	}
-}
-
-//Pickup을 위한 충돌체를 꺼줌.
-void ACAttachment::DisableSphereCollision()
-{
-	if (Sphere)
-	{
-		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
-}
-
-//Item주위로 나오는 이펙트 꺼줌.
-void ACAttachment::DeactivateEmbers()
-{
-	if (ItemEffect)
-	{
-		ItemEffect->Deactivate();
-	}
-}
+//
+//void ACAttachment::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
+//{
+//	ItemState = EItemState::EIS_Equipped;
+//	SetOwner(NewOwner);
+//	SetInstigator(NewInstigator);
+//
+//
+//	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
+//	ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
+//
+//	DisableSphereCollision();
+//	PlayEquipSound();
+//	DeactivateEmbers();
+//}
+//
+//void ACAttachment::PlayEquipSound()
+//{
+//	if (EquipSound)
+//	{
+//		UGameplayStatics::PlaySoundAtLocation(
+//			this,
+//			EquipSound,
+//			GetActorLocation()
+//		);
+//	}
+//}
+//
+////Pickup을 위한 충돌체를 꺼줌.
+//void ACAttachment::DisableSphereCollision()
+//{
+//	if (Sphere)
+//	{
+//		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+//	}
+//}
+//
+////Item주위로 나오는 이펙트 꺼줌.
+//void ACAttachment::DeactivateEmbers()
+//{
+//	if (ItemEffect)
+//	{
+//		ItemEffect->Deactivate();
+//	}
+//}

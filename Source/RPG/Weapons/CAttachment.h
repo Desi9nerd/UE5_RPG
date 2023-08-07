@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Item/CItem.h"
+//#include "Item/CItem.h"
 #include "CAttachment.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttachmentBeginCollision);
@@ -11,15 +11,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttachmentEndCollision);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAttachmentBeginOverlap, class ACharacter*, InAttacker, AActor*, InAttackCauser, class ACharacter*, InOther);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAttachmentEndOverlap, class ACharacter*, InAttacker, class ACharacter*, InOther);
 
-//공중콤보 Delegate, 사용할지 결정 후 지금 주석 지우기
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttachmentBeginCollision_AirCombo);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttachmentEndCollision_AirCombo);
-//
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams/(FAttachmentBeginOverlap_AirCombo,/ class ACharacter*, InAttacker, AActor*, /InAttackCauser, class ACharacter*, /InOther);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAttachmentEndOverlap_AirCombo, class ACharacter*, InAttacker, class ACharacter*, InOther);
 
 UCLASS()
-class RPG_API ACAttachment : public ACItem
+class RPG_API ACAttachment : public AActor
 {
 	GENERATED_BODY()
 
@@ -67,14 +61,6 @@ public:
 	FAttachmentBeginOverlap OnAttachmentBeginOverlap;
 	FAttachmentEndOverlap OnAttachmentEndOverlap;
 
-
-	//공중콤보 Delegate, 사용할지 결정 후 지금 주석 지우기
-	//FAttachmentBeginCollision_AirCombo OnAttachmentBeginCollision_AirCombo;
-	//FAttachmentEndCollision_AirCombo OnAttachmentEndCollision_AirCombo;
-	//
-	//FAttachmentBeginOverlap_AirCombo OnAttachmentBeginOverlap_AirCombo;
-	//FAttachmentEndOverlap_AirCombo OnAttachmentEndOverlap_AirCombo;
-
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Game")
 		class ACharacter* OwnerCharacter;
@@ -82,6 +68,11 @@ protected:
 	//UShapeComponent는 UBox,Capsule,SphereComponent의 상위클래스
 	UPROPERTY(BlueprintReadOnly, Category = "Game")
 		TArray<class UShapeComponent*> Collisions;
+
+
+public:
+	UPROPERTY() //2023.08.07 ImpactPoint를 위해 추가함
+	FHitResult HitResult_CAttachment;
 
 /** Pick Up
  * ////////////////////////////////////////////////////////
@@ -91,10 +82,10 @@ public:
 	FORCEINLINE FName GetHolsterSocketName() { return HolsterSocketName; }
 	
 public:
-	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
-	void PlayEquipSound();
-	void DisableSphereCollision();
-	void DeactivateEmbers();
+	//void Equip(USceneComponent* InParent, FName /InSocketName, /AActor* NewOwner, APawn* NewInstigator);
+	//void PlayEquipSound();
+	//void DisableSphereCollision();
+	//void DeactivateEmbers();
 
 private:
 	UPROPERTY(EditAnywhere, Category = "PickUp")

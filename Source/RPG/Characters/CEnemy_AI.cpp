@@ -10,11 +10,8 @@ ACEnemy_AI::ACEnemy_AI()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	CHelpers::CreateComponent<UWidgetComponent>(this, &LabelWidget, "Label", GetMesh());
-
-	//CHelpers::CreateActorComponent<UCWeaponComponent>(this, &Weapon, "Weapon");
+	CHelpers::CreateComponent<UWidgetComponent>(this, &LabelWidget, "Label", GetMesh());	
 	CHelpers::CreateActorComponent<UCAIBehaviorComponent>(this, &Behavior, "Behavior");
-
 
 	TSubclassOf<UCUserWidget_Label> labelClass;
 	CHelpers::GetClass<UCUserWidget_Label>(&labelClass, "WidgetBlueprint'/Game/Widgets/WB_Label.WB_Label_C'");

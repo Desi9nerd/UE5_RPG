@@ -43,6 +43,7 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 	if (!!DoActionClass)
 	{
 		doAction = NewObject<UCDoAction>(this, DoActionClass);
+		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas);
 		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas, DoActionDatas_AirborneATK, HitDatas_AirborneATK,DoActionDatas_AirCombo, HitDatas_AirCombo);
 
 			

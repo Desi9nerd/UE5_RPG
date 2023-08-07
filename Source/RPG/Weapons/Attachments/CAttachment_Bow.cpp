@@ -9,18 +9,19 @@
 ACAttachment_Bow::ACAttachment_Bow()
 {
 	PrimaryActorTick.bCanEverTick = true;//실시간 적용이 되도록 넣어준다. 안 넣어주면 활 시위가 구부러지는것이 업데이트 되지 않을 수도 있다.
-	
+
+	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &SkeletalMesh, "SkeletalMesh", Root);
 	CHelpers::CreateComponent<UPoseableMeshComponent>(this, &PoseableMesh, "PoseableMesh", Root);
 	
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Character/Weapons/ElvenBow/SK_ElvenBow.SK_ElvenBow'");//ElevenBow 에셋을 할당한다.
-	ItemMesh->SetSkeletalMesh(mesh);//부모 클래스의 CItem의 SkeletalMeshComponent 데이터형의 ItemMesh 변수를 가져다 쓴다. ItemMesh에 mesh(=Elven Bow를 할당한 USkeletalMesh)를 할당한다.
-	ItemMesh->SetCollisionProfileName("NoCollision");
+	SkeletalMesh->SetSkeletalMesh(mesh);//부모 클래스의 CItem의 SkeletalMeshComponent 데이터형의 ItemMesh 변수를 가져다 쓴다. ItemMesh에 mesh(=Elven Bow를 할당한 USkeletalMesh)를 할당한다. XXX //앞의 방식을 시도했다가 다시 돌림. 다시 SkeletalMesh 사용으로 변경.
+	SkeletalMesh->SetCollisionProfileName("NoCollision");
 		
 
 	TSubclassOf<UCAnimInstance_Bow> animInstacne;
 	CHelpers::GetClass<UCAnimInstance_Bow>(&animInstacne, "AnimBlueprint'/Game/Weapons/Bow/ABP_ElvenBow.ABP_ElvenBow_C'");//ABP_ElvenBow 레퍼런스 복사하여 생성.
-	ItemMesh->SetAnimInstanceClass(animInstacne);
+	SkeletalMesh->SetAnimInstanceClass(animInstacne);
 
 }
 
@@ -28,15 +29,15 @@ void ACAttachment_Bow::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//AttachTo("Holster_Bow");
+	AttachTo("Holster_Bow");
 
 	//World에 배치 테스트
 	//this->SetActorLocation(FVector(100.0f, 200.0f, 50.0f), false, nullptr, ETeleportType::None);//World에 배치
 
-	ItemMesh->SetVisibility(false);
+	SkeletalMesh->SetVisibility(false);
 
-	PoseableMesh->SetSkeletalMesh(ItemMesh->SkeletalMesh);//SkeletalMesh 내의 SkeletalMesh 사용.
-	PoseableMesh->CopyPoseFromSkeletalComponent(ItemMesh);//포즈를 캡처해둔다.
+	PoseableMesh->SetSkeletalMesh(SkeletalMesh->SkeletalMesh);//SkeletalMesh 내의 SkeletalMesh 사용.
+	PoseableMesh->CopyPoseFromSkeletalComponent(SkeletalMesh);//포즈를 캡처해둔다.
 
 
 	//Player cast하기
@@ -47,11 +48,11 @@ void ACAttachment_Bow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	GetStartAndEndforTrace();
-	GetArrowSpawnLocationAndRotation();
-	ClearArc();
-	ProjectilePath();
-	UpdateArcSpline();
+	//GetStartAndEndforTrace();
+	//GetArrowSpawnLocationAndRotation();
+	//ClearArc();
+	//ProjectilePath();
+	//UpdateArcSpline();
 }
 
 void ACAttachment_Bow::OnBeginEquip_Implementation()
@@ -89,7 +90,7 @@ void ACAttachment_Bow::OnUnequip_Implementation()
 
 float* ACAttachment_Bow::GetBend()
 {
-	return Cast<UCAnimInstance_Bow>(ItemMesh->GetAnimInstance())->GetBend();//UCAnimInstance_Bow 안의 GetBend() 함수로 Bend값 리턴. UCAnimInstance_Bow 안의 Bend값을 사용한다.
+	return Cast<UCAnimInstance_Bow>(SkeletalMesh->GetAnimInstance())->GetBend();//UCAnimInstance_Bow 안의 GetBend() 함수로 Bend값 리턴. UCAnimInstance_Bow 안의 Bend값을 사용한다.
 }
 
 /** 화살 궤적

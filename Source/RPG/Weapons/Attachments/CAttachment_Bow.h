@@ -18,6 +18,9 @@ private:
 
 private:
     UPROPERTY(VisibleAnywhere)
+        class USkeletalMeshComponent* SkeletalMesh;
+
+    UPROPERTY(VisibleAnywhere)
         class UPoseableMeshComponent* PoseableMesh;
 
 public:

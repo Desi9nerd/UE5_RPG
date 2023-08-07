@@ -1,6 +1,7 @@
 #include "CWeaponStructures.h"
 #include "Global.h"
 #include "GameFramework/Character.h"
+#include "Characters/CBaseCharacter.h"
 #include "Components/CStateComponent.h"
 #include "Components/CMovementComponent.h"
 #include "Animation/AnimMontage.h"
@@ -79,8 +80,11 @@ void FHitData::SendDamage(ACharacter* InAttacker, AActor* InAttackCauser, AChara
 void FHitData::PlayMontage(ACharacter* InOwner)
 {
 	if (!!Montage)
-		InOwner->PlayAnimMontage(Montage, PlayRate);
+	{
+		InOwner->PlayAnimMontage(Montage, PlayRate);		
+	}
 }
+
 
 void FHitData::PlayHitStop(UWorld* InWorld)
 {

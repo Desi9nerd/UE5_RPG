@@ -93,7 +93,7 @@ void ACItem::Tick(float DeltaTime)
 
 	if (ItemState == EItemState::EIS_Hovering)//Item이 떠 있는 상태라면
 	{
-		AddActorWorldOffset(FVector(0.f, 0.f, TransformedSin()));
+		AddActorWorldOffset(FVector(1000.f, 0.f, TransformedSin()));
 	}
 }
 

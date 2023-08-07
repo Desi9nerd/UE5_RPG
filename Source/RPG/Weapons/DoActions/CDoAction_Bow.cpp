@@ -1,6 +1,5 @@
 #include "Weapons/DoActions/CDoAction_Bow.h"
 #include "Global.h"
-#include "Characters/CPlayer.h"
 #include "Weapons/CEquipment.h"
 #include "Weapons/Attachments/CAttachment_Bow.h"
 #include "Weapons/AddOns/CArrow.h"
@@ -37,7 +36,7 @@ void UCDoAction_Bow::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipm
 void UCDoAction_Bow::DoAction()
 {
 	CheckFalse(State->IsIdleMode());
-	//CheckFalse(State->IsSubActionMode());//Zoom이 안된 상태에서도 발사가 되도록 하려면 주석을 치거나 지워야 한다.
+	CheckFalse(State->IsSubActionMode());//Zoom이 안된 상태에서도 발사가 되도록 하려면 주석을 치거나 지워야 한다.
 
 	Super::DoAction();
 
@@ -113,7 +112,7 @@ void UCDoAction_Bow::Tick(float InDeltaTime)
 	bCheck &= (*bEquipped == true);//장착 상태여야 한다.
 	bCheck &= (bBeginAction == false);//BeginAction이면(활 발사) 활 시위가 붙으면 안되므로 false여야 한다.
 	bCheck &= (bAttachedString == true);//활 시위 붙는게 true여야 한다.
-
+	
 	CheckFalse(bCheck);
 
 	FVector handLocation = OwnerCharacter->GetMesh()->GetSocketLocation("Hand_Bow_Right");
