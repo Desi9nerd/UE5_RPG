@@ -22,6 +22,8 @@ public:
 	FORCEINLINE bool IsParryingMode() { return Type == EStateType::Parrying; }
 	FORCEINLINE bool IsSubActionMode() { return bInSubActionMode; }
 
+	FORCEINLINE EStateType GetStateType() { return Type; }
+
 public:
 	UCStateComponent();
 

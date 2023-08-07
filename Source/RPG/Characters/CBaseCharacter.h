@@ -86,4 +86,7 @@ public:
 
 protected:
 	void DirectionalHitReact(const FVector& ImpactPoint);
+
+private:
+	int ParryingCnt;
 };

@@ -68,7 +68,16 @@ float ACBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	ACAttachment* CustomDamageEvent = (ACAttachment*)&DamageEvent;
 	ImpactPoint_Hit = CustomDamageEvent->HitResult_CAttachment.ImpactPoint;// Access the impact point
 
-	
+	//Parrying 상태일 때
+	if (State->IsParryingMode() && ACBaseCharacter::ParryingCnt < 5)
+	{
+		LaunchCharacter(GetActorForwardVector() * -200.0f, false, false);
+		ParryingCnt++;//패링카운트 증가
+
+		return NULL;
+	}
+	ParryingCnt = 0;//다음 번에 패링이 되도록 초기화
+
 
 	State->SetHittedMode();//HittedMode로 변경.
 
@@ -77,15 +86,6 @@ float ACBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 
 void ACBaseCharacter::Hitted()
 {
-	//Block 시
-	if (State->IsParryingMode())
-	{
-		LaunchCharacter(GetActorForwardVector() * -200.0f, false, false);
-	
-	
-		return;
-	}
-
 	//Apply Damage 데미지 처리
 	{   //다음 타격 때 꼬이지 않게 하기위해 초기화 해준다.
 		Status->Damage(Damage.Power);
