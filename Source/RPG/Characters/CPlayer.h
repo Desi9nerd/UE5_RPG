@@ -72,8 +72,7 @@ private:
 
 public:
 	void End_Dodge() override;//ICharacter의 함수 오버라이드
-
-
+	
 public:
 	//무기 줍기
 	void FKeyPressed();
@@ -83,7 +82,8 @@ public:
 	ACItem* OverlappingItem;
 
 public:
-	void Click_RightButton();
+	void OnRightButton();
+	void OffRightButton();
 	void MiddleMouse_Pressed();
 	void MiddleMouse_Released();
 

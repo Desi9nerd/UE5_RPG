@@ -22,11 +22,6 @@ ACPlayer::ACPlayer()
 {
 	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent<UCameraComponent>(this, &Camera, "Camera", SpringArm);
-
-	//CHelpers::CreateActorComponent<UCWeaponComponent>(this, &Weapon, "Weapon");
-	//CHelpers::CreateActorComponent<UCMontagesComponent>(this, &Montages, "Montages");
-	//CHelpers::CreateActorComponent<UCMovementComponent>(this, &Movement, "Movement");
-	//CHelpers::CreateActorComponent<UCStateComponent>(this, &State, "State");
 	CHelpers::CreateActorComponent<UCParkourComponent>(this, &Parkour, "Parkour");
 	CHelpers::CreateActorComponent<UCZoomComponent>(this, &Zoom, "Zoom");
 	CHelpers::CreateActorComponent<USplineComponent>(this, &ArrowPathSpline, "ArrowPathSpline");
@@ -131,8 +126,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, Weapon, &UCWeaponComponent::DoAction);
 
-	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Pressed, this, &ACPlayer::Click_RightButton);
-	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Released, Weapon, &UCWeaponComponent::SubAction_Released);
+	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnRightButton);
+	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Released, this, &ACPlayer::OffRightButton);
 
 	PlayerInputComponent->BindAction("MiddleClick", EInputEvent::IE_Pressed, this, &ACPlayer::MiddleMouse_Pressed);
 	PlayerInputComponent->BindAction("MiddleClick", EInputEvent::IE_Released, this, &ACPlayer::MiddleMouse_Released);
@@ -178,7 +173,7 @@ void ACPlayer::End_Dodge()
 {
 	EnableInput(PlayerController);//Dodge가 끝날때 키 입력이 다시 되게 되돌려준다.
 
-	Movement->DisableControlRotation();//Backstep이 끝나면 원래대로 돌려준다.
+	Movement->DisableControlRotation();//Dodge이 끝나면 원래대로 돌려준다.
 
 	State->SetIdleMode();//Idle상태로 돌려줌.
 }
@@ -187,15 +182,16 @@ void ACPlayer::FKeyPressed()
 {
 	CLog::Print(L"F Key Pressed!");
 
-	ACAttachment* OverlappingWeapon = Cast<ACAttachment>(OverlappingItem);
-	if (!!OverlappingWeapon)
-	{
-		Weapon->ItemsArray.Add(OverlappingWeapon);
-		OverlappingWeapon->AttachTo(OverlappingWeapon->GetHolsterSocketName());
-
-		OverlappingWeapon = nullptr;
-		OverlappingItem = nullptr;
-	}
+	//ACAttachment* OverlappingWeapon = Cast<ACAttachment>(OverlappingItem);
+	//if (!!OverlappingWeapon)
+	//{
+	//	Weapon->ItemsArray.Add(OverlappingWeapon);
+	//	OverlappingWeapon->AttachTo(OverlappingWeapon->GetHolsterSocketName());
+	//
+	//
+	//	OverlappingWeapon = nullptr;
+	//	OverlappingItem = nullptr;
+	//}
 
 	//else
 	//{
@@ -218,7 +214,7 @@ void ACPlayer::SetOverlappingItem(ACItem* Item)
 	}
 }
 
-void ACPlayer::Click_RightButton()
+void ACPlayer::OnRightButton()
 {
 	if (Weapon->IsUnarmedMode())
 	{
@@ -227,7 +223,24 @@ void ACPlayer::Click_RightButton()
 		return;
 	}
 
+	if (Weapon->IsBowMode())
+	{
+		//BowMode(활 장착)일 때 우클릭을 누르고 있을때 Zoom기능을 꺼준다.
+		Zoom->SetComponentTickEnabled(false);
+	}
+
 	Weapon->SubAction_Pressed();
+}
+
+void ACPlayer::OffRightButton()
+{
+	if (Weapon->IsBowMode())
+	{
+		//BowMode(활 장착)일 때 우클릭을 떼면 Zoom기능을 켜준다.
+		Zoom->SetComponentTickEnabled(true);
+	}
+
+	Weapon->SubAction_Released();
 }
 
 void ACPlayer::MiddleMouse_Pressed()
