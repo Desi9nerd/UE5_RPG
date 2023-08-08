@@ -1,5 +1,6 @@
 #include "Weapons/SubActions/CSubAction_Bow.h"
 #include "Global.h"
+#include "AIController.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -20,6 +21,16 @@ UCSubAction_Bow::UCSubAction_Bow()
 void UCSubAction_Bow::Pressed()
 {
 	CheckTrue(State->IsSubActionMode());
+
+	//Enemy AI
+	if (!!Owner->GetController<AAIController>())
+	{
+		Super::Pressed();
+		State->OnSubActionMode();
+
+		return;
+	}
+
 	CheckNull(SpringArm);
 	CheckNull(Camera);
 
@@ -51,6 +62,16 @@ void UCSubAction_Bow::Pressed()
 void UCSubAction_Bow::Released()
 {
 	CheckFalse(State->IsSubActionMode());
+
+	//Enemy AI
+	if (!!Owner->GetController<AAIController>())
+	{
+		Super::Pressed();
+		State->OffSubActionMode();
+
+		return;
+	}
+
 	CheckNull(SpringArm);
 	CheckNull(Camera);
 
