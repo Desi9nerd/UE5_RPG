@@ -14,9 +14,6 @@ private:
 		float AvoidRange = 500;//탐지되었을때 회피범위
 
 	UPROPERTY(EditAnywhere, Category = "Action")
-		float AttackRange = 1000;//탐지되었을때 공격볌위
-
-	UPROPERTY(EditAnywhere, Category = "Action")
 		bool bDrawDebug;//디버깅 그리기 회피범위
 
 public:
