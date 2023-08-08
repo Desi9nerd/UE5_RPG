@@ -7,6 +7,7 @@
 #include "Components/CStateComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Weapons/Attachments/CAttachment_Bow.h"
+#include "Characters/CPlayer.h"
 
 UCSubAction_Bow::UCSubAction_Bow()
 {
@@ -91,8 +92,10 @@ void UCSubAction_Bow::BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment,
 	if (!!bow)
 		Bend = bow->GetBend();//CSubAction_Bow에서 선언한 Bend 변수에 CAttachment_Bow의 Bend값을 GetBend()로 가져와서 넣어준다.
 
+
 	//CrossHair Widget
-	if (!!CrossHairClass)
+	ACPlayer* PlayerCharacterTemp = Cast<ACPlayer>(InOwner);
+	if (!!CrossHairClass && PlayerCharacterTemp)
 	{
 		CrossHair = CreateWidget<UCUserWidget_CrossHair, APlayerController>(Owner->GetController<APlayerController>(), CrossHairClass);
 		CrossHair->AddToViewport();

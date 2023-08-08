@@ -93,7 +93,7 @@ void ACAttachment::AttachTo(FName InSocketName)
 
 	//무기 줍기 추가
 	//ItemState = EItemState::EIS_Equipped;
-
+	//
 	//DisableSphereCollision();
 	//PlayEquipSound();
 	//DeactivateEmbers();
@@ -113,8 +113,8 @@ void ACAttachment::AttachToCollision(FName InCollisionName)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-//
-//void ACAttachment::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
+
+//void ACAttachment::Equip(USceneComponent* InParent, FName InSocketName, AActor* /NewOwner,APawn*/ NewInstigator)
 //{
 //	ItemState = EItemState::EIS_Equipped;
 //	SetOwner(NewOwner);
@@ -158,3 +158,4 @@ void ACAttachment::AttachToCollision(FName InCollisionName)
 //		ItemEffect->Deactivate();
 //	}
 //}
+//

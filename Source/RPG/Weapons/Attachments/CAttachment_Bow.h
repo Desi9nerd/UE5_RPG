@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Kismet/GameplayStaticsTypes.h"
 #include "Weapons/CAttachment.h"
 #include "CAttachment_Bow.generated.h"
 
@@ -22,6 +23,15 @@ private:
 
     UPROPERTY(VisibleAnywhere)
         class UPoseableMeshComponent* PoseableMesh;
+
+    UPROPERTY(VisibleAnywhere)
+        class USplineComponent* ArrowPathSpline;//화살 궤적 Spline\
+
+    UPROPERTY(VisibleAnywhere)
+        class UStaticMeshComponent* ArcEndSphere;//화살 궤적 포인트
+
+    UPROPERTY(VisibleAnywhere)
+        class USplineMeshComponent* ArrowPathSplineMesh;//화살 궤적 매쉬
 
 public:
     float* GetBend();
@@ -65,9 +75,12 @@ protected:
     TArray<USplineMeshComponent*> SplineMeshes;
 
     UPROPERTY(EditAnywhere, Category = "ArrowSpeed")
-        float ArrowSpeed;
+        float ArrowSpeed = 2500.0f;
 
 private:
     ACPlayer* PlayerCharacter;
-    FHitResult HitResult;//Arrow 경로 LineTrace의 HitResults
+    FHitResult TraceHitResult;//Arrow 경로 LineTrace의 HitResults
+    FPredictProjectilePathResult PredictResult;
+    FVector FinalArcLocation;
+    
 };
