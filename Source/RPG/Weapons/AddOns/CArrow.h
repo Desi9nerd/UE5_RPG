@@ -14,7 +14,7 @@ class RPG_API ACArrow : public AActor
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "LifeSpan")
-		float LifeSpanAfterCollision = 1;//충돌 후 몇 초 후에 사라지는지
+		float LifeSpanAfterCollision = 3;//충돌 후 몇 초 후에 사라지는지
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCapsuleComponent* Capsule;//충돌체

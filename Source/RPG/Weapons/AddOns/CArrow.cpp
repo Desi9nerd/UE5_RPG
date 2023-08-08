@@ -57,7 +57,13 @@ void ACArrow::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	Projectile->StopMovementImmediately();
 	Projectile->ProjectileGravityScale = 0;
 
-	AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
+	//가장 가까운 Bone에 화살 붙이기
+	ACharacter* HittedCharacter = Cast<ACharacter>(OtherActor);
+	FName ClosestBone = HittedCharacter->GetMesh()->FindClosestBone(Hit.Location);
+	
+	//AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform, ClosestBone);
+	this->AttachToComponent(HittedCharacter->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, ClosestBone);
+	
 
 	Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
