@@ -78,7 +78,7 @@ protected:
         float ArrowSpeed = 2500.0f;
 
 private:
-    ACPlayer* PlayerCharacter;
+    ACPlayer* PlayerCharacterCast;
     FHitResult TraceHitResult;//Arrow ∞Ê∑Œ LineTrace¿« HitResults
     //FPredictProjectilePathResult PredictResult;
     FVector FinalArcLocation;

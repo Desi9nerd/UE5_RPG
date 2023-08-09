@@ -1,5 +1,4 @@
 #include "HUD/CCharacterHUD.h"
-
 #include "CPlayerOverlay.h"
 
 void ACCharacterHUD::BeginPlay()

@@ -46,6 +46,9 @@ private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCZoomComponent* Zoom;
 
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCPlayerOverlay* PlayerOverlay;
+
 public:
 	UPROPERTY(VisibleDefaultsOnly)
 		USplineComponent* ArrowPathSpline;
@@ -95,4 +98,12 @@ private:
 
 private:
 	APlayerController* PlayerController;//PlayerController 변수
+
+public:
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;//TakeDamage 오버라이드하여 재정의.
+
+//HUD
+private:
+	void InitializePlayerOverlay();
+	void SetHUDHealth();
 };

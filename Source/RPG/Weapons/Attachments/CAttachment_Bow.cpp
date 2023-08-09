@@ -15,9 +15,6 @@ ACAttachment_Bow::ACAttachment_Bow()
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &SkeletalMesh, "SkeletalMesh", Root);
 	CHelpers::CreateComponent<UPoseableMeshComponent>(this, &PoseableMesh, "PoseableMesh", Root);
 
-	CHelpers::CreateComponent<USplineComponent>(this, &ArrowPathSpline, "ArrowPathSpline", Root);
-	ArcEndSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-	ArrowPathSplineMesh = CreateDefaultSubobject<USplineMeshComponent>(TEXT("ArrowPathSplineMesh"));
 
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Character/Weapons/ElvenBow/SK_ElvenBow.SK_ElvenBow'");//ElevenBow 에셋을 할당한다.
@@ -47,20 +44,26 @@ void ACAttachment_Bow::BeginPlay()
 
 
 	//Player cast하기
-	PlayerCharacter = Cast<ACPlayer>(OwnerCharacter);
+	PlayerCharacterCast = Cast<ACPlayer>(OwnerCharacter);
+	if (!!PlayerCharacterCast)
+	{
+		CHelpers::CreateComponent<USplineComponent>(this, &ArrowPathSpline, "ArrowPathSpline", Root);
+		ArcEndSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+		ArrowPathSplineMesh = CreateDefaultSubobject<USplineMeshComponent>(TEXT("ArrowPathSplineMesh"));
+	}
 }
 
 void ACAttachment_Bow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(!!PlayerCharacter)
+	if(!!PlayerCharacterCast)
 	{
 		GetStartAndEndforTrace();
 		GetArrowSpawnLocationAndRotation();
 		ClearArc();
-		//FPredictProjectilePathResult InPredictResult = ProjectilePath();
-		UpdateArcSpline(ProjectilePath());
+		FPredictProjectilePathResult InPredictResult = ProjectilePath();
+		UpdateArcSpline(InPredictResult);
 	}
 }
 
@@ -128,7 +131,7 @@ void ACAttachment_Bow::GetArrowSpawnLocationAndRotation()
 		ImpactPoint = TraceHitResult.ImpactPoint;
 	}
 
-	TargetArrowSpawnLocation = PlayerCharacter->GetMesh()->GetSocketTransform(FName("Hand_Bow_Right_Arrow"), RTS_World).GetLocation();
+	TargetArrowSpawnLocation = PlayerCharacterCast->GetMesh()->GetSocketTransform(FName("Hand_Bow_Right_Arrow"), RTS_World).GetLocation();
 	TargetArrowSpawnRotation = UKismetMathLibrary::MakeRotFromX((ImpactPoint - TargetArrowSpawnLocation));
 
 	ArrowSpawnLocation = UKismetMathLibrary::VInterpTo(ArrowSpawnLocation, TargetArrowSpawnLocation, GetWorld()->DeltaTimeSeconds, 30.0f);

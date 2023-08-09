@@ -17,6 +17,10 @@
 #include "Item/CItem.h"
 #include "Weapons/CAttachment.h"
 #include "Weapons/Attachments/CAttachment_Bow.h"
+//HUD
+#include "Components/CStatusComponent.h"
+#include "HUD/CCharacterHUD.h"
+#include "HUD/CPlayerOverlay.h"
 
 ACPlayer::ACPlayer()
 {
@@ -94,6 +98,7 @@ void ACPlayer::BeginPlay()
 	State->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
 	
 	PlayerController = Cast<APlayerController>(GetController());//PlayerController 캐스팅
+	InitializePlayerOverlay();//PlayerHUD 띄우기
 }
 
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -275,4 +280,45 @@ void ACPlayer::SetZooming(float InValue)
 	CheckTrue(Weapon->IsBowMode());//BowMode이면 바로 리턴
 
 	Zoom->SetZoomValue(InValue);//BowMode가 아닌 경우 Zoom In&Out 가능.
+}
+
+
+ 
+//////////////////////////////////////////////////////////////
+  
+ 
+ 
+float ACPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+                           AActor* DamageCauser)
+{
+	SetHUDHealth();
+
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+void ACPlayer::InitializePlayerOverlay()
+{
+	if (!!PlayerController)
+	{
+		ACCharacterHUD* PlayerHUD = Cast<ACCharacterHUD>(PlayerController->GetHUD());
+		if (!!PlayerHUD)
+		{
+			PlayerOverlay = PlayerHUD->GetPlayerOverlay();
+			if (PlayerOverlay && Status)
+			{
+				PlayerOverlay->SetHealthBarPercent(Status->GetHealthPercent());
+				PlayerOverlay->SetStaminaBarPercent(1.f);
+				PlayerOverlay->SetGold(0);
+				PlayerOverlay->SetSouls(0);
+			}
+		}
+	}
+}
+
+void ACPlayer::SetHUDHealth()
+{
+	if (PlayerOverlay && Status)
+	{
+		PlayerOverlay->SetHealthBarPercent(Status->GetHealthPercent());
+	}
 }

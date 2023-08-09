@@ -19,6 +19,8 @@ public:
     FORCEINLINE float GetMaxHealth() { return MaxHealth; }
     FORCEINLINE bool IsDead() { return Health <= 0.0f; }
 
+    FORCEINLINE float GetHealthPercent() { return Health / MaxHealth; }
+    
 public:
     UCStatusComponent();
 
