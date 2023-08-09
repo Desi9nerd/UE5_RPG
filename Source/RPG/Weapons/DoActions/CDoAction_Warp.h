@@ -32,6 +32,7 @@ private:
 private:
     class APlayerController* PlayerController;
     class UDecalComponent* Decal;
+    class UCAIBehaviorComponent* Behavior;//UCAIBehaviorComponent(=Behavior 변수) 유무에 따라 Enemy인지 Player인지 구분할 수 있다.
 
 private:
     FVector MoveToLocation;

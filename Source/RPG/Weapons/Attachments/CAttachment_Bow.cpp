@@ -28,9 +28,7 @@ ACAttachment_Bow::ACAttachment_Bow()
 	TSubclassOf<UCAnimInstance_Bow> animInstacne;
 	CHelpers::GetClass<UCAnimInstance_Bow>(&animInstacne, "AnimBlueprint'/Game/Weapons/Bow/ABP_ElvenBow.ABP_ElvenBow_C'");//ABP_ElvenBow 레퍼런스 복사하여 생성.
 	SkeletalMesh->SetAnimInstanceClass(animInstacne);
-
-	//Player 캐스팅
-	PlayerCharacter = Cast<ACPlayer>(OwnerCharacter);
+	
 }
 
 void ACAttachment_Bow::BeginPlay()
@@ -61,8 +59,8 @@ void ACAttachment_Bow::Tick(float DeltaTime)
 		GetStartAndEndforTrace();
 		GetArrowSpawnLocationAndRotation();
 		ClearArc();
-		ProjectilePath();
-		UpdateArcSpline();		
+		//FPredictProjectilePathResult InPredictResult = ProjectilePath();
+		UpdateArcSpline(ProjectilePath());
 	}
 }
 
@@ -120,6 +118,7 @@ void ACAttachment_Bow::GetArrowSpawnLocationAndRotation()
 {
 	TArray<AActor*> ignores;
 	ignores.Add(OwnerCharacter);
+	ignores.Add(this);
 
 	//start에 CrosshairWorldLocation, end에 ImpactPoint를 넣어준다. TraceTypeQuery1은 Visibility
 	UKismetSystemLibrary::LineTraceSingle(GetWorld(), CrosshairWorldLocation, ImpactPoint, ETraceTypeQuery::TraceTypeQuery1, false, ignores, EDrawDebugTrace::ForOneFrame, TraceHitResult, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
@@ -137,27 +136,24 @@ void ACAttachment_Bow::GetArrowSpawnLocationAndRotation()
 }
 
 void ACAttachment_Bow::ClearArc()
-{
-	if (SplineMeshes.IsValidIndex(0))
+{	
+	for (const auto& i : SplineMeshes)
 	{
-		while (SplineMeshes.IsValidIndex(0))
-		{
-			//SplineMeshes[0]->DestroyComponent();
-			SplineMeshes.RemoveAt(0);
-		}
+		i->DestroyComponent();
 	}
 
 	SplineMeshes.Empty();
 	
-	PlayerCharacter->ArrowPathSpline->ClearSplinePoints(true);
+	ArrowPathSpline->ClearSplinePoints(true);
 }
 
-void ACAttachment_Bow::ProjectilePath()
+FPredictProjectilePathResult ACAttachment_Bow::ProjectilePath()
 {
 	FVector StartLocation = ArrowSpawnLocation;
 	FVector LaunchVelocity = UKismetMathLibrary::GetForwardVector(ArrowSpawnRotation) * ArrowSpeed;
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(OwnerCharacter);
+	ActorsToIgnore.Add(this);
 
 
 	FPredictProjectilePathParams PredictParams;
@@ -167,41 +163,45 @@ void ACAttachment_Bow::ProjectilePath()
 	PredictParams.ProjectileRadius = 5.0f;
 	PredictParams.MaxSimTime = 5.0f;
 	PredictParams.bTraceWithChannel = true;
-	//PredictParams.TraceChannel = ETraceTypeQuery::TraceTypeQuery1;
+	PredictParams.TraceChannel = ECollisionChannel::ECC_Visibility;
 	PredictParams.ActorsToIgnore = ActorsToIgnore;
 	PredictParams.SimFrequency = 20.0f;
 	PredictParams.OverrideGravityZ = 0.0f;
 	PredictParams.DrawDebugType = EDrawDebugTrace::ForOneFrame;
-	PredictParams.DrawDebugTime = 5.0f;
+	PredictParams.DrawDebugTime = 2.0f;
 	PredictParams.bTraceComplex = false;
-	
 
-	//FPredictProjectilePathResult PredictResult;
+
+	FPredictProjectilePathResult PredictResult;
 
 	UGameplayStatics::PredictProjectilePath(this, PredictParams, PredictResult);
 
+	return PredictResult;
 }
 
-void ACAttachment_Bow::UpdateArcSpline()
+void ACAttachment_Bow::UpdateArcSpline(FPredictProjectilePathResult InPredictResult)
 {
-	for (const auto& i : PredictResult.PathData)
+	FPredictProjectilePathResult PredictProjectilePathResult = InPredictResult;
+
+	for (const auto& i : PredictProjectilePathResult.PathData)
 	{
 		ArrowPathSpline->AddSplinePoint(i.Location, ESplineCoordinateSpace::Local, true);
 		ArcEndSphere->SetWorldLocation(FinalArcLocation, false);
 	}
 
-	//ArrowPathSpline->SetSplinePointType(UKismetArrayLibrary::Array_LastIndex(PredictResult.PathData), //ESplinePointType::CurveClamped, true);
-	//
-	//FinalArcLocation = PredictResult.PathData;
+	ArrowPathSpline->SetSplinePointType((PredictProjectilePathResult.PathData.Num()-1), ESplinePointType::CurveClamped, true);
+	FinalArcLocation = PredictProjectilePathResult.PathData[PredictProjectilePathResult.PathData.Num()-1].Location;
 
 
 	for (int32 i = 0; i < ArrowPathSpline->GetNumberOfSplinePoints() - 2; i++)
 	{
-		//ArrowPathSplineMesh->bCreatedByConstructionScript = true;
-		ArrowPathSplineMesh->SetMobility(EComponentMobility::Movable);
-		//ArrowPathSplineMesh->AttachParent = mSplineComponent;
+		SplineMeshes.Add(ArrowPathSplineMesh);
 
-		//Set the color!
+		//ArrowPathSplineMesh->bCreatedByConstructionScript = true;
+		//ArrowPathSplineMesh->SetMobility(EComponentMobility::Movable);
+		//ArrowPathSplineMesh->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, FName("Hand_Bow_Right_Arrow"));
+
+		//색 지정. 굳이 안 해도 된다.
 		//UMaterialInstanceDynamic* dynamicMat = UMaterialInstanceDynamic::Create(mSplineMeshMaterial, NULL);
 		//dynamicMat->SetVectorParameterValue(TEXT("Color"), FLinearColor(mSegments[i].mColor));
 
@@ -209,7 +209,7 @@ void ACAttachment_Bow::UpdateArcSpline()
 		//ArrowPathSplineMesh->SetStaticMesh(mGridMesh);
 		//ArrowPathSplineMesh->SetMaterial(0, dynamicMat);
 
-		//Width of the mesh 
+		//mesh 두께
 		ArrowPathSplineMesh->SetStartScale(FVector2D(5, 5));
 		ArrowPathSplineMesh->SetEndScale(FVector2D(5, 5));
 

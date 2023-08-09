@@ -60,8 +60,8 @@ private:
     void GetStartAndEndforTrace();
     void GetArrowSpawnLocationAndRotation();
     void ClearArc();
-    void ProjectilePath();
-    void UpdateArcSpline();
+    FPredictProjectilePathResult ProjectilePath();
+    void UpdateArcSpline(FPredictProjectilePathResult InPredictResult);
 
 protected:
     FVector CrosshairWorldLocation;
@@ -80,7 +80,7 @@ protected:
 private:
     ACPlayer* PlayerCharacter;
     FHitResult TraceHitResult;//Arrow ∞Ê∑Œ LineTrace¿« HitResults
-    FPredictProjectilePathResult PredictResult;
+    //FPredictProjectilePathResult PredictResult;
     FVector FinalArcLocation;
     
 };

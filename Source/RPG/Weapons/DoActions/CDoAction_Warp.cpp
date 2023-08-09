@@ -5,6 +5,7 @@
 #include "Components/CStateComponent.h"
 #include "Components/DecalComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/CAIBehaviorComponent.h"
 #include "Weapons/CAttachment.h"
 
 UCDoAction_Warp::UCDoAction_Warp()
@@ -18,6 +19,8 @@ void UCDoAction_Warp::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquip
 
 	Decal = CHelpers::GetComponent<UDecalComponent>(InAttachment);
 	PlayerController = OwnerCharacter->GetController<APlayerController>();
+
+	Behavior = CHelpers::GetComponent<UCAIBehaviorComponent>(InOwner);
 }
 
 void UCDoAction_Warp::Tick(float InDeltaTime)
@@ -74,8 +77,18 @@ void UCDoAction_Warp::Begin_DoAction()
 {
 	Super::Begin_DoAction();
 
-	OwnerCharacter->SetActorLocation(MoveToLocation);//DoAction에서 설정한 MoveToLocation 위치로 이동한다.
-	MoveToLocation = FVector::ZeroVector;//이동 후에 MoveToLocation 위치를 ZeroVector로 초기화해준다.
+	//Player
+	if (!!PlayerController)
+	{
+		OwnerCharacter->SetActorLocation(MoveToLocation);//DoAction에서 설정한 MoveToLocation 위치로 이동한다.
+		MoveToLocation = FVector::ZeroVector;//이동 후에 MoveToLocation 위치를 ZeroVector로 초기화해준다.
+
+		return;//밑의 Enemy AI 기준의 Warp를 실행하지 않기 위해 리턴.
+	}
+
+	//Enemy AI
+	CheckNull(Behavior);
+	OwnerCharacter->SetActorLocation(Behavior->GetAvoidLocation());
 }
 
 bool UCDoAction_Warp::GetCursorLocationAndRotation(FVector& OutLocation, FRotator& OutRotation)

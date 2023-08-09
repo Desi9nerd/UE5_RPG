@@ -70,6 +70,11 @@ void UCAIBehaviorComponent::SetPatrolLocation(const FVector& InLocation)
 	Blackboard->SetValueAsVector(PatrolLocationKey, InLocation);
 }
 
+FVector UCAIBehaviorComponent::GetAvoidLocation()
+{
+	return Blackboard->GetValueAsVector(AvoidLocationKey);
+}
+
 void UCAIBehaviorComponent::SetWaitMode()
 {
 	ChangeType(EAIStateType::Wait);
