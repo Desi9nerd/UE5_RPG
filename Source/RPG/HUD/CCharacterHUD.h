@@ -22,5 +22,5 @@ private:
 		UCPlayerOverlay* PlayerOverlay;
 public:
 	//const를 사용하여 return value전용으로 만듬.
-	FORCEINLINE UCPlayerOverlay* GetSlashOverlay() const { return PlayerOverlay; }
+	FORCEINLINE UCPlayerOverlay* GetPlayerOverlay() const { return PlayerOverlay; }
 };
