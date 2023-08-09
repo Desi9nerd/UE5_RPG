@@ -86,6 +86,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
 				checkBoxes->CheckDefaultValue(index++, data.bCanMove);
 				checkBoxes->CheckDefaultValue(index++, data.bFixedCamera);
+				checkBoxes->CheckDefaultValue(index++, data.Launch);
 				checkBoxes->CheckDefaultObject(index++, data.Effect);
 				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
 				checkBoxes->CheckDefaultValue(index++, data.EffectScale);
@@ -97,7 +98,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("HitData", FText::FromString("Hit Data"));
-		IDetailPropertyRow& row = category.AddProperty("HitDatas", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. DoActionDatas
+		IDetailPropertyRow& row = category.AddProperty("HitDatas", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. HitDatas
 
 		if (bRefreshByCheckBoxes == false)
 		{
@@ -132,7 +133,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("AirborneInitATK", FText::FromString("AirborneInitATK"));
-		IDetailPropertyRow& row = category.AddProperty("DoActionDatas_AirborneATK", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. DoActionDatas
+		IDetailPropertyRow& row = category.AddProperty("DoActionDatas_AirborneATK", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. DoActionDatas_AirborneATK
 
 		if (bRefreshByCheckBoxes == false)
 		{
@@ -154,6 +155,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
 				checkBoxes->CheckDefaultValue(index++, data.bCanMove);
 				checkBoxes->CheckDefaultValue(index++, data.bFixedCamera);
+				checkBoxes->CheckDefaultValue(index++, data.Launch);
 				checkBoxes->CheckDefaultObject(index++, data.Effect);
 				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
 				checkBoxes->CheckDefaultValue(index++, data.EffectScale);
@@ -164,8 +166,8 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 	//HitData_AirborneInitATK
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
-		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("HitData_AirborneInitATK", FText::FromString("Hit Data AirborneInitATK"));
-		IDetailPropertyRow& row = category.AddProperty("HitDatas_AirborneATK", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. DoActionDatas
+		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("HitDatas_AirborneATK", FText::FromString("Hit Data AirborneInitATK"));
+		IDetailPropertyRow& row = category.AddProperty("HitDatas_AirborneATK", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. HitDatas_AirborneATK
 
 		if (bRefreshByCheckBoxes == false)
 		{
@@ -199,7 +201,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 	//DoActionData_AirCombo
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
-		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("DoActionData_AirCombo", FText::FromString("DoAction Data AirCombo"));
+		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("DoActionDatas_AirCombo", FText::FromString("DoAction Data AirCombo"));
 		IDetailPropertyRow& row = category.AddProperty("DoActionDatas_AirCombo", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. DoActionDatas_AirCombo
 
 		if (bRefreshByCheckBoxes == false)
@@ -222,6 +224,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
 				checkBoxes->CheckDefaultValue(index++, data.bCanMove);
 				checkBoxes->CheckDefaultValue(index++, data.bFixedCamera);
+				checkBoxes->CheckDefaultValue(index++, data.Launch);
 				checkBoxes->CheckDefaultObject(index++, data.Effect);
 				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
 				checkBoxes->CheckDefaultValue(index++, data.EffectScale);
@@ -231,8 +234,8 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 	//HitData_AirCombo
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
-		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("HitData_AirCombo", FText::FromString("Hit Data AirCombo"));
-		IDetailPropertyRow& row = category.AddProperty("HitDatas_AirCombo", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. DoActionDatas
+		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("HitDatas_AirCombo", FText::FromString("Hit Data AirCombo"));
+		IDetailPropertyRow& row = category.AddProperty("HitDatas_AirCombo", type);//변수 추가 //WeaponAsset에 있는 데이터명과 일치시킨다. HitDatas_AirCombo
 
 		if (bRefreshByCheckBoxes == false)
 		{

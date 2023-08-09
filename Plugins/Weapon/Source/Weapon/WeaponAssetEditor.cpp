@@ -94,6 +94,34 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 		prop.RegisterCustomPropertyTypeLayout("HitData", instance);//instance를 delegate 등록
 	}
 
+	//AirborneInitATK
+	{
+		FOnGetPropertyTypeCustomizationInstance instance;
+		instance.BindStatic(&SWeaponDoActionData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("DoActionDatas_AirborneATK", instance);//instance를 delegate 등록
+	}
+
+	//HitData_AirborneInitATK
+	{
+		FOnGetPropertyTypeCustomizationInstance instance;
+		instance.BindStatic(&SWeaponHitData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("HitDatas_AirborneATK", instance);//instance를 delegate 등록
+	}
+
+	//DoActionData_AirCombo
+	{
+		FOnGetPropertyTypeCustomizationInstance instanceAir;
+		instanceAir.BindStatic(&SWeaponDoActionData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("DoActionDatas_AirCombo", instanceAir);//instance를 delegate 등록
+	}
+
+	//HitData_AirCombo
+	{
+		FOnGetPropertyTypeCustomizationInstance instanceAirHit;
+		instanceAirHit.BindStatic(&SWeaponHitData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("HitDatas_AirCombo", instanceAirHit);//instance를 delegate 등록
+	}
+
 	//Layout 설정
 	TSharedRef<FTabManager::FLayout> layout = FTabManager::NewLayout("WeaponAssetEditor_Layout")
 		->AddArea //전체화면의 메인 영역
@@ -160,7 +188,10 @@ bool FWeaponAssetEditor::OnRequestClose()
 			FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");//해당모듈을 가져온다.
 			prop.UnregisterCustomClassLayout("EquipmentData");//등록 해제
 			prop.UnregisterCustomClassLayout("DoActionData");//등록 해제
-			prop.UnregisterCustomClassLayout("HitData");//등록 해제
+			prop.UnregisterCustomClassLayout("DoActionDatas_AirborneATK");//등록 해제
+			prop.UnregisterCustomClassLayout("HitDatas_AirborneATK");//등록 해제
+			prop.UnregisterCustomClassLayout("DoActionDatas_AirCombo");//등록 해제
+			prop.UnregisterCustomClassLayout("HitDatas_AirCombo");//등록 해제
 		}
 	}
 
