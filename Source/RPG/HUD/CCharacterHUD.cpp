@@ -28,10 +28,9 @@ void ACCharacterHUD::OnStaminaPromptText()
 {
 	PromptText->SetVisibility(ESlateVisibility::Visible);
 
-	//FTimerDelegate delegate = FTimerDelegate::CreateLambda([this]() { OffStaminaPromptText(); });
+	FTimerDelegate delegate = FTimerDelegate::CreateLambda([this]() { OffStaminaPromptText(); });
 	
-	//GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-	//GetWorld()->GetTimerManager().SetTimer(TimerHandle, delegate, 3.0f, false, 0);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, delegate, 2.5f, false);
 }
 
 void ACCharacterHUD::OffStaminaPromptText()
