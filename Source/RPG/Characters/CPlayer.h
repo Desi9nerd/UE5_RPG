@@ -58,6 +58,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	void Tick(float DeltaSeconds) override;
 
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

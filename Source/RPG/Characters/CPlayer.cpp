@@ -101,6 +101,17 @@ void ACPlayer::BeginPlay()
 	InitializePlayerOverlay();//PlayerHUD 띄우기
 }
 
+void ACPlayer::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (PlayerOverlay && Status)
+	{
+		Status->RegenStamina(DeltaSeconds);
+		PlayerOverlay->SetStaminaBarPercent(Status->GetStaminaPercent());
+	}
+}
+
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -172,6 +183,12 @@ void ACPlayer::Dodge()
 	Movement->EnableControlRotation();//정면을 바라본 상태로 뒤로 뛰어야하기 때문에 EnableControlRotation으로 만들어준다.
 
 	Montages->PlayDodgeMode();//PlayDodgeMode()를 통해 몽타주 재생.
+
+	if (PlayerOverlay && Status)
+	{
+		Status->UseStamina(Status->GetDodgeCost());//Dodge 실행 시 Stamina 소모
+		PlayerOverlay->SetStaminaBarPercent(Status->GetStaminaPercent());//StaminaBar 업데이트
+	}
 }
 
 void ACPlayer::End_Dodge()
@@ -307,7 +324,7 @@ void ACPlayer::InitializePlayerOverlay()
 			if (PlayerOverlay && Status)
 			{
 				PlayerOverlay->SetHealthBarPercent(Status->GetHealthPercent());
-				PlayerOverlay->SetStaminaBarPercent(1.f);
+				PlayerOverlay->SetStaminaBarPercent(0.5f);//시작 시 Stamina값
 				PlayerOverlay->SetGold(0);
 				PlayerOverlay->SetSouls(0);
 			}
