@@ -337,7 +337,7 @@ void ACPlayer::InitializePlayerOverlay()
 			if (PlayerOverlay && Status)
 			{
 				PlayerOverlay->SetHealthBarPercent(Status->GetHealthPercent());
-				PlayerOverlay->SetStaminaBarPercent(100.0f);//시작 시 Stamina값
+				PlayerOverlay->SetStaminaBarPercent(Status->GetStaminaPercent());//시작 시 Stamina값
 				PlayerOverlay->SetGold(0);
 				PlayerOverlay->SetSouls(0);
 			}

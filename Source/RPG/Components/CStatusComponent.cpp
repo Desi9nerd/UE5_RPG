@@ -13,7 +13,9 @@ void UCStatusComponent::BeginPlay()
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 
+	//게임 시작 시 체력, 스테미나 Max로 시작.
 	Health = MaxHealth;
+	Stamina = MaxStamina;
 }
 
 void UCStatusComponent::RegenStamina(float DeltaTime)
