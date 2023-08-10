@@ -32,7 +32,6 @@ private:
 		class UCameraComponent* Camera;
 
 /** 파쿠르 */
-private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USceneComponent* ArrowGroup;//파쿠르를 위한 ArrowGroup
 
@@ -48,6 +47,9 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCPlayerOverlay* PlayerOverlay;
+	
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCPromptText* PromptTextWidget;
 
 public:
 	UPROPERTY(VisibleDefaultsOnly)

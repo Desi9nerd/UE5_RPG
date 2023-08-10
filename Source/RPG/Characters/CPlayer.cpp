@@ -19,8 +19,10 @@
 #include "Weapons/Attachments/CAttachment_Bow.h"
 //HUD
 #include "Components/CStatusComponent.h"
+#include "Components/WidgetComponent.h"
 #include "HUD/CCharacterHUD.h"
 #include "HUD/CPlayerOverlay.h"
+#include "HUD/CPromptText.h"
 
 ACPlayer::ACPlayer()
 {
@@ -172,6 +174,23 @@ void ACPlayer::OnAvoid()
 
 	CheckTrue(InputComponent->GetAxisValue("MoveForward") == 0.0f && InputComponent->GetAxisValue("MoveRight") == 0.0f);
 
+	CheckNull(Status);
+
+	if (Status->GetStamina() < Status->GetDodgeCost())
+	{
+		CLog::Log(FString("Low Stamina"));
+
+		ACCharacterHUD* PlayerHUD = Cast<ACCharacterHUD>(PlayerController->GetHUD());
+		PlayerHUD->OnStaminaPromptText();
+
+		return;//현재 Stamina가 Dodge를 실행하는데 소모되는 Stamina보다 작다면 리턴.
+	}
+	
+	if (PlayerOverlay)
+	{
+		Status->UseStamina(Status->GetDodgeCost());//Dodge 실행 시 Stamina 소모
+		PlayerOverlay->SetStaminaBarPercent(Status->GetStaminaPercent());//StaminaBar 업데이트
+	}
 
 	State->SetDodgeMode();//State을 DodgeMode로 변경한다.
 }
@@ -183,12 +202,6 @@ void ACPlayer::Dodge()
 	Movement->EnableControlRotation();//정면을 바라본 상태로 뒤로 뛰어야하기 때문에 EnableControlRotation으로 만들어준다.
 
 	Montages->PlayDodgeMode();//PlayDodgeMode()를 통해 몽타주 재생.
-
-	if (PlayerOverlay && Status)
-	{
-		Status->UseStamina(Status->GetDodgeCost());//Dodge 실행 시 Stamina 소모
-		PlayerOverlay->SetStaminaBarPercent(Status->GetStaminaPercent());//StaminaBar 업데이트
-	}
 }
 
 void ACPlayer::End_Dodge()
@@ -324,7 +337,7 @@ void ACPlayer::InitializePlayerOverlay()
 			if (PlayerOverlay && Status)
 			{
 				PlayerOverlay->SetHealthBarPercent(Status->GetHealthPercent());
-				PlayerOverlay->SetStaminaBarPercent(0.5f);//시작 시 Stamina값
+				PlayerOverlay->SetStaminaBarPercent(100.0f);//시작 시 Stamina값
 				PlayerOverlay->SetGold(0);
 				PlayerOverlay->SetSouls(0);
 			}
