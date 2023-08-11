@@ -10,6 +10,9 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetTextLibrary.h"
+//Widget
+#include "HUD/CHitNumber.h"
+#include "Blueprint/UserWidget.h"
 
 ACBaseCharacter::ACBaseCharacter()
 {
@@ -112,7 +115,7 @@ void ACBaseCharacter::Hitted()
 		Status->Damage(Damage.Power);
 		Damage.Power = 0;
 	}
-
+	
 	//Change Color
 	{
 		Change_Color(this, FLinearColor::Red);
@@ -163,6 +166,15 @@ void ACBaseCharacter::Hitted()
 			LaunchCharacter(LaunchedVector, true, true);
 			//SetActorRotation(UKismetMathLibrary::FindLookAtRotation(start, target));
 		}
+
+
+		//**
+		//HitNumber 구현하기
+		this->ShowHitNumber(data->Power, HitExactLocation);
+
+		//**
+
+
 	}
 
 	//사망 처리
@@ -267,3 +279,22 @@ void ACBaseCharacter::End_Dead()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+
+void ACBaseCharacter::StoreHitNumber(UUserWidget* InHitNumber, FVector InLocation)
+{
+	HitNumbers.Add(InHitNumber, InLocation);
+
+	FTimerHandle HitNumberTimer;
+	FTimerDelegate HitNumberDelegate;
+	HitNumberDelegate.BindUFunction(this, FName("DestroyHitNumber"), InHitNumber);
+
+	GetWorld()->GetTimerManager().SetTimer(HitNumberTimer, HitNumberDelegate, HitNumberDestroyTime, false);
+
+}
+
+void ACBaseCharacter::DestroyHitNumber(UUserWidget* InHitNumber)
+{
+	HitNumbers.Remove(InHitNumber);
+	InHitNumber->RemoveFromParent();//#include "Blueprint/UserWidget.h"필요
+}

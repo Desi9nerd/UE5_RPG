@@ -89,4 +89,24 @@ protected:
 
 private:
 	int ParryingCnt;
+
+
+//데미지 숫자 구현
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowHitNumber(int32 InDamage, FVector InHitLocation);
+	
+	/** Map to store HitNumber widgets and their hit locations */
+	UPROPERTY(VisibleAnywhere, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	TMap<UUserWidget*, FVector> HitNumbers;
+
+	UPROPERTY(EditAnywhere, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	float HitNumberDestroyTime = 1.0f;
+
+protected:
+	UFUNCTION(BlueprintCallable)
+	void StoreHitNumber(UUserWidget* InHitNumber, FVector InLocation);
+
+	UFUNCTION()
+	void DestroyHitNumber(UUserWidget* InHitNumber);
 };

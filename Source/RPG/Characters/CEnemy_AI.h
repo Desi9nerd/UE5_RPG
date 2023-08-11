@@ -54,4 +54,5 @@ protected:
 
 public:
 	void End_Hitted() override;//CEnemy의 End_Hitted 재정의
+
 };
