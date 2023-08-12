@@ -318,10 +318,15 @@ void ACPlayer::SetZooming(float InValue)
   
  
  
-float ACPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-                           AActor* DamageCauser)
+float ACPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	SetHUDHealth();
+	
+	//**
+	//HitNumber 구현하기
+	//ACEnemy* HitEnemy = Cast<ACEnemy>(DamageEvent.);
+	//HitEnemy->ShowHitNumber(Damage.Power, ImpactPoint_Hit);
+
 
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }

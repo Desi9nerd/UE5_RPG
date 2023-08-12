@@ -13,6 +13,9 @@
 //Widget
 #include "HUD/CHitNumber.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "CEnemy.h"
+#include "CPlayer.h"
 
 ACBaseCharacter::ACBaseCharacter()
 {
@@ -56,6 +59,9 @@ void ACBaseCharacter::Tick(float DeltaSeconds)
 
 	FString WeaponTypeName = StaticEnum<EWeaponType>()->GetNameStringByValue((int32)Weapon->GetWeaponType());
 	TextRender_Weapon->SetText(UKismetTextLibrary::Conv_StringToText(WeaponTypeName));
+
+	//HitNumber 업데이트
+	UpdateHitNumbers();
 }
 
 float ACBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -71,6 +77,17 @@ float ACBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	ACAttachment* CustomDamageEvent = (ACAttachment*)&DamageEvent;
 	ImpactPoint_Hit = CustomDamageEvent->HitResult_CAttachment.ImpactPoint;// Access the impact point
 
+	//**
+	//HitNumber 구현하기
+
+	//ACEnemy* HitEnemy = Cast<ACEnemy>(EventInstigator->GetCharacter());
+	//if (HitEnemy)
+	//	HitEnemy->ShowHitNumber(Damage.Power, ImpactPoint_Hit);
+	ACPlayer* PlayerTemp = Cast<ACPlayer>(EventInstigator->GetCharacter());
+	if (PlayerTemp)
+		PlayerTemp->ShowHitNumber(Damage.Power, ImpactPoint_Hit);
+
+	//**	
 
 	//** */ Hit 방향 판단
 	//Hit의 Impact Point를 계산해서 앞의 공격인지 판단한다. Parrying 적용 여부를 결정하기 위해
@@ -130,11 +147,10 @@ void ACBaseCharacter::Hitted()
 	if (!!Damage.Event && !!Damage.Event->HitData)
 	{
 		FHitData* data = Damage.Event->HitData;//FDamageData의 FActionDamageEvent* Event내의 HitData
-
 		
 		FVector HitExactLocation = ImpactPoint_Hit;
-				
 
+		
 		if(data->Montage)//FHitData에 할당한 몽타주가 있다면
 		{
 			data->PlayMontage(this);  //몽타주 재생
@@ -166,15 +182,6 @@ void ACBaseCharacter::Hitted()
 			LaunchCharacter(LaunchedVector, true, true);
 			//SetActorRotation(UKismetMathLibrary::FindLookAtRotation(start, target));
 		}
-
-
-		//**
-		//HitNumber 구현하기
-		this->ShowHitNumber(data->Power, HitExactLocation);
-
-		//**
-
-
 	}
 
 	//사망 처리
@@ -297,4 +304,23 @@ void ACBaseCharacter::DestroyHitNumber(UUserWidget* InHitNumber)
 {
 	HitNumbers.Remove(InHitNumber);
 	InHitNumber->RemoveFromParent();//#include "Blueprint/UserWidget.h"필요
+}
+
+void ACBaseCharacter::UpdateHitNumbers()
+{
+	for (auto& HitPair : HitNumbers)
+	{
+		//UUserWidget타입의 HitNumber변수를 선언하고 Key값으로 초기화
+		UUserWidget* HitNumber{ HitPair.Key };
+		//FVector타입의 Location변수를 선언하고 Value값으로 초기화
+		const FVector Location{ HitPair.Value };
+		FVector2D ScreenPosition;
+
+		//SreenPosition 위치값을 Location 위치를 사용하여 넣어준다.
+		//ScreenPosition은 FVector2D이고 Location은 FVector이기 때문에 아래와 같은 변환이 필요하다.
+		UGameplayStatics::ProjectWorldToScreen(GetWorld()->GetFirstPlayerController(), Location, ScreenPosition);
+
+		//HitNumber를 ScreenPosition 위치로 업데이트.
+		HitNumber->SetPositionInViewport(ScreenPosition);
+	}	
 }

@@ -109,4 +109,6 @@ protected:
 
 	UFUNCTION()
 	void DestroyHitNumber(UUserWidget* InHitNumber);
+
+	void UpdateHitNumbers();
 };
