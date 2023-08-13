@@ -27,7 +27,7 @@ UCParkourComponent::UCParkourComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	
-	CHelpers::GetAsset<UDataTable>(&DataTable, "DataTable'/Game/Player/DT_Parkour_PP.DT_Parkour_PP'");//DataTable 持失.
+	//CHelpers::GetAsset<UDataTable>(&DataTable, "DataTable'/Game/Player/DT_Parkour_PP.DT_Parkour_PP'");//DataTable 持失.
 }
 
 void UCParkourComponent::BeginPlay()

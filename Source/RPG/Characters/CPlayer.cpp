@@ -92,7 +92,7 @@ void ACPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Movement->OnRun(); //Movement의 기본을 Run으로 설정
+	Movement->OnRun();//Movement의 기본을 Run으로 설정
 	Movement->DisableControlRotation();//Movement의 기본을 DisableControlRotation으로 설정
 
 	CheckNull(State);
@@ -199,6 +199,7 @@ void ACPlayer::Dodge()
 {
 	DisableInput(PlayerController);//Dodge가 시작되면 키 입력이 안 되게 만들어준다.
 
+	//GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Movement->EnableControlRotation();//정면을 바라본 상태로 뒤로 뛰어야하기 때문에 EnableControlRotation으로 만들어준다.
 
 	Montages->PlayDodgeMode();//PlayDodgeMode()를 통해 몽타주 재생.

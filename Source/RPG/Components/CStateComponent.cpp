@@ -15,11 +15,14 @@ void UCStateComponent::BeginPlay()
 void UCStateComponent::SetIdleMode()
 {
 	ChangeType(EStateType::Idle);
+
+	UGameplayStatics::GetPlayerCharacter(this, 0)->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 void UCStateComponent::SetDodgeMode()
 {
 	ChangeType(EStateType::Dodge);
+	UGameplayStatics::GetPlayerCharacter(this, 0)->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void UCStateComponent::SetEquipMode()
