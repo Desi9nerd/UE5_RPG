@@ -50,11 +50,7 @@ private:
 	
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCPromptText* PromptTextWidget;
-
-public:
-	UPROPERTY(VisibleDefaultsOnly)
-		USplineComponent* ArrowPathSpline;
-
+	
 public:
 	ACPlayer();
 

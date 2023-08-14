@@ -25,13 +25,16 @@ private:
         class UPoseableMeshComponent* PoseableMesh;
 
     UPROPERTY(VisibleAnywhere)
-        class USplineComponent* ArrowPathSpline;//화살 궤적 Spline\
+        class USplineComponent* ArrowPathSpline;//화살 궤적 Spline
 
     UPROPERTY(VisibleAnywhere)
         class UStaticMeshComponent* ArcEndSphere;//화살 궤적 포인트
 
-    UPROPERTY(VisibleAnywhere)
-        class USplineMeshComponent* ArrowPathSplineMesh;//화살 궤적 매쉬
+    UPROPERTY(EditAnywhere)
+        UMaterial* ArrowPathSplineMaterial;
+
+    UPROPERTY(EditAnywhere)
+        UStaticMesh* ArrowPathSplineMesh;//화살 궤적 매쉬
 
 public:
     float* GetBend();
@@ -75,12 +78,13 @@ protected:
     TArray<USplineMeshComponent*> SplineMeshes;
 
     UPROPERTY(EditAnywhere, Category = "ArrowSpeed")
-        float ArrowSpeed = 2500.0f;
+        float ArrowSpeed = 5000.0f;
+
+    UPROPERTY()
+    ACPlayer* PlayerCharacterCast;
 
 private:
-    ACPlayer* PlayerCharacterCast;
     FHitResult TraceHitResult;//Arrow 경로 LineTrace의 HitResults
-    //FPredictProjectilePathResult PredictResult;
     FVector FinalArcLocation;
     
 };

@@ -8,6 +8,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetArrayLibrary.h"
 
+
 ACAttachment_Bow::ACAttachment_Bow()
 {
 	PrimaryActorTick.bCanEverTick = true;//실시간 적용이 되도록 넣어준다. 안 넣어주면 활 시위가 구부러지는것이 업데이트 되지 않을 수도 있다.
@@ -25,7 +26,11 @@ ACAttachment_Bow::ACAttachment_Bow()
 	TSubclassOf<UCAnimInstance_Bow> animInstacne;
 	CHelpers::GetClass<UCAnimInstance_Bow>(&animInstacne, "AnimBlueprint'/Game/Weapons/Bow/ABP_ElvenBow.ABP_ElvenBow_C'");//ABP_ElvenBow 레퍼런스 복사하여 생성.
 	SkeletalMesh->SetAnimInstanceClass(animInstacne);
-	
+
+		
+	CHelpers::CreateComponent<USplineComponent>(this, &ArrowPathSpline, "ArrowPathSpline", Root);
+	ArcEndSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+
 }
 
 void ACAttachment_Bow::BeginPlay()
@@ -45,26 +50,19 @@ void ACAttachment_Bow::BeginPlay()
 
 	//Player cast하기
 	PlayerCharacterCast = Cast<ACPlayer>(OwnerCharacter);
-	if (!!PlayerCharacterCast)
-	{
-		CHelpers::CreateComponent<USplineComponent>(this, &ArrowPathSpline, "ArrowPathSpline", Root);
-		ArcEndSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-		ArrowPathSplineMesh = CreateDefaultSubobject<USplineMeshComponent>(TEXT("ArrowPathSplineMesh"));
-	}
 }
 
 void ACAttachment_Bow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(!!PlayerCharacterCast)
-	{
-		GetStartAndEndforTrace();
-		GetArrowSpawnLocationAndRotation();
-		ClearArc();
-		FPredictProjectilePathResult InPredictResult = ProjectilePath();
-		UpdateArcSpline(InPredictResult);
-	}
+	CheckNull(PlayerCharacterCast);
+
+	GetStartAndEndforTrace();
+	GetArrowSpawnLocationAndRotation();
+	ClearArc();
+	FPredictProjectilePathResult InPredictResult = ProjectilePath();
+	UpdateArcSpline(InPredictResult);	
 }
 
 void ACAttachment_Bow::OnBeginEquip_Implementation()
@@ -111,7 +109,8 @@ float* ACAttachment_Bow::GetBend()
 
 void ACAttachment_Bow::GetStartAndEndforTrace()
 {
-	APlayerCameraManager* camManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
+	APlayerCameraManager* camManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	//APlayerCameraManager* camManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
 
 	CrosshairWorldLocation = camManager->GetCameraLocation();
 	ImpactPoint = CrosshairWorldLocation + camManager->GetActorForwardVector() * FVector(15000, 15000, 15000);
@@ -146,7 +145,8 @@ void ACAttachment_Bow::ClearArc()
 	}
 
 	SplineMeshes.Empty();
-	
+
+	CheckNull(ArrowPathSpline);
 	ArrowPathSpline->ClearSplinePoints(true);
 }
 
@@ -166,7 +166,7 @@ FPredictProjectilePathResult ACAttachment_Bow::ProjectilePath()
 	PredictParams.ProjectileRadius = 5.0f;
 	PredictParams.MaxSimTime = 5.0f;
 	PredictParams.bTraceWithChannel = true;
-	PredictParams.TraceChannel = ECollisionChannel::ECC_Visibility;
+	PredictParams.TraceChannel = ECollisionChannel::ECC_Pawn;
 	PredictParams.ActorsToIgnore = ActorsToIgnore;
 	PredictParams.SimFrequency = 20.0f;
 	PredictParams.OverrideGravityZ = 0.0f;
@@ -184,43 +184,39 @@ FPredictProjectilePathResult ACAttachment_Bow::ProjectilePath()
 
 void ACAttachment_Bow::UpdateArcSpline(FPredictProjectilePathResult InPredictResult)
 {
+	CheckNull(ArrowPathSpline);
 	FPredictProjectilePathResult PredictProjectilePathResult = InPredictResult;
 
 	for (const auto& i : PredictProjectilePathResult.PathData)
 	{
 		ArrowPathSpline->AddSplinePoint(i.Location, ESplineCoordinateSpace::Local, true);
-		ArcEndSphere->SetWorldLocation(FinalArcLocation, false);
+		ArcEndSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		ArcEndSphere->SetSimulatePhysics(false);
+		ArcEndSphere->SetWorldLocation(FinalArcLocation);
 	}
 
 	ArrowPathSpline->SetSplinePointType((PredictProjectilePathResult.PathData.Num()-1), ESplinePointType::CurveClamped, true);
 	FinalArcLocation = PredictProjectilePathResult.PathData[PredictProjectilePathResult.PathData.Num()-1].Location;
 
 
-	for (int32 i = 0; i < ArrowPathSpline->GetNumberOfSplinePoints() - 2; i++)
+	for (int32 i = 0; i < ArrowPathSpline->GetNumberOfSplinePoints() - 1; i++)
 	{
-		SplineMeshes.Add(ArrowPathSplineMesh);
-
-		//ArrowPathSplineMesh->bCreatedByConstructionScript = true;
-		//ArrowPathSplineMesh->SetMobility(EComponentMobility::Movable);
+		USplineMeshComponent* TempArrowPathSplineMesh = NewObject<USplineMeshComponent>(this, USplineMeshComponent::StaticClass());//화살 궤적 매쉬 생성
+		
 		//ArrowPathSplineMesh->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, FName("Hand_Bow_Right_Arrow"));
-
-		//색 지정. 굳이 안 해도 된다.
-		//UMaterialInstanceDynamic* dynamicMat = UMaterialInstanceDynamic::Create(mSplineMeshMaterial, NULL);
-		//dynamicMat->SetVectorParameterValue(TEXT("Color"), FLinearColor(mSegments[i].mColor));
-
-		ArrowPathSplineMesh->bCastDynamicShadow = false;
-		//ArrowPathSplineMesh->SetStaticMesh(mGridMesh);
-		//ArrowPathSplineMesh->SetMaterial(0, dynamicMat);
-
-		//mesh 두께
-		ArrowPathSplineMesh->SetStartScale(FVector2D(5, 5));
-		ArrowPathSplineMesh->SetEndScale(FVector2D(5, 5));
+		TempArrowPathSplineMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		TempArrowPathSplineMesh->bCastDynamicShadow = false;
+		TempArrowPathSplineMesh->SetSimulatePhysics(false);
+		TempArrowPathSplineMesh->SetStaticMesh(ArrowPathSplineMesh);
+		TempArrowPathSplineMesh->SetMaterial(0,ArrowPathSplineMaterial);
+		
+		SplineMeshes.Add(TempArrowPathSplineMesh);
 
 		FVector pointLocationStart, pointTangentStart, pointLocationEnd, pointTangentEnd;
 		ArrowPathSpline->GetLocalLocationAndTangentAtSplinePoint(i, pointLocationStart, pointTangentStart);
 		ArrowPathSpline->GetLocalLocationAndTangentAtSplinePoint(i + 1, pointLocationEnd, pointTangentEnd);
 
-		ArrowPathSplineMesh->SetStartAndEnd(pointLocationStart, pointTangentStart, pointLocationEnd, pointTangentEnd, true);
+		TempArrowPathSplineMesh->SetStartAndEnd(pointLocationStart, pointTangentStart, pointLocationEnd, pointTangentEnd, true);
 	}
 
 	RegisterAllComponents();

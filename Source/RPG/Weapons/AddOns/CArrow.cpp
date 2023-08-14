@@ -57,28 +57,27 @@ void ACArrow::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	Projectile->StopMovementImmediately();
 	Projectile->ProjectileGravityScale = 0;
 
-	//가장 가까운 Bone에 화살 붙이기
-	ACharacter* HittedCharacter = Cast<ACharacter>(OtherActor);
-	FName ClosestBone = HittedCharacter->GetMesh()->FindClosestBone(Hit.Location);
-
-	CLog::Log(Hit.Location);
-
-	FAttachmentTransformRules rule(
-		EAttachmentRule:: SnapToTarget, 
-		EAttachmentRule::KeepWorld, 
-		EAttachmentRule::KeepWorld, true);
-		
-	//AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform, ClosestBone);
-	AttachToComponent(HittedCharacter->GetMesh(), rule, ClosestBone);
-	
-
 	Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	ACharacter* character = Cast<ACharacter>(OtherActor);
-	if (!!character && OnHit.IsBound())
-		OnHit.Broadcast(this, character);
 
 	//충돌 위치에 Emitter 넣어주기
 	if (ArrowParticle)
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowParticle, GetActorLocation());
+
+
+	ACharacter* HittedCharacter = Cast<ACharacter>(OtherActor);
+	CheckNull(HittedCharacter);
+
+	//가장 가까운 Bone에 화살 붙이기
+	FName ClosestBone = HittedCharacter->GetMesh()->FindClosestBone(Hit.Location);
+	CLog::Log(Hit.Location);
+	FAttachmentTransformRules rule(
+		EAttachmentRule:: SnapToTarget, 
+		EAttachmentRule::KeepWorld, 
+		EAttachmentRule::KeepWorld, true);		
+	//AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform, ClosestBone);
+	AttachToComponent(HittedCharacter->GetMesh(), rule, ClosestBone);
+
+	//Hit 처리하기
+	if (!!HittedCharacter && OnHit.IsBound())
+		OnHit.Broadcast(this, HittedCharacter);	
 }
