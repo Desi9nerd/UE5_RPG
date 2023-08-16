@@ -8,6 +8,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetArrayLibrary.h"
 
+#include "Components/CStateComponent.h"
+#include "Weapons/AddOns/CArrow.h"
 
 ACAttachment_Bow::ACAttachment_Bow()
 {
@@ -47,9 +49,13 @@ void ACAttachment_Bow::BeginPlay()
 	PoseableMesh->SetSkeletalMesh(SkeletalMesh->SkeletalMesh);//SkeletalMesh 내의 SkeletalMesh 사용.
 	PoseableMesh->CopyPoseFromSkeletalComponent(SkeletalMesh);//포즈를 캡처해둔다.
 
+	
+	PlayerCharacterCast = Cast<ACPlayer>(OwnerCharacter);	
+	state = CHelpers::GetComponent<UCStateComponent>(OwnerCharacter);
 
-	//Player cast하기
-	PlayerCharacterCast = Cast<ACPlayer>(OwnerCharacter);
+	//TODO : CAttachment_Bow 클래스의 ArrowSpeed 변수와 CArrow 클래스 내의 Projectile 화살 속도 연동. 현재는 숫자 하드코딩으로 일치시켜줬음.
+	//ACArrow* arrow = Cast<ACArrow>(OwnerCharacter->Get)
+	//ArrowSpeed = Cast<ACArrow>(arrow)->Projectile->speed
 }
 
 void ACAttachment_Bow::Tick(float DeltaTime)
@@ -57,7 +63,13 @@ void ACAttachment_Bow::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	CheckNull(PlayerCharacterCast);
-
+	if (false == state->IsSubActionMode())
+	{
+		ClearArc();
+		ArcEndSphere->SetVisibility(false);
+		return;
+	}
+	
 	GetStartAndEndforTrace();
 	GetArrowSpawnLocationAndRotation();
 	ClearArc();
@@ -193,6 +205,7 @@ void ACAttachment_Bow::UpdateArcSpline(FPredictProjectilePathResult InPredictRes
 		ArcEndSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		ArcEndSphere->SetSimulatePhysics(false);
 		ArcEndSphere->SetWorldLocation(FinalArcLocation);
+		ArcEndSphere->SetVisibility(true);
 	}
 
 	ArrowPathSpline->SetSplinePointType((PredictProjectilePathResult.PathData.Num()-1), ESplinePointType::CurveClamped, true);

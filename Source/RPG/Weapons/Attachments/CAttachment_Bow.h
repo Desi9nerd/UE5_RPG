@@ -87,4 +87,6 @@ private:
     FHitResult TraceHitResult;//Arrow ∞Ê∑Œ LineTrace¿« HitResults
     FVector FinalArcLocation;
     
+
+    class UCStateComponent* state;
 };
