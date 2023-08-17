@@ -5,6 +5,7 @@
 #include "Components/CStateComponent.h"
 #include "Components/CWeaponComponent.h"
 #include "Weapons/CDoAction.h"
+#include "Weapons/DoActions/CDoAction_Combo.h"
 
 UCBTTaskNode_Action::UCBTTaskNode_Action()
 {
@@ -42,6 +43,9 @@ void UCBTTaskNode_Action::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 
 	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(ai);
 	UCStateComponent* state = CHelpers::GetComponent<UCStateComponent>(ai);
+
+	UCDoAction_Combo* combo = Cast<UCDoAction_Combo>(weapon->GetDoAction());
+	combo->bExist = true;
 
 	bool bCheck = true;
 	bCheck &= (state->IsIdleMode());

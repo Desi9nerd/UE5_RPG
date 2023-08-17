@@ -40,6 +40,8 @@ private:
 	int32 Index;
 
 	bool bEnable;
+
+public:
 	bool bExist;
 
 private:
