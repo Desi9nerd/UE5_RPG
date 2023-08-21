@@ -9,17 +9,8 @@ ACEnemy::ACEnemy()
 {
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
-
-	USkeletalMesh* mesh;
-	CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Character/Mesh/SK_Mannequin.SK_Mannequin'");
-	GetMesh()->SetSkeletalMesh(mesh);
-
-	TSubclassOf<UCAnimInstance> animInstance;
-	CHelpers::GetClass<UCAnimInstance>(&animInstance, "AnimBlueprint'/Game/ABP_Character.ABP_Character_C'");
-	GetMesh()->SetAnimClass(animInstance);
-
+	
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
-
 }
 
 void ACEnemy::BeginPlay()

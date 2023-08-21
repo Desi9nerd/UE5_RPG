@@ -27,9 +27,13 @@ EBTNodeResult::Type UCBTTaskNode_Equip::ExecuteTask(UBehaviorTreeComponent& Owne
 
 	switch (Type)
 	{
+		case EWeaponType::Around: weapon->SetAroundMode(); break;
+		case EWeaponType::Fist: weapon->SetFistMode(); break;
 		case EWeaponType::Sword: weapon->SetSwordMode(); break;//Sword 장착
+		case EWeaponType::Hammer: weapon->SetHammerMode(); break;//Sword 장착
 		case EWeaponType::Bow: weapon->SetBowMode(); break;//Bow 장착
 		case EWeaponType::Warp: weapon->SetWarpMode(); break;//Warp 장착
+		case EWeaponType::Max: weapon->SetUnarmedMode(); break;
 	}
 
 	return EBTNodeResult::InProgress;//장착 동작이 나올 수 있도록 InProgress 리턴

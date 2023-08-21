@@ -16,6 +16,9 @@ public:
 	FORCEINLINE void EnableCombo() { bEnable = true; }
 	FORCEINLINE void DisableCombo() { bEnable = false; }
 
+	FORCEINLINE bool GetbEnable() { return bEnable; }
+	FORCEINLINE bool GetbExist() { return bExist; }
+
 public:
 	void DoAction() override;
 	void Begin_DoAction() override;
@@ -38,7 +41,6 @@ public:
 	
 private:
 	int32 Index;
-
 	bool bEnable;
 
 public:

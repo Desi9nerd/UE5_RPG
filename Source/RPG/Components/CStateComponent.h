@@ -52,4 +52,8 @@ private:
 
 private:
 	bool bInSubActionMode;
+
+public:
+	//class ACPlayer* OwnerCPlayer;
+
 };
