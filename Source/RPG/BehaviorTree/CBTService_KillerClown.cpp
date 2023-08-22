@@ -38,7 +38,7 @@ void UCBTService_KillerClown::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 
 	float distance = ai->GetDistanceTo(target);
 	OwnerComp.GetBlackboardComponent()->SetValueAsFloat(UKismetSystemLibrary::MakeLiteralName(FName("BossDistance")), distance);
-	CLog::Log(distance);
+	//CLog::Log(distance);
 		
 	if (distance < ActionRange)//공격범위 내로 들어오면
 	{

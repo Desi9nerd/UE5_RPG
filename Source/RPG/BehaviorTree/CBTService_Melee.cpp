@@ -1,5 +1,6 @@
 #include "BehaviorTree/CBTService_Melee.h"
 #include "Global.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
 #include "Characters/CAIController.h"
 #include "Characters/CEnemy_AI.h"
@@ -8,7 +9,7 @@
 
 UCBTService_Melee::UCBTService_Melee()
 {
-	NodeName = "Melee,Archer";
+	NodeName = "Melee";
 
 	Interval = 0.1f;//호출 간격. 0.1초 마다 호출
 	RandomDeviation = 0.0f;
@@ -39,6 +40,7 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	}
 
 	float distance = ai->GetDistanceTo(target);
+	OwnerComp.GetBlackboardComponent()->SetValueAsFloat(UKismetSystemLibrary::MakeLiteralName(FName("DistanceToTarget")), distance);
 	if (distance < ActionRange)//공격범위 내로 들어오면
 	{
 		aiState->SetActionMode();//공격
