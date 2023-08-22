@@ -67,8 +67,8 @@ void UCDoAction_Warp::DoAction()
 		float yaw = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), MoveToLocation).Yaw;
 		OwnerCharacter->SetActorRotation(FRotator(0, yaw, 0));
 	}
-	else
-		return;
+	//else
+	//	return;
 
 	DoActionDatas[0].DoAction(OwnerCharacter);
 }
