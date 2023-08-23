@@ -18,9 +18,7 @@ ACRotate_Object::ACRotate_Object()
 	InitialLifeSpan = 5;
 
 	HitData.Launch.X = 0;//HitData 초기값 설정.
-	HitData.Power = 5;//HitData 초기값 설정.
-
-	CHelpers::GetAsset<UAnimMontage>(&HitData.Montage, "AnimMontage'/Game/Character/Montages/Common/HitReaction_Stop_Montage.HitReaction_Stop_Montage'");//HitReaction 몽타주 
+	HitData.Power = 2;//HitData 초기값 설정.	
 }
 
 void ACRotate_Object::BeginPlay()
@@ -55,7 +53,7 @@ void ACRotate_Object::Tick(float DeltaTime)
 	if (FMath::IsNearlyEqual(Angle, bNegative ? -360 : +360))
 		Angle = 0;//짐벌락 현상을 방지하기 위해서 +-360도가 되었을때 0도로 만들어준다.
 
-	FVector distance = FVector(Distance, 0, 0);
+	FVector distance = FVector(Distance, 0, Height);
 	FVector value = distance.RotateAngleAxis(Angle, FVector::UpVector);//UpVector(Yaw)기준으로 회전.
 	location += value;//현재위치에서 회전해서 이동한 위치값을 더해준다.
 

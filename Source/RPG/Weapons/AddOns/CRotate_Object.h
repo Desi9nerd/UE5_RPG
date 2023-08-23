@@ -19,6 +19,9 @@ private:
 		float Speed = 300.0f;//돌아가는 속도
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
+		float Height = 0.0f;//스폰되는 높이
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
 		float Distance = 150.0f;//중심으로부터의 거리
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
