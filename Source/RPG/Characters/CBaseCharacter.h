@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		class UCStatusComponent* Status;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UCTargetComponent* Target;
+
 	UPROPERTY(VisibleAnywhere)
 		class UTextRenderComponent* TextRender_State;
 	UPROPERTY(VisibleAnywhere)

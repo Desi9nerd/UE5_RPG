@@ -19,6 +19,7 @@
 #include "Weapons/Attachments/CAttachment_Bow.h"
 //HUD
 #include "Components/CStatusComponent.h"
+#include "Components/CTargetComponent.h"
 #include "Components/WidgetComponent.h"
 #include "HUD/CCharacterHUD.h"
 #include "HUD/CPlayerOverlay.h"
@@ -30,6 +31,7 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateComponent<UCameraComponent>(this, &Camera, "Camera", SpringArm);
 	CHelpers::CreateActorComponent<UCParkourComponent>(this, &Parkour, "Parkour");
 	CHelpers::CreateActorComponent<UCZoomComponent>(this, &Zoom, "Zoom");
+	CHelpers::CreateActorComponent<UCTargetComponent>(this, &Target, "Target");
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
