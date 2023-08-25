@@ -6,6 +6,7 @@
 #include "IDetailPropertyRow.h"
 #include "IDetailChildrenBuilder.h"
 #include "DetailWidgetRow.h"
+#include "GameFramework/Character.h"
 
 void SWeaponCheckBoxes::AddProperties(TSharedPtr<IPropertyHandle> InHandle)
 {
@@ -149,5 +150,14 @@ void SWeaponCheckBoxes::CheckDefaultValue(int32 InIndex, const FVector& InValue)
     InternalDatas[InIndex].Handle->GetValue(val);//해당 Property에 선택한 값
 
     if (InValue != val)//선택한 값이랑 기본값이 다르다면
+        InternalDatas[InIndex].bChecked = true;
+}
+
+void SWeaponCheckBoxes::CheckDefaultClass(int32 InIndex, const TSubclassOf<ACharacter> InClass)
+{
+    TSubclassOf<ACharacter> characterClassType = nullptr;//기본값
+    //InternalDatas[InIndex].Handle->GetClassMetaData(FName(characterClassType->GetName()));//해당 Property에 선택한 값
+
+    if (InClass != characterClassType)//선택한 값이랑 기본값이 다르다면
         InternalDatas[InIndex].bChecked = true;
 }

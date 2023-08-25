@@ -116,6 +116,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->AddProperties(handle);
 
 				int32 index = 0;
+				checkBoxes->CheckDefaultClass(index++, data.CharacterClass);
 				checkBoxes->CheckDefaultObject(index++, data.Montage);
 				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
 				checkBoxes->CheckDefaultValue(index++, data.Power);

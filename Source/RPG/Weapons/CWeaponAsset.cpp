@@ -45,9 +45,7 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 		doAction = NewObject<UCDoAction>(this, DoActionClass);
 		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas);
 		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas, DoActionDatas_AirborneATK, HitDatas_AirborneATK,DoActionDatas_AirCombo, HitDatas_AirCombo);
-		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas_ZombieM, DoActionDatas_AirborneATK, HitDatas_AirborneATK,DoActionDatas_AirCombo, HitDatas_AirCombo);
-
-			
+					
 
 		if (!!attachment)
 		{
@@ -110,7 +108,6 @@ void UCWeaponAsset::PostEditChangeChainProperty(FPropertyChangedChainEvent& Prop
 	bool bRefresh = false;
 	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("DoActionDatas") == 0;
 	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("HitDatas") == 0;
-	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("HitDatas_ZombieM") == 0;
 	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("DoActionDatas_AirborneATK") == 0;
 	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("HitDatas_AirborneATK") == 0;
 	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("DoActionDatas_AirCombo") == 0;

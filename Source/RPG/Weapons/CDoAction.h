@@ -42,22 +42,7 @@ public:
 		const TArray<FDoActionData>& InDoAirActionDatas, 
 		const TArray<FHitData>& InAirHitDatas
 	);
-
-	virtual void BeginPlay //재정의 할 수 있도록 virtual로 만든다.
-	(
-		class ACAttachment* InAttachment,
-		class UCEquipment* InEquipment,
-		ACharacter* InOwner,
-		const TArray<FDoActionData>& InDoActionDatas,
-		const TArray<FHitData_ZombieM>& InHitDatas,
-
-		const TArray<FDoActionData>& InAirborneATKDatas,
-		const TArray<FHitData>& InAirborneATKHitDatas,
-
-		const TArray<FDoActionData>& InDoAirActionDatas,
-		const TArray<FHitData>& InAirHitDatas
-	);
-
+	
 	virtual void Tick(float InDeltaTime) { }
 
 public:
@@ -116,7 +101,6 @@ protected:
 
 	TArray<FDoActionData> DoActionDatas;
 	TArray<FHitData> HitDatas;
-	TArray<FHitData_ZombieM> HitDatas_ZombieM;
 
 	//공중콤보 Data
 	TArray<FDoActionData> DoActionDatas_AirborneInitATK;

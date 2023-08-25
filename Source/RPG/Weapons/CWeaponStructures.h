@@ -67,47 +67,10 @@ struct FHitData
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
+		TSubclassOf<ACharacter> CharacterClass;
+
+	UPROPERTY(EditAnywhere)
 		class UAnimMontage* Montage;
-
-	UPROPERTY(EditAnywhere)
-		float PlayRate = 1;
-
-	UPROPERTY(EditAnywhere)
-		float Power;
-
-	UPROPERTY(EditAnywhere)
-		FVector Launch = FVector(100.0f, 0.0f, 0.0f);
-
-	UPROPERTY(EditAnywhere)
-		float StopTime;
-
-	UPROPERTY(EditAnywhere)
-		class USoundWave* Sound;
-
-	UPROPERTY(EditAnywhere)
-		class UFXSystemAsset* Effect;
-
-	UPROPERTY(EditAnywhere)
-		FVector EffectLocation = FVector::ZeroVector;
-
-	UPROPERTY(EditAnywhere)
-		FVector EffectScale = FVector::OneVector;
-
-public:
-	void SendDamage(class ACharacter* InAttacker, AActor* InAttackCauser, class ACharacter* InOther);
-	void PlayMontage(class ACharacter* InOwner);
-	void PlayHitStop(UWorld* InWorld);
-	void PlaySoundWave(class ACharacter* InOwner);
-	void PlayEffect(UWorld* InWorld, const FVector& InLocation);
-	void PlayEffect(UWorld* InWorld, const FVector& InLocation, const FRotator& InRotation);
-};
-
-//////////////////////////////////////////////////////////////////
-
-USTRUCT()
-struct FHitData_ZombieM
-{
-	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
 		float PlayRate = 1;
@@ -151,7 +114,6 @@ struct FActionDamageEvent : public FDamageEvent
 
 public:
 	FHitData* HitData;
-	FHitData_ZombieM* HitData_ZombieM;//Á»ºñ HitData
 };
 
 UCLASS()

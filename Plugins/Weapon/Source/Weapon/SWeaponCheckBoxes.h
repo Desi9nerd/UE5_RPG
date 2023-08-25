@@ -31,6 +31,7 @@ public:
     void CheckDefaultValue(int32 InIndex, float InValue);
     void CheckDefaultValue(int32 InIndex, bool InValue);
     void CheckDefaultValue(int32 InIndex, const FVector& InValue);
+    void CheckDefaultClass(int32 InIndex, const TSubclassOf<ACharacter> InClass);
 
 private:
     //내부 구조체 생성, 관리를 위해 사용

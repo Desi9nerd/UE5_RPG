@@ -16,7 +16,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "CEnemy.h"
 #include "CPlayer.h"
-#include "Utilities/CLog.h"
 
 ACBaseCharacter::ACBaseCharacter()
 {
@@ -151,18 +150,11 @@ void ACBaseCharacter::Hitted()
 
 		//HitData 모음
 		FHitData* data = Damage.Event->HitData;//FDamageData의 FActionDamageEvent* Event내의 HitData
-		FHitData_ZombieM* data_ZombieM = Damage.Event->HitData_ZombieM;//FDamageData의 FActionDamageEvent* Event내의 HitData_ZombieM
-
 
 		if(data->Montage)//FHitData에 할당한 몽타주가 있다면
 		{
-			//CLog::Print(Damage.Causer);
 			data->PlayMontage(this);//몽타주 재생
 		}
-		//if(data_ZombieM->Montage)
-		//{
-		//	data_ZombieM->PlayMontage(this);
-		//}
 		else//할당한 몽타주가 없다면 기본 HitReactMontage 재생
 		{
 			DirectionalHitReact(HitExactLocation);
