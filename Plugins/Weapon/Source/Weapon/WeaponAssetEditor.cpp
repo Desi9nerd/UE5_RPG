@@ -82,30 +82,37 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 
 	//DoActionData
 	{
-		FOnGetPropertyTypeCustomizationInstance instance;
-		instance.BindStatic(&SWeaponDoActionData::MakeInstance);
-		prop.RegisterCustomPropertyTypeLayout("DoActionData", instance);//instance를 delegate 등록
+		FOnGetPropertyTypeCustomizationInstance instance_DoAction;
+		instance_DoAction.BindStatic(&SWeaponDoActionData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("DoActionData", instance_DoAction);//instance를 delegate 등록
 	}
 
 	//HitData
 	{
-		FOnGetPropertyTypeCustomizationInstance instance;
-		instance.BindStatic(&SWeaponHitData::MakeInstance);
-		prop.RegisterCustomPropertyTypeLayout("HitData", instance);//instance를 delegate 등록
+		FOnGetPropertyTypeCustomizationInstance instance_HitData;
+		instance_HitData.BindStatic(&SWeaponHitData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("HitData", instance_HitData);//instance를 delegate 등록
+	}
+
+	//HitData_ZombieM
+	{
+		FOnGetPropertyTypeCustomizationInstance instance_HitData_ZombieM;
+		instance_HitData_ZombieM.BindStatic(&SWeaponHitData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("HitData_ZombieM", instance_HitData_ZombieM);//instance를 delegate 등록
 	}
 
 	//AirborneInitATK
 	{
-		FOnGetPropertyTypeCustomizationInstance instance;
-		instance.BindStatic(&SWeaponDoActionData::MakeInstance);
-		prop.RegisterCustomPropertyTypeLayout("DoActionDatas_AirborneATK", instance);//instance를 delegate 등록
+		FOnGetPropertyTypeCustomizationInstance instance_AirborneInitATK;
+		instance_AirborneInitATK.BindStatic(&SWeaponDoActionData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("DoActionDatas_AirborneATK", instance_AirborneInitATK);//instance를 delegate 등록
 	}
 
 	//HitData_AirborneInitATK
 	{
-		FOnGetPropertyTypeCustomizationInstance instance;
-		instance.BindStatic(&SWeaponHitData::MakeInstance);
-		prop.RegisterCustomPropertyTypeLayout("HitDatas_AirborneATK", instance);//instance를 delegate 등록
+		FOnGetPropertyTypeCustomizationInstance instance_AirborneInitATKHit;
+		instance_AirborneInitATKHit.BindStatic(&SWeaponHitData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("HitDatas_AirborneATK", instance_AirborneInitATKHit);//instance를 delegate 등록
 	}
 
 	//DoActionData_AirCombo
@@ -188,6 +195,8 @@ bool FWeaponAssetEditor::OnRequestClose()
 			FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");//해당모듈을 가져온다.
 			prop.UnregisterCustomClassLayout("EquipmentData");//등록 해제
 			prop.UnregisterCustomClassLayout("DoActionData");//등록 해제
+			prop.UnregisterCustomClassLayout("HitData");//등록 해제
+			prop.UnregisterCustomClassLayout("HitData_ZombieM");//등록 해제
 			prop.UnregisterCustomClassLayout("DoActionDatas_AirborneATK");//등록 해제
 			prop.UnregisterCustomClassLayout("HitDatas_AirborneATK");//등록 해제
 			prop.UnregisterCustomClassLayout("DoActionDatas_AirCombo");//등록 해제

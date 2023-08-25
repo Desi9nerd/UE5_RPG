@@ -16,6 +16,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "CEnemy.h"
 #include "CPlayer.h"
+#include "Utilities/CLog.h"
 
 ACBaseCharacter::ACBaseCharacter()
 {
@@ -146,15 +147,22 @@ void ACBaseCharacter::Hitted()
 	//Damage는 CEnemy.h의 FDamageData이다.
 	if (!!Damage.Event && !!Damage.Event->HitData)
 	{
-		FHitData* data = Damage.Event->HitData;//FDamageData의 FActionDamageEvent* Event내의 HitData
-		
 		FVector HitExactLocation = ImpactPoint_Hit;
 
-		
+		//HitData 모음
+		FHitData* data = Damage.Event->HitData;//FDamageData의 FActionDamageEvent* Event내의 HitData
+		FHitData_ZombieM* data_ZombieM = Damage.Event->HitData_ZombieM;//FDamageData의 FActionDamageEvent* Event내의 HitData_ZombieM
+
+
 		if(data->Montage)//FHitData에 할당한 몽타주가 있다면
 		{
-			data->PlayMontage(this);  //몽타주 재생
+			//CLog::Print(Damage.Causer);
+			data->PlayMontage(this);//몽타주 재생
 		}
+		//if(data_ZombieM->Montage)
+		//{
+		//	data_ZombieM->PlayMontage(this);
+		//}
 		else//할당한 몽타주가 없다면 기본 HitReactMontage 재생
 		{
 			DirectionalHitReact(HitExactLocation);
@@ -170,15 +178,15 @@ void ACBaseCharacter::Hitted()
 			FVector target = Damage.Character->GetActorLocation();//target=데미지를 전달하는 대상
 			FVector direction = target - start;//direction=target을 바라보는 방향
 			direction.Normalize();
-
-			//FVector LaunchedVector = FVector(-direction.X * data->Launch.X, -direction.Y * data->Launch.Y, data->Launch.Z);
-
+		
+			//FVector LaunchedVector = FVector(-direction.X * data->Launch.X, -direction.Y * data->Launch.Y,data-//>Launch.Z);
+		
 			FVector LaunchF = FVector(-direction.X, -direction.Y, 0) * data->Launch.X;
 			FVector LaunchR = FVector(0, 0, 0);
 			FVector LaunchU = FVector(0, 0, 1) * data->Launch.Z;
-
+		
 			FVector LaunchedVector = LaunchF + LaunchR + LaunchU;
-
+		
 			LaunchCharacter(LaunchedVector, true, true);
 			//SetActorRotation(UKismetMathLibrary::FindLookAtRotation(start, target));
 		}

@@ -29,6 +29,9 @@ private:
 		TArray<FHitData> HitDatas; //CWeaopnStructure내의 FHitData
 
 	UPROPERTY(EditAnywhere)
+		TArray<FHitData_ZombieM> HitDatas_ZombieM; //CWeaopnStructure내의 FHitData_ZombieM
+
+	UPROPERTY(EditAnywhere)
 		TSubclassOf<class UCSubAction> SubActionClass;
 
 

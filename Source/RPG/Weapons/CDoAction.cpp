@@ -41,6 +41,25 @@ void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment,
 
 }
 
+void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment, ACharacter* InOwner,
+	const TArray<FDoActionData>& InDoActionDatas, const TArray<FHitData_ZombieM>& InHitDatas,
+	const TArray<FDoActionData>& InAirborneATKDatas, const TArray<FHitData>& InAirborneATKHitDatas,
+	const TArray<FDoActionData>& InDoAirActionDatas, const TArray<FHitData>& InAirHitDatas)
+{
+	OwnerCharacter = InOwner;
+	World = OwnerCharacter->GetWorld();
+
+	State = CHelpers::GetComponent<UCStateComponent>(OwnerCharacter);
+	Movement = CHelpers::GetComponent<UCMovementComponent>(OwnerCharacter);
+
+	DoActionDatas = InDoActionDatas;
+	HitDatas_ZombieM = InHitDatas;
+	DoActionDatas_AirborneInitATK = InAirborneATKDatas;
+	HitDatas_AirborneInitATK = InAirborneATKHitDatas;
+	DoActionDatas_AirCombo = InDoAirActionDatas;
+	HitDatas_AirCombo = InAirHitDatas;
+}
+
 void UCDoAction::DoAction()
 {
 	bInAction = true;
