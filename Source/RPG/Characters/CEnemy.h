@@ -18,8 +18,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION()
-	void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);
+	void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType) override;
 
 protected:
 	virtual void Hitted() override;//CBaseCharacter의 Hitted 재정의

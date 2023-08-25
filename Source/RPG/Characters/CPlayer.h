@@ -63,8 +63,7 @@ public:
 	FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(TeamID); }
 
 public:
-	UFUNCTION()
-	void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);
+	void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType) override;
 
 private:
 	void OnAvoid();

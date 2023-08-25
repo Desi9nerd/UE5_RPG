@@ -58,6 +58,10 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 public:
+	UFUNCTION()
+	virtual void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType) { };
+
+public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;//TakeDamage 오버라이드하여 재정의.
 
 	virtual void End_Hitted() override;//ICharacter의 가상함수 오버라이드.

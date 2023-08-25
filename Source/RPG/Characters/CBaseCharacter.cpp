@@ -44,6 +44,8 @@ void ACBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	State->OnStateTypeChanged.AddDynamic(this, &ACBaseCharacter::OnStateTypeChanged);
+
 	//디버깅용, 머리 위에 현재 State, Weapon Type 띄우기
 	TextRender_State->SetVisibility(true);
 	TextRender_Weapon->SetVisibility(true);
