@@ -72,3 +72,31 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Content/Assets/[ASSET NAME]/*
+# !Content/Assets/[ASSET NAME]/.gitkeep
+Content/Assets/*
+!Content/Assets/.gitkeep
+Content/Assets/KillerClown/*
+Content/Assets/KPOP_RYU/*
+
+# Assets
+Content/AILA_Music_Pack/*
+Content/Ancient_Undead_Pack/*
+Content/Archer/*
+Content/Berserker_S1/*
+Content/Character/*
+Content/CyberpunkCity/*
+Content/InsaneAirCombo/*
+Content/KillerClown/*
+Content/KPOP_RYU/*
+Content/MegaPack/*
+Content/ParagonKwang/*
+Content/ParagonRevenant/*
+Content/ParagonSparrow/*
+Content/PP801_P3/*
+Content/RPGCharacterAnims/*
+Content/sA_SkillSet_1/*
+Content/Sword_Animations/*
+Content/WeaponKit/*
+Content/Zombies_Collection/*
