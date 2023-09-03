@@ -3,7 +3,6 @@
 #include "Global.h"
 #include "Characters/CBaseCharacter.h"
 #include "GameFramework/Controller.h"
-#include "Global.h"
 
 UCTargetComponent::UCTargetComponent()
 {

@@ -129,6 +129,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::OnSprint);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnRun);
+	PlayerInputComponent->BindAction("SprintFast", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::OnSprintFast);
+	PlayerInputComponent->BindAction("SprintFast", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnSprint);
 
 	PlayerInputComponent->BindAction("Avoid", EInputEvent::IE_Pressed, this, &ACPlayer::OnAvoid);
 
@@ -179,7 +181,7 @@ void ACPlayer::OnAvoid()
 
 	if (Status->GetStamina() < Status->GetDodgeCost())
 	{
-		CLog::Log(FString("Low Stamina"));
+		//CLog::Log(FString("Low Stamina"));
 
 		ACCharacterHUD* PlayerHUD = Cast<ACCharacterHUD>(PlayerController->GetHUD());
 		PlayerHUD->OnStaminaPromptText();

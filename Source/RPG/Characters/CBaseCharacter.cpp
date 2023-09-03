@@ -47,8 +47,8 @@ void ACBaseCharacter::BeginPlay()
 	State->OnStateTypeChanged.AddDynamic(this, &ACBaseCharacter::OnStateTypeChanged);
 
 	//디버깅용, 머리 위에 현재 State, Weapon Type 띄우기
-	TextRender_State->SetVisibility(true);
-	TextRender_Weapon->SetVisibility(true);
+	TextRender_State->SetVisibility(false);
+	TextRender_Weapon->SetVisibility(false);
 }
 
 void ACBaseCharacter::Tick(float DeltaSeconds)
@@ -153,14 +153,14 @@ void ACBaseCharacter::Hitted()
 		//HitData 모음
 		FHitData* data = Damage.Event->HitData;//FDamageData의 FActionDamageEvent* Event내의 HitData
 
-		if(data->Montage)//FHitData에 할당한 몽타주가 있다면
+		if(data->CharacterCnM.Num() > 0)//FHitData에 할당한 몽타주가 있다면 data->CharacterClass != nullptr &&
 		{
 			data->PlayMontage(this);//몽타주 재생
 		}
-		else//할당한 몽타주가 없다면 기본 HitReactMontage 재생
-		{
-			DirectionalHitReact(HitExactLocation);
-		}
+		//else//할당한 몽타주가 없다면 기본 HitReactMontage 재생
+		//{
+		//	DirectionalHitReact(HitExactLocation);
+		//}
 
 		data->PlayHitStop(GetWorld());  //HitStop 재생
 		data->PlaySoundWave(this);//소리 재생
@@ -175,7 +175,7 @@ void ACBaseCharacter::Hitted()
 		
 			//FVector LaunchedVector = FVector(-direction.X * data->Launch.X, -direction.Y * data->Launch.Y,data-//>Launch.Z);
 		
-			FVector LaunchF = FVector(-direction.X, -direction.Y, 0) * data->Launch.X;
+			FVector LaunchF = FVector(-direction.X, -direction.Y, 0) * data->Launch.X * 10.0f;
 			FVector LaunchR = FVector(0, 0, 0);
 			FVector LaunchU = FVector(0, 0, 1) * data->Launch.Z;
 		
@@ -255,8 +255,13 @@ void ACBaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
 		Theta *= -1.0f; //
 	}
 
-	FName Section("FromBack");//뒷 방향 피격
+	//FName Section("Default");//방향 없을때 Default
+	FName Section("FromBack");//방향 없을때 Default
 
+	//if (Theta <= -45.0f && Theta > 45.0f)
+	//{
+	//	Section = FName("FromBack");//뒷 방향 피격
+	//}
 	if (Theta >= -45.0f && Theta < 45.0f)
 	{
 		Section = FName("FromFront");//앞 방향 피격

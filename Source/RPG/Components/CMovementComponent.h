@@ -7,7 +7,7 @@
 UENUM()
 enum class ESpeedType : uint8
 {
-	Walk = 0, Run, Sprint, Max,
+	Walk = 0, Run, Sprint, SprintFast, Max,
 };
 
 UCLASS()
@@ -24,7 +24,7 @@ private:
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Speed")
-		float Speed[(int32)ESpeedType::Max] = { 200, 400, 600 };
+		float Speed[(int32)ESpeedType::Max] = { 200, 400, 600, 800 };
 
 public:
 	FORCEINLINE bool CanMove() { return bCanMove; }
@@ -36,6 +36,7 @@ public:
 	FORCEINLINE float GetWalkSpeed() { return Speed[(int32)ESpeedType::Walk]; }
 	FORCEINLINE float GetRunSpeed() { return Speed[(int32)ESpeedType::Run]; }
 	FORCEINLINE float GetSprintSpeed() { return Speed[(int32)ESpeedType::Sprint]; }
+	FORCEINLINE float GetSprintFastSpeed() { return Speed[(int32)ESpeedType::SprintFast]; }
 
 	FORCEINLINE bool GetFixedCamera() { return bFixedCamera; }
 	FORCEINLINE void EnableFixedCamera() { bFixedCamera = true; }
@@ -57,6 +58,7 @@ public:
 	void OnJump();
 	void SetJumpCountZero();
 	void OnStopJumping();
+	void OnSprintFast();
 	void OnSprint();
 	void OnRun();
 	void OnWalk();

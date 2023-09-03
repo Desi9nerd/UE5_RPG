@@ -13,8 +13,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		class UBehaviorTree* BehaviorTree;
 
-	UPROPERTY(EditAnywhere, Category = "AI")
-		uint8 TeamID = 2;//TeamID를 0~255번까지 지정가능하다. 255번은 중립이다. ID 같으면 아군이고 ID가 다르면 적이다.
+	//UPROPERTY(EditAnywhere, Category = "AI")
+		//uint8 TeamID = 2;//TeamID를 0~255번까지 지정가능하다. 255번은 중립이다. ID 같으면 아군이고 ID가 다르면 적이다.
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Label")

@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "ICharacter.h"
 #include "Interfaces/IHit.h"
+#include "GenericTeamAgentInterface.h"
 #include "Characters/ECharacterTypes.h"
 #include "Components/CStateComponent.h"
 #include "CBaseCharacter.generated.h"
@@ -12,11 +13,14 @@ class UAnimMontage;
 
 UCLASS()
 class RPG_API ACBaseCharacter
-	: public ACharacter, public IIHit, public IICharacter //다중상속
+	: public ACharacter, public IGenericTeamAgentInterface, public IIHit, public IICharacter //다중상속
 {
 	GENERATED_BODY()
-
+		
 protected:
+	UPROPERTY(EditAnywhere, Category = "Team")
+		uint8 TeamID;
+
 	UPROPERTY(VisibleAnywhere)
 		class UCWeaponComponent* Weapon;
 
@@ -51,6 +55,8 @@ protected:
 
 public:
 	ACBaseCharacter();
+
+	FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(TeamID); }
 
 protected:
 	virtual void BeginPlay() override;

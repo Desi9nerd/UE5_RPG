@@ -31,6 +31,8 @@ void ACEnemy_AI::BeginPlay()
 	label->UpdateHealth(Status->GetHealth(), Status->GetMaxHealth());
 	label->UpdateName(GetName());
 	label->UpdateControllerName(GetController()->GetName());
+
+	//TeamID = 2;//TeamID를 0~255번까지 지정가능하다. 255번은 중립이다. ID 같으면 아군이고 ID가 다르면 적이다.
 }
 
 void ACEnemy_AI::Tick(float DeltaTime)
