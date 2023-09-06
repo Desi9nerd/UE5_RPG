@@ -6,6 +6,7 @@
 #include "IDetailPropertyRow.h"
 #include "IDetailChildrenBuilder.h"
 #include "DetailWidgetRow.h"
+#include "Animation/AnimMontage.h"
 #include "GameFramework/Character.h"
 
 void SWeaponCheckBoxes::AddProperties(TSharedPtr<IPropertyHandle> InHandle)
@@ -153,11 +154,39 @@ void SWeaponCheckBoxes::CheckDefaultValue(int32 InIndex, const FVector& InValue)
         InternalDatas[InIndex].bChecked = true;
 }
 
+void SWeaponCheckBoxes::CheckDefaultClass(int32 InIndex, TArray<FClassMontage> InClassMontage)
+{
+    //for(int i = 0; i < InClassMontage.Num(); i++)
+    //{
+    //    UObject* CharacterClass = nullptr;
+    //    InternalDatas[InIndex].Handle->GetValue(CharacterClass);
+
+    //   // UClassMontage* temp = Cast<UClassMontage>(CharacterClass);
+
+    //}
+ /*   if (!!CharacterClass)
+    {
+        if (temp->CharacterClass != InClassMontage[i]->CharacterClass &&
+           temp->Montage != InClassMontage[i]->Montage)
+        {
+            InternalDatas[InIndex].bChecked = true;
+        }
+    }*/
+}
+
 void SWeaponCheckBoxes::CheckDefaultClass(int32 InIndex, const TSubclassOf<ACharacter> InClass)
 {
-    TSubclassOf<ACharacter> characterClassType = nullptr;//기본값
-    //InternalDatas[InIndex].Handle->GetClassMetaData(FName(characterClassType->GetName()));//해당 Property에 선택한 값
+    TSubclassOf<ACharacter> characterClassType = nullptr;
+    
+    if (InClass != characterClassType)
+        InternalDatas[InIndex].bChecked = true;    
+}
 
-    if (InClass != characterClassType)//선택한 값이랑 기본값이 다르다면
+void SWeaponCheckBoxes::CheckDefaultClass(int32 InIndex, const UAnimMontage* InMontage)
+{
+    UAnimMontage* val = nullptr;//기본값
+    //InternalDatas[InIndex].Handle->GetValue(val);//해당 Property에 선택한 값
+
+    if (InMontage != val)//선택한 값이랑 기본값이 다르다면
         InternalDatas[InIndex].bChecked = true;
 }

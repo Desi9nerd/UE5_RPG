@@ -62,15 +62,25 @@ public:
 };
 
 USTRUCT()
+struct FClassMontage
+{
+	GENERATED_BODY()		
+
+public:
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class ACharacter> CharacterClass;
+
+	UPROPERTY(EditAnywhere)
+		class UAnimMontage* Montage;
+};
+
+USTRUCT()
 struct FHitData
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<ACharacter> CharacterClass;
-
-	UPROPERTY(EditAnywhere)
-		class UAnimMontage* Montage;
+		TArray<FClassMontage> CharacterCnM;//아래 두 변수를 CharacterCnM에 대입시키는 방법 찾아보기
 
 	UPROPERTY(EditAnywhere)
 		float PlayRate = 1;

@@ -89,9 +89,9 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 
 	//HitData
 	{
-		FOnGetPropertyTypeCustomizationInstance instance_HitData;
-		instance_HitData.BindStatic(&SWeaponHitData::MakeInstance);
-		prop.RegisterCustomPropertyTypeLayout("HitData", instance_HitData);//instance를 delegate 등록
+		FOnGetPropertyTypeCustomizationInstance instance;
+		instance.BindStatic(&SWeaponHitData::MakeInstance);
+		prop.RegisterCustomPropertyTypeLayout("HitData", instance);//instance를 delegate 등록		
 	}
 	
 	//AirborneInitATK

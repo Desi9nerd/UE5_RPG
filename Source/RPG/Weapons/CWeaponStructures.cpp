@@ -79,10 +79,15 @@ void FHitData::SendDamage(ACharacter* InAttacker, AActor* InAttackCauser, AChara
 
 void FHitData::PlayMontage(ACharacter* InOwner)
 {
-	if (!!Montage)
+	if (CharacterCnM.Num() > 0)
 	{
-		if(InOwner->GetClass() == CharacterClass)
-			InOwner->PlayAnimMontage(Montage, PlayRate);	
+		for(FClassMontage i : CharacterCnM)
+		{
+			if(InOwner->GetClass() == i.CharacterClass)
+			{
+				InOwner->PlayAnimMontage(i.Montage, PlayRate);
+			}
+		}
 	}
 }
 

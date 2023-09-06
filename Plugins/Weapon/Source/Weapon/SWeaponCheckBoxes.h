@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Weapons/CWeaponStructures.h"
 
 class WEAPON_API SWeaponCheckBoxes
     : public TSharedFromThis<SWeaponCheckBoxes> // 직접적으로 상속받으면 주소가 일치하게된다.
@@ -31,7 +32,9 @@ public:
     void CheckDefaultValue(int32 InIndex, float InValue);
     void CheckDefaultValue(int32 InIndex, bool InValue);
     void CheckDefaultValue(int32 InIndex, const FVector& InValue);
+    void CheckDefaultClass(int32 InIndex, TArray<FClassMontage> InClassMontage);
     void CheckDefaultClass(int32 InIndex, const TSubclassOf<ACharacter> InClass);
+    void CheckDefaultClass(int32 InIndex, const UAnimMontage* InMontage);
 
 private:
     //내부 구조체 생성, 관리를 위해 사용

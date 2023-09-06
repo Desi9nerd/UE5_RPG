@@ -5,6 +5,8 @@
 #include "IDetailChildrenBuilder.h"
 #include "SWeaponCheckBoxes.h"
 #include "DetailWidgetRow.h"
+#include "Animation/AnimMontage.h"
+#include "GameFramework/Character.h"
 
 TArray<TSharedPtr<SWeaponCheckBoxes>> SWeaponHitData::CheckBoxes;
 
@@ -54,11 +56,11 @@ void SWeaponHitData::CustomizeHeader(TSharedRef<IPropertyHandle> InPropertyHandl
 	}
 
 	int32 index = InPropertyHandle->GetIndexInArray();//GetIndexInArray()는 Array 안에서의 번호를 리턴.
-	CheckBoxes[index]->SetUtilities(InCustomizationUtils.GetPropertyUtilities());//Header,Children,Header,Children..순서로 콜된다.
-
+	CheckBoxes[index]->SetUtilities(InCustomizationUtils.GetPropertyUtilities());////Header,Children,Header,Children.순서로 콜된다.
+	
 	FString name = InPropertyHandle->GetPropertyDisplayName().ToString();//0,1,2..표시하는 name
 	name = "Hit Data - " + name;
-
+	
 	InHeaderRow
 		.NameContent()
 		[
@@ -72,7 +74,7 @@ void SWeaponHitData::CustomizeHeader(TSharedRef<IPropertyHandle> InPropertyHandl
 		.MinDesiredWidth(FWeaponStyle::Get()->DesiredWidth.X)
 		.MaxDesiredWidth(FWeaponStyle::Get()->DesiredWidth.Y)
 		[
-			CheckBoxes[index]->Draw(true)//CheckBoxes를 그려준다(=생성한다).bBackground에 true값을 넣어주어 alpha값이 0.1f인 흰색 이미지가 겹쳐저 해당 줄이 띠처럼 보이게 만들어준다.
+			CheckBoxes[index]->Draw(true)//CheckBoxes를 그려준다(=생성한다).bBackground에 true값을 넣어//주어 alpha값이0.1f인 흰색 이미지가 겹쳐저 해당 줄이 띠처럼 보이게 만들어준다.
 		];
 }
 
@@ -92,19 +94,55 @@ void SWeaponHitData::CustomizeChildren(TSharedRef<IPropertyHandle> InPropertyHan
 			TSharedPtr<SWidget> name;
 			TSharedPtr<SWidget> value;
 
-			row.GetDefaultWidgets(name, value);
+			if(i == 0)
+			{
+				TSharedRef<IPropertyHandle> temp = handle.ToSharedRef();
 
-			row.CustomWidget()
-				.NameContent()
-				[
-					name.ToSharedRef()
-				]
-			.ValueContent()
-				.MinDesiredWidth(FWeaponStyle::Get()->DesiredWidth.X)
-				.MaxDesiredWidth(FWeaponStyle::Get()->DesiredWidth.Y)
-				[
-					value.ToSharedRef()
-				];
+				uint32 numtemp = 0;
+				temp->GetNumChildren(numtemp);		//numtemp : 구조체 배열 가짓수
+
+				for(uint32 j = 0; j < numtemp; j++)
+				{
+					TSharedPtr<IPropertyHandle> tempHandle = temp->GetChildHandle(j);	//배열의 인자하나씪 데이터 가져오기
+
+					uint32 test = 0;
+					tempHandle->GetNumChildren(test);
+					IDetailPropertyRow& tempRow = InChildBuilder.AddProperty(tempHandle.ToSharedRef());
+
+					TSharedPtr<SWidget> tempname;
+					TSharedPtr<SWidget> tempvalue;
+
+					tempRow.GetDefaultWidgets(tempname, tempvalue);
+
+					tempRow.CustomWidget()
+						.NameContent()
+						[
+							tempname.ToSharedRef()
+						]
+					.ValueContent()
+						.MinDesiredWidth(FWeaponStyle::Get()->DesiredWidth.X)
+						.MaxDesiredWidth(FWeaponStyle::Get()->DesiredWidth.Y)
+						[
+							tempvalue.ToSharedRef()
+						];
+				}
+			}
+			else
+			{
+				row.GetDefaultWidgets(name, value);
+
+				row.CustomWidget()
+					.NameContent()
+					[
+						name.ToSharedRef()
+					]
+				.ValueContent()
+					.MinDesiredWidth(FWeaponStyle::Get()->DesiredWidth.X)
+					.MaxDesiredWidth(FWeaponStyle::Get()->DesiredWidth.Y)
+					[
+						value.ToSharedRef()
+					];
+			}
 		}//for(i)
 
 		return;//CanDraw가 false면 그리지 않고 리턴.
