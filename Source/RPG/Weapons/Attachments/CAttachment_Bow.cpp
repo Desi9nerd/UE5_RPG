@@ -135,7 +135,7 @@ void ACAttachment_Bow::GetArrowSpawnLocationAndRotation()
 	ignores.Add(this);
 
 	//start에 CrosshairWorldLocation, end에 ImpactPoint를 넣어준다. TraceTypeQuery1은 Visibility
-	UKismetSystemLibrary::LineTraceSingle(GetWorld(), CrosshairWorldLocation, ImpactPoint, ETraceTypeQuery::TraceTypeQuery1, false, ignores, EDrawDebugTrace::ForOneFrame, TraceHitResult, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
+	UKismetSystemLibrary::LineTraceSingle(GetWorld(), CrosshairWorldLocation, ImpactPoint, ETraceTypeQuery::TraceTypeQuery1, false, ignores, EDrawDebugTrace::None, TraceHitResult, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 
 	if (TraceHitResult.bBlockingHit)
 	{
@@ -182,7 +182,7 @@ FPredictProjectilePathResult ACAttachment_Bow::ProjectilePath()
 	PredictParams.ActorsToIgnore = ActorsToIgnore;
 	PredictParams.SimFrequency = 20.0f;
 	PredictParams.OverrideGravityZ = 0.0f;
-	PredictParams.DrawDebugType = EDrawDebugTrace::ForOneFrame;
+	PredictParams.DrawDebugType = EDrawDebugTrace::None; 
 	PredictParams.DrawDebugTime = 2.0f;
 	PredictParams.bTraceComplex = false;
 
