@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Characters/CBaseCharacter.h"
 #include "Weapons/CSubAction.h"
 #include "Weapons/CWeaponStructures.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -11,6 +12,11 @@ class RPG_API UCSubAction_Sword : public UCSubAction
 {
 	GENERATED_BODY()
 
+public:
+    UCSubAction_Sword();
+
+    virtual void BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment, UCDoAction* InDoAction) override;
+    
 private:
     UPROPERTY(EditDefaultsOnly, Category = "Trace")
         float Distance = 1000.0;//이동거리
@@ -20,8 +26,7 @@ private:
 
     UPROPERTY(EditDefaultsOnly, Category = "Trace")
         TEnumAsByte<EDrawDebugTrace::Type> DrawDebug;//디버그용
-
-private:
+    
     UPROPERTY(EditDefaultsOnly, Category = "Action")
         FDoActionData ActionData;
 
@@ -54,4 +59,11 @@ private:
 
 private:
     class ACGhostTrail* GhostTrail;
+
+//Targeting    
+public:
+    class UCTargetComponent* Targeting;
+
+    TWeakObjectPtr<ACBaseCharacter> Target;//타겟
+
 };
