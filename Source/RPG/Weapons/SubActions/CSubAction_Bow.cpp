@@ -15,7 +15,7 @@ UCSubAction_Bow::UCSubAction_Bow()
 	CHelpers::GetAsset<UCurveVector>(&Curve, "CurveVector'/Game/Weapons/Bow/Curve_Aiming.Curve_Aiming'");//Editor에서 만든 CurveVector를 할당한다.
 	
 	//CrossHair Widget 생성
-	CHelpers::GetClass<UCUserWidget_CrossHair>(&CrossHairClass, "WidgetBlueprint'/Game/Widgets/WB_CrossHair.WB_CrossHair_C'");	
+	//CHelpers::GetClass<UCUserWidget_CrossHair>(&CrossHairClass, "WidgetBlueprint'/Game/Widgets/WB_CrossHair.WB_CrossHair_C'");	
 }
 
 void UCSubAction_Bow::Pressed()

@@ -5,6 +5,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/CStatusComponent.h"
 #include "Widgets/CUserWidget_Label.h"
+#include "Kismet/GameplayStatics.h"
 
 ACEnemy_AI::ACEnemy_AI()
 {
@@ -47,6 +48,12 @@ void ACEnemy_AI::Tick(float DeltaTime)
 
 		UpdateLabelRenderScale();
 	}
+
+	float distanceToPlayer = GetDistanceTo(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (distanceToPlayer < 1000.0f)
+		LabelWidget->SetVisibility(true);
+	else
+		LabelWidget->SetVisibility(false);
 }
 
 void ACEnemy_AI::UpdateLabelRenderScale()
