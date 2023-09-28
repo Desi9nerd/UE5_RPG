@@ -1,5 +1,8 @@
 #include "CAnimNotifyState_Collision.h"
+
+#include "EngineUtils.h"
 #include "Global.h"
+#include "Characters/CBaseCharacter.h"
 #include "Components/CWeaponComponent.h"
 #include "Weapons/CAttachment.h"
 
@@ -46,6 +49,23 @@ void UCAnimNotifyState_Collision::NotifyTick(USkeletalMeshComponent* MeshComp, U
 	TArray<TEnumAsByte<EObjectTypeQuery>> objects;
 	objects.Add(EObjectTypeQuery::ObjectTypeQuery3);//ObjectTypeQuery3은 Pawn. Pawn을 추적하기 위해 objects에 추가하였다
 	TArray<AActor*> ignores;//제외시킬 것들을 담을 배열 변수
+
+	ACBaseCharacter* MyCharacter = Cast<ACBaseCharacter>(MeshComp->GetOwner());
+	if (MyCharacter == nullptr)
+		return; 
+
+	int32 MyTeamID = MyCharacter->GetGenericTeamId();// CBaseCharacter의 함수로 공격하는 대상의 TeamID를 담는다. 
+
+	for (TActorIterator<APawn> It(MyCharacter->GetWorld()); It; ++It) 
+	{
+		ACBaseCharacter* OtherChar = Cast<ACBaseCharacter>(*It);
+
+		if (OtherChar && OtherChar->GetGenericTeamId() == MyTeamID)// TeamID가 같다면  
+		{
+			ignores.Add(OtherChar);// ignores에 같은 팀 캐릭터들을 담는다
+			continue;
+		}
+	}
 
 	bool condition = UKismetSystemLibrary::SphereTraceSingleForObjects(
 		MeshComp,
