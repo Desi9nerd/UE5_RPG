@@ -35,6 +35,8 @@ public:
 	void ChangeTarget(ACBaseCharacter* InCandidate);
 	void Tick_Targeting();
 
+	FORCEINLINE TWeakObjectPtr<ACBaseCharacter> GetTarget() { return Target; }
+
 private:
 	TWeakObjectPtr<ACBaseCharacter> NearlyForward(TWeakObjectPtr<ACBaseCharacter> InCenterTarget,
 		TArray<TWeakObjectPtr<ACBaseCharacter>> InArray,
@@ -51,7 +53,7 @@ protected:
 	class UParticleSystemComponent* Particle;
 
 	UPROPERTY(EditAnywhere, Category = "Settings")
-	float TraceDistance = 1200.0f;
+	float TraceDistance = 2500.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Settings")
 	UParticleSystem* ParticleAsset;	
