@@ -11,8 +11,6 @@
 #include "Components/SplineComponent.h"
 #include "CPlayer.generated.h"
 
-class ACItem;
-
 UCLASS()
 class RPG_API ACPlayer
 	: public ACBaseCharacter, public IIPickup //다중상속
@@ -21,81 +19,56 @@ class RPG_API ACPlayer
 
 private:
 	UPROPERTY(VisibleAnywhere)
-		class USpringArmComponent* SpringArm;
+	class USpringArmComponent* SpringArm;
 	
 	UPROPERTY(VisibleAnywhere)
-		class UCameraComponent* Camera;
+	class UCameraComponent* Camera;
 
 /** 파쿠르 */
 	UPROPERTY(VisibleDefaultsOnly)
-		class USceneComponent* ArrowGroup;//파쿠르를 위한 ArrowGroup
+	class USceneComponent* ArrowGroup;//파쿠르를 위한 ArrowGroup
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UArrowComponent* Arrows[(int32)EParkourArrowType::Max];
+	class UArrowComponent* Arrows[(int32)EParkourArrowType::Max];
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UCParkourComponent* Parkour;
+	class UCParkourComponent* Parkour;
 /** 파쿠르 */
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UCZoomComponent* Zoom;
+	class UCZoomComponent* Zoom;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UCPlayerOverlay* PlayerOverlay;
+	class UCPlayerOverlay* PlayerOverlay;
 	
 	UPROPERTY(VisibleDefaultsOnly)
-		class UCPromptText* PromptTextWidget;
-	
+	class UCPromptText* PromptTextWidget;
+
+	APlayerController* PlayerController;//PlayerController 변수
+
 public:
 	ACPlayer();
-
-protected:
-	virtual void BeginPlay() override;
-	void Tick(float DeltaSeconds) override;
-
-public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-public:
 	void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType) override;
 
-private:
-	void OnAvoid();
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;//TakeDamage 오버라이드하여 재정의.
 
-private:
-	void Dodge();
-
-public:
 	void End_Dodge() override;//ICharacter의 함수 오버라이드
-	
-public:
-	//무기 줍기
-	void FKeyPressed();
-	virtual void SetOverlappingItem(ACItem* Item) override;
+	void Landed(const FHitResult& Hit) override;//BP의 OnLanded C++버젼.
 
-	UPROPERTY(VisibleInstanceOnly)
-	ACItem* OverlappingItem;
-
-public:
 	void OnRightButton();
 	void OffRightButton();
 	void MiddleMouse_Pressed();
 	void MiddleMouse_Released();
 
-public:
-	void Landed(const FHitResult& Hit) override;//BP의 OnLanded C++버젼.
-
+protected:
+	virtual void BeginPlay() override;
+	void Tick(float DeltaSeconds) override;
+	
 private:
+	void OnAvoid();
+	void Dodge();	
 	void SetZooming(float InValue);
-
-private:
-	APlayerController* PlayerController;//PlayerController 변수
-
-public:
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;//TakeDamage 오버라이드하여 재정의.
-
-//HUD
-private:
-	void InitializePlayerOverlay();
-	void SetHUDHealth();
+	void InitializePlayerOverlay(); // PlayerOverlay Widget
+	void SetHUDHealth(); // HUD
 };

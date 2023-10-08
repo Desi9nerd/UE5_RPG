@@ -17,8 +17,6 @@ void ACEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Movement->OnWalk();//기본값 설정.
-
 	Create_DynamicMaterial(this);//IICharacter의 함수 사용. 색이 적용되는 객체를 this(여기서는 Enemy)로 설정.
 	Change_Color(this, OriginColor);//색상 할당.
 
@@ -27,6 +25,8 @@ void ACEnemy::BeginPlay()
 
 void ACEnemy::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
 {
+	Super::OnStateTypeChanged(InPrevType, InNewType);
+
 	switch (InNewType)
 	{
 		case EStateType::Hitted: Hitted(); break;//실제처리는 아래의 Hitted()에서 일어난다.

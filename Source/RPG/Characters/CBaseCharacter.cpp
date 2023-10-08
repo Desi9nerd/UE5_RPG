@@ -135,37 +135,28 @@ void ACBaseCharacter::Hitted()
 		Damage.Power = 0;
 	}
 	
-	//Change Color
-	{
-		Change_Color(this, FLinearColor::Red);
-
-		FTimerDelegate timerDelegate;
-		timerDelegate.BindUFunction(this, "RestoreColor");
-
-		GetWorld()->GetTimerManager().SetTimer(RestoreColor_TimerHandle, timerDelegate, 0.2f, false);//0.2초 동안 반복없이 실행.
-	}
-
 	//Damage는 CEnemy.h의 FDamageData이다.
 	if (!!Damage.Event && !!Damage.Event->HitData)
 	{
 		FVector HitExactLocation = ImpactPoint_Hit;
-
+	
 		//HitData 모음
 		FHitData* data = Damage.Event->HitData;//FDamageData의 FActionDamageEvent* Event내의 HitData
-
-		if(data->CharacterCnM.Num() > 0)//FHitData에 할당한 몽타주가 있다면 data->CharacterClass != nullptr &&
-		{
-			data->PlayMontage(this);//몽타주 재생
-		}
+	
+		//if(data->CharacterCnM.Num() > 0)//FHitData에 할당한 몽타주가 있다면 
+		//{
+		//	data->PlayMontage(this);//몽타주 재생
+			//data->PlayMontage(this, DirectionalHitReactSection(HitExactLocation));//몽타주 재생
+		//}
 		//else//할당한 몽타주가 없다면 기본 HitReactMontage 재생
 		//{
-		//	DirectionalHitReact(HitExactLocation);
+			DirectionalHitReact(HitExactLocation);
 		//}
-
+	
 		data->PlayHitStop(GetWorld());  //HitStop 재생
 		data->PlaySoundWave(this);//소리 재생
 		data->PlayEffect(GetWorld(), GetActorLocation(), GetActorRotation());//Effect 재생
-
+	
 		if (Status->IsDead() == false)
 		{
 			FVector start = GetActorLocation(); //start=현재 위치
@@ -185,6 +176,7 @@ void ACBaseCharacter::Hitted()
 			//SetActorRotation(UKismetMathLibrary::FindLookAtRotation(start, target));
 		}
 	}
+
 
 	//사망 처리
 	if (Status->IsDead())
@@ -216,6 +208,63 @@ void ACBaseCharacter::Dead()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);//Collision 꺼줌.
 
 	Montages->PlayDeadMode();
+
+	// 죽은 후 붙은 무기 및 액터 제거
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+
+	for (AActor* Actor : AttachedActors)
+	{
+		if (Actor && Actor->IsValidLowLevel())
+		{
+			Actor->Destroy();
+		}
+	}
+}
+
+FName ACBaseCharacter::DirectionalHitReactSection(const FVector& ImpactPoint)
+{
+	const FVector Forward = GetActorForwardVector();
+	const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);//디버깅에로우가 바닥과 평행이되게 만들기 위해 ImpactPoint.Z값 대신에 z값을 Enemy위치 z값으로 만들어준다.
+	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();//(충돌지점-Enemy위치)를 Normalize한다.
+
+	/* 내적 */
+	//내적. Forward * ToHit = |Forward||ToHit| * cos(theta)
+	// |Forward| = 1, |ToHit| = 1 이므로 Forward * ToHit = cos(theta)
+	const double CosTheta = FVector::DotProduct(Forward, ToHit);
+	//Theta를 구하기 위해 arc-cosine을 한다.
+	double Theta = FMath::Acos(CosTheta);
+	//Theta는 라디안(radian) 값이다. 라디안 값을 degree로 바꾸어준다.
+	Theta = FMath::RadiansToDegrees(Theta);
+	
+	/* 외적 */
+	//Forward와 ToHit의 외적을 구한다.
+	////외적벡터가 아래를 향하고 있으면, Theta값은 음수(-)이다.//언리얼은 왼손좌표계
+	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
+	if (CrossProduct.Z < 0)
+	{
+		Theta *= -1.0f; //
+	}
+
+	FName Section("Default");//방향 없을때 Default
+	if (Theta >= -45.0f && Theta < 45.0f)
+	{
+		Section = FName("FromFront");//앞 방향 피격
+	}
+	else if (Theta >= -135.0f && Theta < -45.0f)
+	{
+		Section = FName("FromLeft");//왼쪽 방향 피격
+	}
+	else if (Theta >= 45.0f && Theta < 135.0f)
+	{
+		Section = FName("FromRight");//오른쪽 방향 피격
+	}
+	else if (Theta < -135.0f || 135.0f <= Theta)
+	{
+		Section = FName("FromBack");//뒷 방향 피격
+	}
+
+	return Section;
 }
 
 void ACBaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
@@ -258,7 +307,7 @@ void ACBaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
 	//FName Section("Default");//방향 없을때 Default
 	FName Section("FromBack");//방향 없을때 Default
 
-	//if (Theta <= -45.0f && Theta > 45.0f)
+	//if (Theta < -135.0f || Theta >= 135.0f)
 	//{
 	//	Section = FName("FromBack");//뒷 방향 피격
 	//}

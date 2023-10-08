@@ -154,12 +154,12 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("MiddleClick", EInputEvent::IE_Released, this, &ACPlayer::MiddleMouse_Released);
 
 	PlayerInputComponent->BindAction("Airborne", EInputEvent::IE_Pressed, Weapon, &UCWeaponComponent::AirborneInitATK);
-
-	PlayerInputComponent->BindAction("Equip", EInputEvent::IE_Pressed, this, &ACPlayer::FKeyPressed);
 }
 
 void ACPlayer::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
 {
+	Super::OnStateTypeChanged(InPrevType, InNewType);
+
 	switch (InNewType)
 	{
 		case EStateType::Dodge:	 Dodge(); break;
@@ -215,42 +215,6 @@ void ACPlayer::End_Dodge()
 	Movement->DisableControlRotation();//Dodge이 끝나면 원래대로 돌려준다.
 
 	State->SetIdleMode();//Idle상태로 돌려줌.
-}
-
-void ACPlayer::FKeyPressed()
-{
-	CLog::Print(L"F Key Pressed!");
-
-	//ACAttachment* OverlappingWeapon = Cast<ACAttachment>(OverlappingItem);
-	//if (!!OverlappingWeapon)
-	//{
-	//	Weapon->ItemsArray.Add(OverlappingWeapon);
-	//	OverlappingWeapon->AttachTo(OverlappingWeapon->GetHolsterSocketName());
-	//
-	//
-	//	OverlappingWeapon = nullptr;
-	//	OverlappingItem = nullptr;
-	//}
-
-	//else
-	//{
-	//	if (CanDisarm())
-	//	{
-	//		Disarm();
-	//	}
-	//	else if (CanArm())
-	//	{
-	//		Arm();
-	//	}
-	//}
-}
-
-void ACPlayer::SetOverlappingItem(ACItem* Item)
-{
-	if (Weapon->ItemsArray.Find(Item))
-	{
-		OverlappingItem = Item;
-	}
 }
 
 void ACPlayer::OnRightButton()

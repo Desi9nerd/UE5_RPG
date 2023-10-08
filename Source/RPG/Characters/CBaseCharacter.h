@@ -19,69 +19,40 @@ class RPG_API ACBaseCharacter
 		
 protected:
 	UPROPERTY(EditAnywhere, Category = "Team")
-		uint8 TeamID;
+	uint8 TeamID;
 
 	UPROPERTY(VisibleAnywhere)
-		class UCWeaponComponent* Weapon;
+	class UCWeaponComponent* Weapon;
 
 	UPROPERTY(VisibleAnywhere)
-		class UCMontagesComponent* Montages;
+	class UCMontagesComponent* Montages;
 
 	UPROPERTY(VisibleAnywhere)
-		class UCMovementComponent* Movement;
+	class UCMovementComponent* Movement;
 
 	UPROPERTY(VisibleAnywhere)
-		class UCStateComponent* State;
+	class UCStateComponent* State;
 
 	UPROPERTY(VisibleAnywhere)
-		class UCStatusComponent* Status;
+	class UCStatusComponent* Status;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UCTargetComponent* Target;
+	class UCTargetComponent* Target;
 
 	UPROPERTY(VisibleAnywhere)
-		class UTextRenderComponent* TextRender_State;
+	class UTextRenderComponent* TextRender_State;
 	UPROPERTY(VisibleAnywhere)
-		class UTextRenderComponent* TextRender_Weapon;
+	class UTextRenderComponent* TextRender_Weapon;
 
 	//무기 장착 및 해제를 위한 변수
 	//UPROPERTY(VisibleAnywhere, Category = Weapon)
 	//ACWeapon* EquippedWeapon;
 
 	UPROPERTY(EditAnywhere, Category = "Color")
-		FLinearColor OriginColor = FLinearColor::White;//색상 설정.
+	FLinearColor OriginColor = FLinearColor::White;//색상 설정.
 
 	FTimerHandle RestoreColor_TimerHandle;//변한 색이 일정시간 후에 되돌아오도록 시간을 기록하는 변수.
 
-public:
-	ACBaseCharacter();
-
-	FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(TeamID); }
-
-protected:
-	virtual void BeginPlay() override;
-
-	virtual void Tick(float DeltaSeconds) override;
-
-public:
-	UFUNCTION()
-	virtual void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType) { };
-
-public:
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;//TakeDamage 오버라이드하여 재정의.
-
-	virtual void End_Hitted() override;//ICharacter의 가상함수 오버라이드.
-	void End_Dead() override;//ICharacter의 가상함수 오버라이드.
-
-protected:
-	UFUNCTION()
-	void RestoreColor();
-
-	virtual void Hitted();//자식(Enemy_AI)에서 재정의 할 수 있도록 virtual을 붙인다.
-	void Dead();
-
-
-protected:
 	struct FDamageData
 	{
 		float Power;
@@ -94,12 +65,35 @@ protected:
 	FVector ImpactPoint_Hit;
 
 public:
+	ACBaseCharacter();
+	FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(TeamID); }
+
+	UFUNCTION()
+	virtual void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType) { };
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;//TakeDamage 오버라이드하여 재정의.
+
+	virtual void End_Hitted() override;//ICharacter의 가상함수 오버라이드.
+	void End_Dead() override;//ICharacter의 가상함수 오버라이드.
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
+	
+	virtual void Hitted();//자식(Enemy_AI)에서 재정의 할 수 있도록 virtual을 붙인다.
+	void Dead();
+
+	UFUNCTION()
+	void RestoreColor();
+
+	void DirectionalHitReact(const FVector& ImpactPoint);
+
+public:
 	UPROPERTY(EditDefaultsOnly, Category = Combat)
 	UAnimMontage* HitReactMontage;
 
-protected:
-	void DirectionalHitReact(const FVector& ImpactPoint);
-
+	FName DirectionalHitReactSection(const FVector& ImpactPoint);
+	
 private:
 	int ParryingCnt;
 
