@@ -18,16 +18,16 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = PlayerAttributeHUD)
-		TSubclassOf<UCPlayerOverlay> PlayerOverlayClass;
+	TSubclassOf<UCPlayerOverlay> PlayerOverlayClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = PromptText)
-		TSubclassOf<UCPromptText> PromptTextClass;
+	TSubclassOf<UCPromptText> PromptTextClass;
 
 	UPROPERTY()
-		UCPlayerOverlay* PlayerOverlay;
+	UCPlayerOverlay* PlayerOverlay;
 
 	UPROPERTY()
-		UCPromptText* PromptText;
+	UCPromptText* PromptText;
 
 public:
 	//const를 사용하여 return value전용으로 만듬.
