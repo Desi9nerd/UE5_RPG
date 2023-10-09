@@ -221,18 +221,6 @@ void FWeaponAssetEditor::RegisterTabSpawners(const TSharedRef<FTabManager>& InTa
 
 TSharedRef<SDockTab> FWeaponAssetEditor::Spawn_LeftAreaTab(const FSpawnTabArgs& InArgs)
 {
-	//TSharedPtr<SDockTab> tab = SNew(SDockTab)
-	//[
-	//	SNew(SButton)
-	//	.OnClicked(this, &FWeaponAssetEditor::OnClicked)//OnClicked 함수 연결
-	//	[
-	//		SNew(STextBlock)
-	//		.Text(FText::FromString("Test"))
-	//	]
-	//];
-
-	//return tab.ToSharedRef();
-
 	return SNew(SDockTab)
 		[
 			LeftArea.ToSharedRef()
@@ -281,7 +269,5 @@ FLinearColor FWeaponAssetEditor::GetWorldCentricTabColorScale() const
 
 FReply FWeaponAssetEditor::OnClicked()
 {
-	GLog->Log("Test");
-
 	return FReply::Handled();//Handled()는 처리하고 끝낸다.
 }
