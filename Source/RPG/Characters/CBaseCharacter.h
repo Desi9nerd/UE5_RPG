@@ -19,7 +19,7 @@ class RPG_API ACBaseCharacter
 		
 protected:
 	UPROPERTY(EditAnywhere, Category = "Team")
-	uint8 TeamID;
+	uint8 TeamID;// TeamID를 0~255번까지 지정가능하다. 255번은 중립이다. ID 같으면 아군이고 ID가 다르면 적이다.
 
 	UPROPERTY(VisibleAnywhere)
 	class UCWeaponComponent* Weapon;

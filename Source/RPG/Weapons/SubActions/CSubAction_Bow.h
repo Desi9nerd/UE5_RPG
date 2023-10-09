@@ -42,13 +42,13 @@ private:
 
 private:
     UPROPERTY(EditAnywhere, Category = "Aiming")
-        class UCurveVector* Curve;
+	class UCurveVector* Curve;
 
     UPROPERTY(EditAnywhere, Category = "Aiming")
-        FAimData AimData;
+	FAimData AimData;
 
     UPROPERTY(EditAnywhere, Category = "Aiming")
-        float AimingSpeed = 200;
+	float AimingSpeed = 200;
 
     class USpringArmComponent* SpringArm;
     class UCameraComponent* Camera;

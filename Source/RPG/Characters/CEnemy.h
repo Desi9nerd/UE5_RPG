@@ -14,7 +14,6 @@ class RPG_API ACEnemy
 public:
 	ACEnemy();
 	void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType) override;
-
 	virtual void End_Hitted() override;//CBaseCharacter의 End_Hitted 재정의
 
 protected:

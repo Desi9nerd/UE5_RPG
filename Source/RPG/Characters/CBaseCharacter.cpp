@@ -14,7 +14,6 @@
 #include "HUD/CHitNumber.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
-#include "CEnemy.h"
 #include "CPlayer.h"
 
 ACBaseCharacter::ACBaseCharacter()
