@@ -11,5 +11,5 @@ class RPG_API UCPromptText : public UUserWidget
 	
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* PromptText`;
+	class UTextBlock* PromptText;
 };

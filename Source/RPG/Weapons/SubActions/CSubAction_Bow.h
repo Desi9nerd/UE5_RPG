@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "Weapons/CSubAction.h"
 #include "Components/TimelineComponent.h"
-#include "Widgets/CUserWidget_CrossHair.h"
 #include "CSubAction_Bow.generated.h"
 
 USTRUCT()
@@ -13,22 +12,33 @@ struct FAimData
 
 public:
     UPROPERTY(EditAnywhere)
-        float TargetArmLength = 100;
+	float TargetArmLength = 100;
 
     UPROPERTY(EditAnywhere)
-        FVector SocketOffset = FVector(0, 30, 10);
+	FVector SocketOffset = FVector(0, 30, 10);
 
     UPROPERTY(EditAnywhere)
-        bool bEnableCameraLag;
+	bool bEnableCameraLag;
 
     UPROPERTY(EditAnywhere)
-        FVector CameraLocation;
+	FVector CameraLocation;
 };
 
 UCLASS(Blueprintable)
 class RPG_API UCSubAction_Bow : public UCSubAction
 {
     GENERATED_BODY()
+
+public:
+    UCSubAction_Bow();
+    void BeginPlay(class ACharacter* InOwner, class ACAttachment* InAttachment, class UCDoAction* InDoAction) override;
+    void Tick_Implementation(float InDeltaTime) override;
+    virtual void Pressed() override;
+    virtual void Released() override;
+
+private:
+    UFUNCTION()
+	void OnAiming(FVector Output);
 
 private:
     UPROPERTY(EditAnywhere, Category = "Aiming")
@@ -40,42 +50,11 @@ private:
     UPROPERTY(EditAnywhere, Category = "Aiming")
         float AimingSpeed = 200;
 
-public:
-    UCSubAction_Bow();
-
-public:
-    virtual void Pressed() override;
-    virtual void Released() override;
-
-public:
-    void BeginPlay(class ACharacter* InOwner, class ACAttachment* InAttachment, class UCDoAction* InDoAction) override;
-
-public:
-    void Tick_Implementation(float InDeltaTime) override;
-
-private:
-    UFUNCTION()
-        void OnAiming(FVector Output);
-
-private:
     class USpringArmComponent* SpringArm;
     class UCameraComponent* Camera;
-
-private:
-    FTimeline Timeline;
     //SubAction는 Actor가 아니기 때문에 Component를 가질 수 없다. SubAction은 UObject 상속이다.
     //그래서 TimelineComponent가 아닌 Timeline으로 작업한다.
-
-private:
+    FTimeline Timeline;
     FAimData OriginData;
-
-private:
     float* Bend;
-
-public:    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-        TSubclassOf<UCUserWidget_CrossHair> CrossHairClass;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-        class UCUserWidget_CrossHair* CrossHair;
 };

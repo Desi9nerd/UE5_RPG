@@ -5,15 +5,13 @@
 #include "Characters/ECharacterTypes.h"
 #include "Characters/CBaseCharacter.h"
 #include "Parkour/CParkourComponent.h"
-#include "Interfaces/IPickup.h"
-#include "Weapons/CAttachment.h"//Pickup
-#include "Weapons/Attachments/CAttachment_Bow.h"//Pickup
+#include "Weapons/Attachments/CAttachment_Bow.h"
 #include "Components/SplineComponent.h"
 #include "CPlayer.generated.h"
 
 UCLASS()
 class RPG_API ACPlayer
-	: public ACBaseCharacter, public IIPickup //다중상속
+	: public ACBaseCharacter
 {
 	GENERATED_BODY()
 
@@ -71,6 +69,5 @@ private:
 	void SetZooming(float InValue);
 	void InitializePlayerOverlay(); // PlayerOverlay Widget
 	void SetHUDHealth(); // HUD
-
-	//git test
+	
 };

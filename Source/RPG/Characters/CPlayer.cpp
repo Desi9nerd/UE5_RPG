@@ -14,7 +14,6 @@
 #include "Components/ArrowComponent.h"//파쿠르 Arrow 생성을 위한 헤더
 
 //무기 Pickup
-#include "Item/CItem.h"
 #include "Weapons/CAttachment.h"
 #include "Weapons/Attachments/CAttachment_Bow.h"
 //HUD
@@ -279,12 +278,8 @@ void ACPlayer::SetZooming(float InValue)
 
 	Zoom->SetZoomValue(InValue);//BowMode가 아닌 경우 Zoom In&Out 가능.
 }
-
-
  
-//////////////////////////////////////////////////////////////
-  
- 
+////////////////////////////////////////////////////////////// 
  
 float ACPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -311,8 +306,6 @@ void ACPlayer::InitializePlayerOverlay()
 			{
 				PlayerOverlay->SetHealthBarPercent(Status->GetHealthPercent());
 				PlayerOverlay->SetStaminaBarPercent(Status->GetStaminaPercent());//시작 시 Stamina값
-				PlayerOverlay->SetGold(0);
-				PlayerOverlay->SetSouls(0);
 			}
 		}
 	}
