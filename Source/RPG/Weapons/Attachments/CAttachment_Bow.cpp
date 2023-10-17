@@ -40,10 +40,7 @@ void ACAttachment_Bow::BeginPlay()
 	Super::BeginPlay();
 
 	AttachTo("Holster_Bow");
-
-	//World에 배치 테스트
-	//this->SetActorLocation(FVector(100.0f, 200.0f, 50.0f), false, nullptr, ETeleportType::None);//World에 배치
-
+	
 	SkeletalMesh->SetVisibility(false);
 
 	PoseableMesh->SetSkeletalMesh(SkeletalMesh->SkeletalMesh);//SkeletalMesh 내의 SkeletalMesh 사용.
@@ -52,10 +49,7 @@ void ACAttachment_Bow::BeginPlay()
 	
 	PlayerCharacterCast = Cast<ACPlayer>(OwnerCharacter);	
 	state = CHelpers::GetComponent<UCStateComponent>(OwnerCharacter);
-
-	//TODO : CAttachment_Bow 클래스의 ArrowSpeed 변수와 CArrow 클래스 내의 Projectile 화살 속도 연동. 현재는 숫자 하드코딩으로 일치시켜줬음.
-	//ACArrow* arrow = Cast<ACArrow>(OwnerCharacter->Get)
-	//ArrowSpeed = Cast<ACArrow>(arrow)->Projectile->speed
+	
 }
 
 void ACAttachment_Bow::Tick(float DeltaTime)
@@ -122,7 +116,6 @@ float* ACAttachment_Bow::GetBend()
 void ACAttachment_Bow::GetStartAndEndforTrace()
 {
 	APlayerCameraManager* camManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
-	//APlayerCameraManager* camManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
 
 	CrosshairWorldLocation = camManager->GetCameraLocation();
 	ImpactPoint = CrosshairWorldLocation + camManager->GetActorForwardVector() * FVector(15000, 15000, 15000);
