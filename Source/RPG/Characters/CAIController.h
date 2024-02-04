@@ -20,8 +20,7 @@ protected:
 private:
 	UFUNCTION()
 	void OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors);
-
-private:
+	
 	UPROPERTY(VisibleAnywhere)
 	class UAIPerceptionComponent* Perception;
 

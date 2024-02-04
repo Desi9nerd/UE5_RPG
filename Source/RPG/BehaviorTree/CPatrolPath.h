@@ -19,7 +19,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Path")
 		bool bReverse;
 
-private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USceneComponent* Root;
 
@@ -31,15 +30,13 @@ private:
 
 public:
 	FORCEINLINE class USplineComponent* GetSpline() { return Spline; }
-
-public:
+	
 	ACPatrolPath();
 	void OnConstruction(const FTransform& Transform) override;
 
-protected:
-	virtual void BeginPlay() override;
-
-public:
 	FVector GetMoveTo();
 	void UpdateIndex();
+
+protected:
+	virtual void BeginPlay() override;
 };

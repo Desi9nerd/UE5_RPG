@@ -64,8 +64,7 @@ protected:
 
 private:
 	class UCWeaponComponent* Weapon;
-
-private:
+    
     FRotator PrevRotation;
 
 /** Bow 변수 추가*/
