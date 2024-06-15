@@ -1,33 +1,29 @@
 #pragma once
 #include "CoreMinimal.h"
 
+class FSlateStyleSet;
+struct FSlateImageBrush;
+
 class WEAPON_API FWeaponStyle
 {
 public:
+	FWeaponStyle();
+	~FWeaponStyle();
 	static TSharedRef<FWeaponStyle> Get();
 	static void Shutdown();
 
-private:
-	static TSharedPtr<FWeaponStyle> Instance;
+	FSlateIcon ToolBar_Icon;
 
-public:
-	FWeaponStyle();
-	~FWeaponStyle();
+	TSharedPtr<FSlateImageBrush> Array_Image;
+
+	const FVector2D DesiredWidth = FVector2D(250, 1000);
 
 private:
 	void RegisterIcon(const FString& InName, const FString& InPath, const FVector2D& InIconSize, FSlateIcon& OutSlateIcon);
 
-private:
+	static TSharedPtr<FWeaponStyle> Instance;
+
 	static const FName StyleSetName;
-
-private:
-	TSharedPtr<class FSlateStyleSet> StyleSet;
-
-public:
-	FSlateIcon ToolBar_Icon;
-
-	TSharedPtr<struct FSlateImageBrush> Array_Image;
-
-public:
-	const FVector2D DesiredWidth = FVector2D(250, 1000);
+	
+	TSharedPtr<FSlateStyleSet> StyleSet;
 };

@@ -1,6 +1,5 @@
 #include "SWeaponEquipmentData.h"
 #include "WeaponStyle.h"
-#include "IPropertyUtilities.h"
 #include "IDetailPropertyRow.h"
 #include "IDetailChildrenBuilder.h"
 #include "SWeaponCheckBoxes.h"

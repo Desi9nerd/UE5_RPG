@@ -10,16 +10,10 @@ struct FWeaponRowData
 	FString Name;
 	class UCWeaponAsset* Asset;
 
-	FWeaponRowData()
-	{
-
-	}
+	FWeaponRowData() { }
 
 	FWeaponRowData(int32 InNumber, FString InName, class UCWeaponAsset* InAsset)
-		: Number(InNumber), Name(InName), Asset(InAsset)
-	{
-
-	}
+		: Number(InNumber), Name(InName), Asset(InAsset) { }
 
 	static TSharedPtr<FWeaponRowData> Make(int32 InNumber, FString InName, class UCWeaponAsset* InAsset)
 	{
@@ -38,8 +32,7 @@ public:
 	SLATE_BEGIN_ARGS(SWeaponTableRow) { }//{ }는 초기화영역
 	SLATE_ARGUMENT(FWeaponRowDataPtr, RowData)
 		SLATE_END_ARGS()
-
-public:
+		
 	void Construct(const FArguments& InArgs, const TSharedRef<STableViewBase>& InOwnerTable);
 
 protected:
@@ -47,7 +40,6 @@ protected:
 
 private:
 	FWeaponRowDataPtr Data;//실제로 받아서 쓸 자료형 FWeaponRowDataPtr의 변수 Data.
-
 };
 
 
@@ -61,39 +53,27 @@ public:
 	SLATE_BEGIN_ARGS(SWeaponLeftArea) {}
 	SLATE_EVENT(FOnWeaponListViewSelectedItem, OnSelectedItem)
 		SLATE_END_ARGS()
-
-public:
+		
 	void Construct(const FArguments& InArgs);
-
-public:
-	bool HasRowDataPtr() { return  RowDatas.Num() > 0; }//하나라도 데이터 있는지 체크
-	FWeaponRowDataPtr GetFirstDataPtr() { return RowDatas[0]; }//첫번째 데이터 리턴
-
 	void SelectDataPtr(class UCWeaponAsset* InAsset);
-
 	FWeaponRowDataPtr GetRowDataPtrByName(FString InAssetName);
 	FString SelectedRowDataPtrName();
+	bool HasRowDataPtr() { return  RowDatas.Num() > 0; }//하나라도 데이터 있는지 체크
+	FWeaponRowDataPtr GetFirstDataPtr() { return RowDatas[0]; }//첫번째 데이터 리턴
 
 private:
 	TSharedRef<ITableRow> OnGenerateRow(FWeaponRowDataPtr InRow, const TSharedRef<STableViewBase>& InTable);
 	void OnSelectionChanged(FWeaponRowDataPtr InDataPtr, ESelectInfo::Type InType);
-
 	FText OnGetAssetCount() const;
-
 	void OnTextChanged(const FText& InText);//입력한 텍스트가 들어와 바뀐다.
 	void OnTextCommitted(const FText& InText, ETextCommit::Type InType);//입력완료(enter 등)시켰을 때 호출되는 이벤트.
-
-private:
 	void ReadDataAssetList();
-
-private:
+	
 	FOnWeaponListViewSelectedItem OnListViewSelectedItem;
-
-private:
+	
 	TArray<FWeaponRowDataPtr> RowDatas;//데이터 자료형을 받는 배열변수 
 	TSharedPtr<SListView<FWeaponRowDataPtr>> ListView;
-
-private:
+	
 	TSharedPtr<class SSearchBox> SearchBox;
 	FText SearchText;//검색 문자열을 관리할 변수
 };

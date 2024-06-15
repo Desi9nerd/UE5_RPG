@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Weapons/CWeaponStructures.h"
 
@@ -19,14 +18,9 @@ public:
     //객체를 외부에서 받기위해,
     void SetUtilities(TSharedPtr<class IPropertyUtilities> InUtilities);
 
-private:
-    //체크가 완료되었는지 
-    void OnCheckStateChanged(ECheckBoxState InState, int32 InIndex);
-
-public:
-    static bool CanDraw(TSharedPtr<IPropertyHandle> InHandle, int InCount);//사용자가 체크한 InHandle이 들어와서 배열이 개수와 일치하는지 판단. 배열 범위를 벗어나면 그리지 않도록 false를 리턴.
-
-public:
+    //사용자가 체크한 InHandle이 들어와서 배열이 개수와 일치하는지 판단. 배열 범위를 벗어나면 그리지 않도록 false를 리턴.
+    static bool CanDraw(TSharedPtr<IPropertyHandle> InHandle, int InCount);
+    
     //InIndex에는 Property 번호가 InValue에는 값.
     void CheckDefaultObject(int32 InIndex, UObject* InValue);
     void CheckDefaultValue(int32 InIndex, float InValue);
@@ -37,6 +31,9 @@ public:
     void CheckDefaultClass(int32 InIndex, const UAnimMontage* InMontage);
 
 private:
+    //체크가 완료되었는지 
+    void OnCheckStateChanged(ECheckBoxState InState, int32 InIndex);
+    
     //내부 구조체 생성, 관리를 위해 사용
     struct FInternalData
     {
@@ -52,6 +49,7 @@ private:
             Name = Handle->GetPropertyDisplayName().ToString();//핸들 내의 DisplayName을 출력이름으로 설정.
         }
     };
+
     TArray<FInternalData> InternalDatas;//구조체 Data 전부를 포괄한 배열변수
 
     TSharedPtr<class IPropertyUtilities> Utilities;//멤버 변수

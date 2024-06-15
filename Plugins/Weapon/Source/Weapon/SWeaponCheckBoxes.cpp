@@ -30,7 +30,7 @@ TSharedRef<SWidget> SWeaponCheckBoxes::Draw(bool bBackground)
             [
                 SNew(SCheckBox)//체크박스는 컨텐츠 영역을 가지고 있다.
                 .IsChecked(InternalDatas[i].bChecked)//체크 여부 출력, 0과 1로만 판단
-            .OnCheckStateChanged(this, &SWeaponCheckBoxes::OnCheckStateChanged, i)//체크 했는지 판단
+				.OnCheckStateChanged(this, &SWeaponCheckBoxes::OnCheckStateChanged, i)//체크 했는지 판단
             [
                 SNew(STextBlock)
                 .Text(FText::FromString(InternalDatas[i].Name))//InternalDatas의 이름들 출력
@@ -123,8 +123,10 @@ void SWeaponCheckBoxes::CheckDefaultObject(int32 InIndex, UObject* InValue)
     UObject* val = nullptr;//기본값
     InternalDatas[InIndex].Handle->GetValue(val);//해당 Property에 선택한 값
 
-    if (!!val && InValue != val)//nullptr이거나 선택한 값이랑 기본값이 다르다면
+    if (IsValid(val) && InValue != val)//nullptr이거나 선택한 값이랑 기본값이 다르다면
+    {
         InternalDatas[InIndex].bChecked = true;
+    }
 }
 
 void SWeaponCheckBoxes::CheckDefaultValue(int32 InIndex, float InValue)
@@ -133,7 +135,9 @@ void SWeaponCheckBoxes::CheckDefaultValue(int32 InIndex, float InValue)
     InternalDatas[InIndex].Handle->GetValue(val);//해당 Property에 선택한 값
 
     if (InValue != val)//선택한 값이랑 기본값이 다르다면
+    {
         InternalDatas[InIndex].bChecked = true;
+    }
 }
 
 void SWeaponCheckBoxes::CheckDefaultValue(int32 InIndex, bool InValue)
@@ -142,7 +146,9 @@ void SWeaponCheckBoxes::CheckDefaultValue(int32 InIndex, bool InValue)
     InternalDatas[InIndex].Handle->GetValue(val);//해당 Property에 선택한 값
 
     if (InValue != val)//선택한 값이랑 기본값이 다르다면
+    {
         InternalDatas[InIndex].bChecked = true;
+    }
 }
 
 void SWeaponCheckBoxes::CheckDefaultValue(int32 InIndex, const FVector& InValue)
@@ -151,7 +157,9 @@ void SWeaponCheckBoxes::CheckDefaultValue(int32 InIndex, const FVector& InValue)
     InternalDatas[InIndex].Handle->GetValue(val);//해당 Property에 선택한 값
 
     if (InValue != val)//선택한 값이랑 기본값이 다르다면
-        InternalDatas[InIndex].bChecked = true;
+    {
+    	InternalDatas[InIndex].bChecked = true;
+    }
 }
 
 void SWeaponCheckBoxes::CheckDefaultClass(int32 InIndex, TArray<FClassMontage> InClassMontage)
@@ -179,7 +187,9 @@ void SWeaponCheckBoxes::CheckDefaultClass(int32 InIndex, const TSubclassOf<AChar
     TSubclassOf<ACharacter> characterClassType = nullptr;
     
     if (InClass != characterClassType)
-        InternalDatas[InIndex].bChecked = true;    
+    {
+        InternalDatas[InIndex].bChecked = true;
+    }
 }
 
 void SWeaponCheckBoxes::CheckDefaultClass(int32 InIndex, const UAnimMontage* InMontage)
@@ -188,5 +198,7 @@ void SWeaponCheckBoxes::CheckDefaultClass(int32 InIndex, const UAnimMontage* InM
     //InternalDatas[InIndex].Handle->GetValue(val);//해당 Property에 선택한 값
 
     if (InMontage != val)//선택한 값이랑 기본값이 다르다면
+    {
         InternalDatas[InIndex].bChecked = true;
+    }
 }

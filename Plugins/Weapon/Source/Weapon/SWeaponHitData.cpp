@@ -1,12 +1,9 @@
 #include "SWeaponHitData.h"
 #include "WeaponStyle.h"
-#include "IPropertyUtilities.h"
 #include "IDetailPropertyRow.h"
 #include "IDetailChildrenBuilder.h"
 #include "SWeaponCheckBoxes.h"
 #include "DetailWidgetRow.h"
-#include "Animation/AnimMontage.h"
-#include "GameFramework/Character.h"
 
 TArray<TSharedPtr<SWeaponCheckBoxes>> SWeaponHitData::CheckBoxes;
 
@@ -143,7 +140,7 @@ void SWeaponHitData::CustomizeChildren(TSharedRef<IPropertyHandle> InPropertyHan
 						value.ToSharedRef()
 					];
 			}
-		}//for(i)
+		}
 
 		return;//CanDraw가 false면 그리지 않고 리턴.
 	}

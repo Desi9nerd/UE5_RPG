@@ -10,12 +10,7 @@ UWeaponAssetFactory::UWeaponAssetFactory()
 	SupportedClass = UCWeaponAsset::StaticClass();
 }
 
-UObject* UWeaponAssetFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags,
-	UObject* Context, FFeedbackContext* Warn, FName CallingContext)
+UObject* UWeaponAssetFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn, FName CallingContext)
 {
-	//UCWeaponAsset* asset = NewObject<UCWeaponAsset>(InParent, InClass, InName, Flags);
-	//
-	//return nullptr;
-
 	return NewObject<UCWeaponAsset>(InParent, InClass, InName, Flags);
 }

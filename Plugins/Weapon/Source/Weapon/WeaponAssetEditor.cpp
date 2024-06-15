@@ -62,7 +62,7 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 
 	FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 
-	//DetailsView
+	//** DetailsView
 	{
 		FDetailsViewArgs args(false, false, true, FDetailsViewArgs::HideNameArea);//기본값 설정. ActorsUserNameArea, ObjectsUserNameArea, HideNameArea
 		args.ViewIdentifier = "WeaponAssetEditorDetailsView";//식별자 설정. 게임 Editor쪽에서 DetailView 접근시 이 식별자로 찾을 수 있다.
@@ -73,56 +73,56 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 		DetailsView->SetGenericLayoutDetailsDelegate(detailView);//Delegate를 연결해준다.
 	}
 
-	//EquipmentData
+	//** EquipmentData
 	{
 		FOnGetPropertyTypeCustomizationInstance instance;
 		instance.BindStatic(&SWeaponEquipmentData::MakeInstance);
 		prop.RegisterCustomPropertyTypeLayout("EquipmentData", instance);//instance를 delegate 등록
 	}
 
-	//DoActionData
+	//** DoActionData
 	{
 		FOnGetPropertyTypeCustomizationInstance instance_DoAction;
 		instance_DoAction.BindStatic(&SWeaponDoActionData::MakeInstance);
 		prop.RegisterCustomPropertyTypeLayout("DoActionData", instance_DoAction);//instance를 delegate 등록
 	}
 
-	//HitData
+	//** HitData
 	{
 		FOnGetPropertyTypeCustomizationInstance instance;
 		instance.BindStatic(&SWeaponHitData::MakeInstance);
 		prop.RegisterCustomPropertyTypeLayout("HitData", instance);//instance를 delegate 등록		
 	}
 	
-	//AirborneInitATK
+	//** AirborneInitATK
 	{
 		FOnGetPropertyTypeCustomizationInstance instance_AirborneInitATK;
 		instance_AirborneInitATK.BindStatic(&SWeaponDoActionData::MakeInstance);
 		prop.RegisterCustomPropertyTypeLayout("DoActionDatas_AirborneATK", instance_AirborneInitATK);//instance를 delegate 등록
 	}
 
-	//HitData_AirborneInitATK
+	//** HitData_AirborneInitATK
 	{
 		FOnGetPropertyTypeCustomizationInstance instance_AirborneInitATKHit;
 		instance_AirborneInitATKHit.BindStatic(&SWeaponHitData::MakeInstance);
 		prop.RegisterCustomPropertyTypeLayout("HitDatas_AirborneATK", instance_AirborneInitATKHit);//instance를 delegate 등록
 	}
 
-	//DoActionData_AirCombo
+	//** DoActionData_AirCombo
 	{
 		FOnGetPropertyTypeCustomizationInstance instanceAir;
 		instanceAir.BindStatic(&SWeaponDoActionData::MakeInstance);
 		prop.RegisterCustomPropertyTypeLayout("DoActionDatas_AirCombo", instanceAir);//instance를 delegate 등록
 	}
 
-	//HitData_AirCombo
+	//** HitData_AirCombo
 	{
 		FOnGetPropertyTypeCustomizationInstance instanceAirHit;
 		instanceAirHit.BindStatic(&SWeaponHitData::MakeInstance);
 		prop.RegisterCustomPropertyTypeLayout("HitDatas_AirCombo", instanceAirHit);//instance를 delegate 등록
 	}
 
-	//Layout 설정
+	//** Layout 설정
 	TSharedRef<FTabManager::FLayout> layout = FTabManager::NewLayout("WeaponAssetEditor_Layout")
 		->AddArea //전체화면의 메인 영역
 		(
@@ -175,7 +175,7 @@ void FWeaponAssetEditor::Open(FString InAssetName)
 
 bool FWeaponAssetEditor::OnRequestClose()
 {
-	if (!!DetailsView)
+	if (DetailsView)
 	{
 		//AssetEditorSubsystem안에(=DetailView 안에)
 		//GetEditingObject()가 등록되어 있었다면 해제하고 Editor에 알린다.
@@ -197,13 +197,16 @@ bool FWeaponAssetEditor::OnRequestClose()
 	}
 
 	if (LeftArea.IsValid())
+	{
 		LeftArea.Reset();
+	}
 
 	if (DetailsView.IsValid())
+	{
 		DetailsView.Reset();
+	}
 
-	return true;
-	//false 리턴인 경우 창이 닫힐 수 없다는 것을 의미한다.
+	return true; //false 리턴인 경우 창이 닫힐 수 없다는 것을 의미한다.
 }
 
 void FWeaponAssetEditor::RegisterTabSpawners(const TSharedRef<FTabManager>& InTabManager)
@@ -237,11 +240,12 @@ TSharedRef<SDockTab> FWeaponAssetEditor::Spawn_DetailsViewTab(const FSpawnTabArg
 
 void FWeaponAssetEditor::OnListViewSelectedItem(FWeaponRowDataPtr InDataPtr)
 {
-	if (InDataPtr == nullptr)//LeftArea에서 선택한게 없다면(또는 빈 공간을 선택했다면)
-		return;
+	if (nullptr == InDataPtr) return;//LeftArea에서 선택한게 없다면(또는 빈 공간을 선택했다면) return
 
-	if (!!GetEditingObject())//편집하는 객체가 있다면
+	if (IsValid(GetEditingObject()))//편집하는 객체가 있다면
+	{
 		RemoveEditingObject(GetEditingObject());//현재 창에서 편집중인 애들 제거한다.
+	}
 
 	AddEditingObject(InDataPtr->Asset);//현재 창에 편집해줄 객체를 등록해준다.
 	DetailsView->SetObject(InDataPtr->Asset);//창 안의 DetailsView도 변경해준다.

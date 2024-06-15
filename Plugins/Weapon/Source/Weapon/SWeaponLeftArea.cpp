@@ -14,17 +14,21 @@ void SWeaponTableRow::Construct(const FArguments& InArgs, const TSharedRef<STabl
 }
 
 TSharedRef<SWidget> SWeaponTableRow::GenerateWidgetForColumn(const FName& InColumnName)
-{	//InColumnName에 아래 Construct 내부의 SHeaderRow::Column("이름, 번호 등")이 들어간다.
+{
+	//InColumnName에 아래 Construct 내부의 SHeaderRow::Column("이름, 번호 등")이 들어간다.
 	FString str;
 	if (InColumnName == "Number")//InColumnName이 숫자면
+	{
 		str = FString::FromInt(Data->Number);//str에 숫자를 넣어준다.
+	}
 	else if (InColumnName == "Name")//InColumnName이 이름이면
+	{
 		str = Data->Name;//str에 이름을 넣어준다.
+	}
 
 	return SNew(STextBlock)
 		.Text(FText::FromString(str));//출력할 문자str를 생성하여 리턴해준다.
 }
-
 
 /*모양을 디자인 해주는 역할*/
 void SWeaponLeftArea::Construct(const FArguments& InArgs)
@@ -77,8 +81,7 @@ void SWeaponLeftArea::Construct(const FArguments& InArgs)
 
 void SWeaponLeftArea::SelectDataPtr(UCWeaponAsset* InAsset)
 {
-	if (HasRowDataPtr() == false)
-		return;
+	if (false == HasRowDataPtr()) return;
 
 	for (FWeaponRowDataPtr ptr : RowDatas)
 	{
@@ -107,7 +110,9 @@ FString SWeaponLeftArea::SelectedRowDataPtrName()
 	TArray<FWeaponRowDataPtr> ptrs = ListView->GetSelectedItems();
 
 	if (ptrs.Num() > 0)//선택된게 있을때
+	{
 		return ptrs[0]->Asset->GetName();//선택된 것의 이름을 리턴
+	}
 
 	return "";//빈 문자열 리턴
 }
@@ -162,8 +167,8 @@ FText SWeaponLeftArea::OnGetAssetCount() const
 
 void SWeaponLeftArea::OnTextChanged(const FText& InText)
 {
-	if (SearchText.CompareToCaseIgnored(InText) == 0)//기존 문자열과 현재 입력된 문자열이 같다면
-		return;//리턴으로 끝내버린다.
+	//기존 문자열과 현재 입력된 문자열이 같다면 리턴으로 끝내버린다.
+	if (SearchText.CompareToCaseIgnored(InText) == 0) return;
 
 	SearchText = InText;
 	ReadDataAssetList();//재검색하도록 ReadDataAssetList()를 콜 한다.
@@ -178,8 +183,7 @@ void SWeaponLeftArea::OnSelectionChanged(FWeaponRowDataPtr InDataPtr, ESelectInf
 {
 	//InDataPtr로 선택된 데이터가 들어온다.
 	//주의사항: 빈 구역을 클릭해도 InDataPtr의 데이터가 들어온다. 빈 구역 클릭 시 null로 값이 들어온다.
-	if (InDataPtr.IsValid() == false)
-		return;
+	if (false == InDataPtr.IsValid()) return;
 
 	OnListViewSelectedItem.ExecuteIfBound(InDataPtr);
 }

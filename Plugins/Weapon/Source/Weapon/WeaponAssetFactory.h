@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Factories/Factory.h"
 #include "WeaponAssetFactory.generated.h"

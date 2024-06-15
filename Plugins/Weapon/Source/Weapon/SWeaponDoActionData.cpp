@@ -1,6 +1,5 @@
 #include "SWeaponDoActionData.h"
 #include "WeaponStyle.h"
-#include "IPropertyUtilities.h"
 #include "IDetailPropertyRow.h"
 #include "IDetailChildrenBuilder.h"
 #include "SWeaponCheckBoxes.h"
@@ -105,7 +104,7 @@ void SWeaponDoActionData::CustomizeChildren(TSharedRef<IPropertyHandle> InProper
 				[
 					value.ToSharedRef()
 				];
-		}//for(i)
+		}
 
 		return;//CanDraw가 false면 그리지 않고 리턴.
 	}

@@ -6,20 +6,6 @@ const FName FWeaponStyle::StyleSetName = "WeaponStyle";
 
 TSharedPtr<FWeaponStyle> FWeaponStyle::Instance = nullptr;
 
-TSharedRef<FWeaponStyle> FWeaponStyle::Get()
-{
-    if (Instance == nullptr)
-        Instance = MakeShareable(new FWeaponStyle());
-
-    return Instance.ToSharedRef();
-}
-
-void FWeaponStyle::Shutdown()
-{
-    if (Instance.IsValid())
-        Instance.Reset();
-}
-
 FWeaponStyle::FWeaponStyle()
 {
     StyleSet = MakeShareable(new FSlateStyleSet(StyleSetName));
@@ -46,6 +32,20 @@ FWeaponStyle::~FWeaponStyle()
 
     FSlateStyleRegistry::UnRegisterSlateStyle(StyleSetName);
     StyleSet.Reset();
+}
+
+TSharedRef<FWeaponStyle> FWeaponStyle::Get()
+{
+    if (Instance == nullptr)
+        Instance = MakeShareable(new FWeaponStyle());
+
+    return Instance.ToSharedRef();
+}
+
+void FWeaponStyle::Shutdown()
+{
+    if (Instance.IsValid())
+        Instance.Reset();
 }
 
 void FWeaponStyle::RegisterIcon(const FString& InName, const FString& InPath, const FVector2D& InIconSize, FSlateIcon& OutSlateIcon)

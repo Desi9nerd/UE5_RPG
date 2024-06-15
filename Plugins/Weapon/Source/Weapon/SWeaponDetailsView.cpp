@@ -7,7 +7,6 @@
 #include "DetailCategoryBuilder.h"
 #include "IDetailPropertyRow.h"
 #include "Weapons/CWeaponAsset.h"
-
 #include "Animation/AnimMontage.h"
 #include "Particles/ParticleSystem.h"
 #include "NiagaraSystem.h"
@@ -27,7 +26,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 
 	//DetailBuilder.HideCategory("CWeaponAsset");//CWeaponAsset 카테고리를 숨겨준다. 현재는 모든 카테고리를 노출시키기 때문에 사용하지 않는다.
 
-	//Class Settings
+	//** Class Settings
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		//ClassSettings는 없으므로 새로 만들어서 return
@@ -39,7 +38,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 		category.AddProperty("SubActionClass", type);//CWeaponAsset의 SubActionClass를 카테고리에 추가.
 	}
 
-	//EquipmentData
+	//** EquipmentData
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("EquipmentData", FText::FromString("Equipment Data!!"));
@@ -60,7 +59,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 		}
 	}
 
-	//DoActionData
+	//** DoActionData
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("DoActionData", FText::FromString("DoAction Data"));
@@ -91,10 +90,10 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
 				checkBoxes->CheckDefaultValue(index++, data.EffectScale);
 			}
-		}//if(bRefreshByCheckBoxes)
+		}
 	}
 
-	//HitData
+	//** HitData
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("HitData", FText::FromString("Hit Data"));
@@ -120,11 +119,6 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->AddProperties(handle);
 
 				int32 index = 0;
-				//for (int32 j = 0; j < data.CharacterCnM.Num(); j++)
-				//{
-				//	checkBoxes->CheckDefaultClass(index, testtemp.CharacterCnM[j]->CharacterClass);
-				//	checkBoxes->CheckDefaultClass(index, testtemp.CharacterCnM[j]->Montage);
-				//}
 				checkBoxes->CheckDefaultClass(index++, data.CharacterCnM);				
 				checkBoxes->CheckDefaultValue(index++, data.PlayRate);
 				checkBoxes->CheckDefaultValue(index++, data.Power);
@@ -135,10 +129,10 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
 				checkBoxes->CheckDefaultValue(index++, data.EffectScale);
 			}
-		}//if(bRefreshByCheckBoxes)
+		}
 	}
 
-	//DoActionData_AirborneInitATK
+	//** DoActionData_AirborneInitATK
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("AirborneInitATK", FText::FromString("AirborneInitATK"));
@@ -172,7 +166,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 		}//if(bRefreshByCheckBoxes)
 	}
 
-	//HitData_AirborneInitATK
+	//** HitData_AirborneInitATK
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("HitDatas_AirborneATK", FText::FromString("Hit Data AirborneInitATK"));
@@ -207,7 +201,7 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 		}//if(bRefreshByCheckBoxes)
 	}
 
-	//DoActionData_AirCombo
+	//** DoActionData_AirCombo
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("DoActionDatas_AirCombo", FText::FromString("DoAction Data AirCombo"));
@@ -238,9 +232,10 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
 				checkBoxes->CheckDefaultValue(index++, data.EffectScale);
 			}
-		}//if(bRefreshByCheckBoxes)
+		}
 	}
-	//HitData_AirCombo
+
+	//** HitData_AirCombo
 	{
 		//.EditCategory 해당 타입에 해당 카테고리가 있으면 그 카테고리를 return, 없으면 새로 만들어서 return
 		IDetailCategoryBuilder& category = DetailBuilder.EditCategory("HitDatas_AirCombo", FText::FromString("Hit Data AirCombo"));
@@ -272,6 +267,6 @@ void SWeaponDetailsView::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 				checkBoxes->CheckDefaultValue(index++, data.EffectLocation);
 				checkBoxes->CheckDefaultValue(index++, data.EffectScale);
 			}
-		}//if(bRefreshByCheckBoxes)
+		}
 	}
 }

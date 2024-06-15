@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Framework/Commands/Commands.h"
 
@@ -11,19 +10,14 @@ public:
 	~FWeaponCommand();
 
 	void Startup();
-
-public:
 	virtual void RegisterCommands() override;
 
 private:
+	void AddToolBar(FToolBarBuilder& InBuilder);//툴바에 버튼 추가
+	void OnClicked();//버튼이 눌렸을때
+
 	TSharedPtr<FExtender> Extender;
-	//2023.06.20 화요일
-	//TSharedPtr<FToolMenuSection> Section;
 
 	TSharedPtr<FUICommandList> Command;
 	TSharedPtr<FUICommandInfo> Id;
-		
-private:
-	void AddToolBar(FToolBarBuilder& InBuilder);//툴바에 버튼 추가
-	void OnClicked();//버튼이 눌렸을때
 };
