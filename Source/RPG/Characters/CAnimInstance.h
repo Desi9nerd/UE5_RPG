@@ -1,107 +1,113 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
 #include "Components/CWeaponComponent.h"
 #include "Components/CFeetComponent.h"
 #include "CAnimInstance.generated.h"
 
+class UCWeaponComponent;
+class UCMovementComponent;
+class ACharacter;
+
 UCLASS()
 class RPG_API UCAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 
-protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
-        float Speed;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Animation")
-        float Pitch;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Animation")
-        float Direction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
-        bool bFalling;//추락중 여부
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
-        bool bBow_Aiming;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
-        class UCharacterMovementComponent* CharacterMovement;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
-        bool IsFalling;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
-		int JumpCnt;
-
-    //Feet IK
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "InverseKinemetics")
-        bool bFeet;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "InverseKinemetics")
-        FFeetData FeetData;
-    
-	//Parkour
-    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
-        EWeaponType WeaponType = EWeaponType::Max;
-
 public:
     void NativeInitializeAnimation() override;
     void NativeUpdateAnimation(float DeltaSeconds) override;
-    
-private:
-    UFUNCTION()
-        void OnWeaponTypeChanged(EWeaponType InPrevType, EWeaponType InNewType);
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
-		class ACharacter* OwnerCharacter;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	float Speed;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	float Pitch;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	float Direction;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
-        class UCMovementComponent* Movement;
+	bool bFalling;//추락중 여부
 
-private:
-	class UCWeaponComponent* Weapon;
-    
-    FRotator PrevRotation;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	bool bBow_Aiming;
 
-/** Bow 변수 추가*/
-protected:
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	class UCharacterMovementComponent* CharacterMovement;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	bool IsFalling;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	int JumpCnt;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	ACharacter* OwnerCharacter;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	UCMovementComponent* Movement;
+
+    //*****************************************************
+    //Parkour
+    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+        EWeaponType WeaponType = EWeaponType::Max;
+    //*****************************************************
+
+    //*****************************************************
+    //Feet IK
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "InverseKinemetics")
+	bool bFeet;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "InverseKinemetics")
+	FFeetData FeetData;
+    //*****************************************************
+
+    //*****************************************************
+	//** Bow
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        FVector Velocity;
+	FVector Velocity;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        bool ShouldMove;
+	bool ShouldMove;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        FRotator BaseAimRotation;
+	FRotator BaseAimRotation;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        float YawOffset;
+	float YawOffset;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        float RootYawOffset;
+	float RootYawOffset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-		FRotator MovingRotation;
+	FRotator MovingRotation;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        FRotator LastMovingRotation;
+	FRotator LastMovingRotation;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        float DistanceCurve;
+	float DistanceCurve;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        float LastDistanceCurve;
+	float LastDistanceCurve;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        float DeltaDistanceCurve;
+    float DeltaDistanceCurve;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        float AbsRootYawOffset;
+    float AbsRootYawOffset;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bow")
-        float YawExcess;
+    float YawExcess;
+    //*****************************************************
+
+private:
+    UFUNCTION()
+	void OnWeaponTypeChanged(EWeaponType InPrevType, EWeaponType InNewType);
+
+    UCWeaponComponent* Weapon;
+
+    FRotator PrevRotation;
 };

@@ -61,8 +61,10 @@ EBTNodeResult::Type UCBTTaskNode_SubAction::AbortTask(UBehaviorTreeComponent& Ow
 	ACEnemy_AI* ai = Cast<ACEnemy_AI>(controller->GetPawn());
 
 	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(ai);
-	if (weapon == nullptr)//무기가 없다면
+	if (false == IsValid(weapon))//무기가 없다면
+	{
 		return EBTNodeResult::Failed;//실패 종료한다.	
+	}
 
 	return EBTNodeResult::Succeeded;//성공 종료한다.
 }

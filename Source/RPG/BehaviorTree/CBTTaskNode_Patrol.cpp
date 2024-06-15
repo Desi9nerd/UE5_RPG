@@ -23,14 +23,16 @@ EBTNodeResult::Type UCBTTaskNode_Patrol::ExecuteTask(UBehaviorTreeComponent& Own
 	UCAIBehaviorComponent* behavior = CHelpers::GetComponent<UCAIBehaviorComponent>(ai);
 
 	//PatrolPath가 있을때
-	if (!!ai->GetPatrolPath())
+	if (IsValid(ai->GetPatrolPath()))
 	{
 		//움직일 위치를 Blackboard에 넣는다.
 		FVector moveToPoint = ai->GetPatrolPath()->GetMoveTo();
 		behavior->SetPatrolLocation(moveToPoint);
 
 		if (bDebugMode)//순찰 경로 DrawDebug
+		{
 			DrawDebugSphere(ai->GetWorld(), moveToPoint, 25, 25, FColor::Green, true, 5);
+		}
 
 		return EBTNodeResult::InProgress;
 	}
@@ -46,14 +48,15 @@ EBTNodeResult::Type UCBTTaskNode_Patrol::ExecuteTask(UBehaviorTreeComponent& Own
 	while (true)
 	{
 		//갈 수 있는 위치가 나올때까지 계속 돌린다.
-		if (navSystem->GetRandomPointInNavigableRadius(location, RandomRadius, point))
-			break;
+		if (navSystem->GetRandomPointInNavigableRadius(location, RandomRadius, point)) break;
 	}
 
 	behavior->SetPatrolLocation(point.Location);
 
 	if (bDebugMode)//순찰 경로 DrawDebug
+	{
 		DrawDebugSphere(ai->GetWorld(), point.Location, 25, 25, FColor::Green, true, 5);
+	}
 
 	return EBTNodeResult::InProgress;
 }

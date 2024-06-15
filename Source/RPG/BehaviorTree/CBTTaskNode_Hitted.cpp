@@ -30,11 +30,10 @@ void UCBTTaskNode_Hitted::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 	ACEnemy_AI* ai = Cast<ACEnemy_AI>(controller->GetPawn());
 
 	UCStateComponent* state = CHelpers::GetComponent<UCStateComponent>(ai);
-	if (state->IsHittedMode() == false)//Hitted가 끝나면
+	if (false == state->IsHittedMode())//Hitted가 끝나면
 	{
 		//Task를 Succeeded로 만들어주고 리턴한다.
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-
 		return;
 	}
 }

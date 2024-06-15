@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
 #include "CBTTaskNode_SubAction.generated.h"

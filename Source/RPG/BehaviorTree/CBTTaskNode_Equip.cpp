@@ -54,7 +54,6 @@ void UCBTTaskNode_Equip::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 	if (state->IsIdleMode() && *bEquipped)
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);//Succeeded 종료. FinishLatentTask는 리턴이 없는 Tick 같은 곳에서 사용한다.
-
 		return;
 	}
 }
@@ -67,13 +66,16 @@ EBTNodeResult::Type UCBTTaskNode_Equip::AbortTask(UBehaviorTreeComponent& OwnerC
 	ACEnemy_AI* ai = Cast<ACEnemy_AI>(controller->GetPawn());
 
 	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(ai);
-	if (weapon == nullptr)//무기가 없다면
+	if (false == IsValid(weapon))//무기가 없다면
+	{
 		return EBTNodeResult::Failed;//실패 종료.
-	
+	}
 
 	bool bBeginEquip = weapon->GetEquipment()->GetBeginEquip();//GetBeginEquip()으로 CEquipment의 bBeginEquip를 넣어준다. bBeginEquip=true면 Equip이 시작되었다는 의미다.
-	if (bBeginEquip == false)
+	if (false == bBeginEquip)
+	{
 		weapon->GetEquipment()->Begin_Equip();
+	}
 
 	weapon->GetEquipment()->End_Equip();
 

@@ -3,8 +3,6 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Characters/CEnemy_AI.h"
 #include "Characters/CAIController.h"
-#include "Components/CStateComponent.h"
-#include "Components/CWeaponComponent.h"
 #include "Weapons/CDoAction.h"
 
 UCBTTaskNode_SetFocus::UCBTTaskNode_SetFocus()
@@ -23,7 +21,7 @@ EBTNodeResult::Type UCBTTaskNode_SetFocus::ExecuteTask(UBehaviorTreeComponent& O
 	//ACEnemy_AI* ai = Cast<ACEnemy_AI>(controller->GetPawn());
 	ACharacter* Target = Cast<ACharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(FName("Target")));
 
-	if(nullptr == Target)
+	if(false == IsValid(Target))
 	{
 		return EBTNodeResult::Failed;
 	}

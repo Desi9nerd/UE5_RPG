@@ -19,8 +19,10 @@ void UCAnimInstance::NativeInitializeAnimation()
 	Movement = CHelpers::GetComponent<UCMovementComponent>(OwnerCharacter);
 
 	Weapon = CHelpers::GetComponent<UCWeaponComponent>(OwnerCharacter);
-	if (!!Weapon)
+	if (IsValid(Weapon))
+	{
 		Weapon->OnWeaponTypeChange.AddDynamic(this, &UCAnimInstance::OnWeaponTypeChanged);
+	}
 }
 
 void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
