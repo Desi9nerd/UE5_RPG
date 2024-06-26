@@ -59,12 +59,12 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	if (Weapon->IsUnarmedMode())
 	{
-		if (!!parkour && !!feet)
+		if (IsValid(parkour) && IsValid(feet))
 		{
 			bFeet = parkour->IsExecuting() == false;//EParkourType::Max라면 false==false가 되어 bFeet은 true, EParkourType::Max가 아닌 상황이라면 true==false가 되어 bFeet은 false.
 			FeetData = feet->GetData();//FFeetData를 넣어준다.
 		}
-		else if (!!feet)
+		else if (IsValid(feet))
 		{
 			bFeet = true;
 			FeetData = feet->GetData();
@@ -72,7 +72,7 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 
 	//활 조준
-	if (!!Weapon->GetSubAction())
+	if (IsValid(Weapon->GetSubAction()))
 	{
 		bBow_Aiming = true;
 		bBow_Aiming &= WeaponType == EWeaponType::Bow;

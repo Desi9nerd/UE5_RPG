@@ -1,31 +1,14 @@
 #pragma once
 
-//TODO:
-//StateComponent Enum 옮기기
-//StatusComponent Enum 옮기기
-
-//TODO:
-//ActionMode 기준
-//if(State->IsAction())
-//WeaponType과 HitReactionType을 조합하여
-//Enemy 기준에서 HitData의 Attacker는 Player, Causer는 무기이다. 
-//Enemy가 HitData에서 Causer인 무기를 판단하여 HitReactionType을 결정해 다른 몽타주가 나오도록 해보자.
-//TODO
-//SubActionMode 기준
-//if(State->IsSubActionMode())
-//Player가 SubActionMode일 때 위와 같은 방법으로 구현.
-
-UENUM() //CStateComponent.h에 있던것 옮김
+UENUM()
 enum class EStateType : uint8
 {
 	Idle = 0, Dodge, Equip, Hitted, Dead, Action, Parrying, Max,
 };
 
-
-
 //////////////////////////////////////////////////////////
 
-UENUM(BlueprintType) //BP에 리플렉션 해준다.
+UENUM(BlueprintType)
 enum class ECharacterState : uint8
 {
 	ECS_Unequipped UMETA(DisplayName = "Unequipped"),
@@ -33,7 +16,7 @@ enum class ECharacterState : uint8
 	ECS_EquippedTwoHandedWeapon UMETA(DisplayName = "Equipped Two-Handed Weapon")
 };
 
-UENUM(BlueprintType) //BP에 리플렉션 해준다.
+UENUM(BlueprintType)
 enum class EActionState : uint8
 {
 	EAS_Unoccupied UMETA(DisplayName = "Unocuppied"),
@@ -44,7 +27,7 @@ enum class EActionState : uint8
 	EAS_Dead UMETA(DisplayName = "Dead")
 };
 
-UENUM(BlueprintType) //BP에 리플렉션 해준다.
+UENUM(BlueprintType)
 enum EDeathPose
 {
 	EDP_Death1 UMETA(DisplayName = "Death1"),
@@ -57,7 +40,7 @@ enum EDeathPose
 	EDP_MAX UMETA(DisplayName = "DefaultMAX")
 };
 
-UENUM(BlueprintType) //BP에 리플렉션 해준다.
+UENUM(BlueprintType)
 enum class EEnemyState : uint8
 {
 	EES_NoState UMETA(DisplayName = "NoState"),

@@ -10,8 +10,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetTextLibrary.h"
-//Widget
-#include "HUD/CHitNumber.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "CPlayer.h"
@@ -78,19 +76,21 @@ float ACBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	ACAttachment* CustomDamageEvent = (ACAttachment*)&DamageEvent;
 	ImpactPoint_Hit = CustomDamageEvent->HitResult_CAttachment.ImpactPoint;// Access the impact point
 
-	//**
+	//****************************************************************************
 	//HitNumber 구현하기
 
 	//ACEnemy* HitEnemy = Cast<ACEnemy>(EventInstigator->GetCharacter());
 	//if (HitEnemy)
 	//	HitEnemy->ShowHitNumber(Damage.Power, ImpactPoint_Hit);
 	ACPlayer* PlayerTemp = Cast<ACPlayer>(EventInstigator->GetCharacter());
-	if (PlayerTemp)
+	if (IsValid(PlayerTemp))
+	{
 		PlayerTemp->ShowHitNumber(Damage.Power, ImpactPoint_Hit);
+	}
+	//****************************************************************************
 
-	//**	
-
-	//** */ Hit 방향 판단
+	//****************************************************************************
+	//** Hit 방향 판단
 	//Hit의 Impact Point를 계산해서 앞의 공격인지 판단한다. Parrying 적용 여부를 결정하기 위해
 	const FVector Forward = GetActorForwardVector();
 	const FVector ImpactLowered(ImpactPoint_Hit.X, ImpactPoint_Hit.Y, GetActorLocation().Z);//
@@ -107,11 +107,11 @@ float ACBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	bool bFrontHitted = false;
 	if (Theta >= -60.0f && Theta < 60.0f)//전방 기준 120도 일때만 패링 방어 
 		bFrontHitted = true;
-	//** */
+	//****************************************************************************
 
-
+	//****************************************************************************
 	//Parrying 상태 + 앞 방향 피격 + 패링막기 5 미만일 때
-	if (State->IsParryingMode() && bFrontHitted == true && ACBaseCharacter::ParryingCnt < 5)
+	if (State->IsParryingMode() && bFrontHitted == true && ParryingCnt < 5)
 	{
 		LaunchCharacter(GetActorForwardVector() * -200.0f, false, false);
 		ParryingCnt++;//패링카운트 증가
@@ -119,6 +119,7 @@ float ACBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 		return NULL;
 	}
 	ParryingCnt = 0;//다음 번에 패링이 되도록 초기화
+	//****************************************************************************
 
 
 	State->SetHittedMode();//HittedMode로 변경.
@@ -135,22 +136,14 @@ void ACBaseCharacter::Hitted()
 	}
 	
 	//Damage는 CEnemy.h의 FDamageData이다.
-	if (!!Damage.Event && !!Damage.Event->HitData)
+	if (Damage.Event && Damage.Event->HitData)
 	{
 		FVector HitExactLocation = ImpactPoint_Hit;
 	
 		//HitData 모음
 		FHitData* data = Damage.Event->HitData;//FDamageData의 FActionDamageEvent* Event내의 HitData
 	
-		//if(data->CharacterCnM.Num() > 0)//FHitData에 할당한 몽타주가 있다면 
-		//{
-		//	data->PlayMontage(this);//몽타주 재생
-			//data->PlayMontage(this, DirectionalHitReactSection(HitExactLocation));//몽타주 재생
-		//}
-		//else//할당한 몽타주가 없다면 기본 HitReactMontage 재생
-		//{
-			DirectionalHitReact(HitExactLocation);
-		//}
+		DirectionalHitReact(HitExactLocation);
 	
 		data->PlayHitStop(GetWorld());  //HitStop 재생
 		data->PlaySoundWave(this);//소리 재생
@@ -172,10 +165,8 @@ void ACBaseCharacter::Hitted()
 			FVector LaunchedVector = LaunchF + LaunchR + LaunchU;
 		
 			LaunchCharacter(LaunchedVector, true, true);
-			//SetActorRotation(UKismetMathLibrary::FindLookAtRotation(start, target));
 		}
 	}
-
 
 	//사망 처리
 	if (Status->IsDead())
@@ -227,7 +218,8 @@ FName ACBaseCharacter::DirectionalHitReactSection(const FVector& ImpactPoint)
 	const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);//디버깅에로우가 바닥과 평행이되게 만들기 위해 ImpactPoint.Z값 대신에 z값을 Enemy위치 z값으로 만들어준다.
 	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();//(충돌지점-Enemy위치)를 Normalize한다.
 
-	/* 내적 */
+	//****************************************************************************
+	//** 내적
 	//내적. Forward * ToHit = |Forward||ToHit| * cos(theta)
 	// |Forward| = 1, |ToHit| = 1 이므로 Forward * ToHit = cos(theta)
 	const double CosTheta = FVector::DotProduct(Forward, ToHit);
@@ -235,8 +227,10 @@ FName ACBaseCharacter::DirectionalHitReactSection(const FVector& ImpactPoint)
 	double Theta = FMath::Acos(CosTheta);
 	//Theta는 라디안(radian) 값이다. 라디안 값을 degree로 바꾸어준다.
 	Theta = FMath::RadiansToDegrees(Theta);
-	
-	/* 외적 */
+	//****************************************************************************
+
+	//****************************************************************************
+	//** 외적
 	//Forward와 ToHit의 외적을 구한다.
 	////외적벡터가 아래를 향하고 있으면, Theta값은 음수(-)이다.//언리얼은 왼손좌표계
 	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
@@ -244,6 +238,7 @@ FName ACBaseCharacter::DirectionalHitReactSection(const FVector& ImpactPoint)
 	{
 		Theta *= -1.0f; //
 	}
+	//****************************************************************************
 
 	FName Section("Default");//방향 없을때 Default
 	if (Theta >= -45.0f && Theta < 45.0f)
@@ -272,7 +267,8 @@ void ACBaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
 	const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);//디버깅에로우가 바닥과 평행이되게 만들기 위해 ImpactPoint.Z값 대신에 z값을 Enemy위치 z값으로 만들어준다.
 	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();//(충돌지점-Enemy위치)를 Normalize한다.
 
-	/* 내적 */
+	//****************************************************************************
+	//** 내적
 	//내적. Forward * ToHit = |Forward||ToHit| * cos(theta)
 	// |Forward| = 1, |ToHit| = 1 이므로 Forward * ToHit = cos(theta)
 	const double CosTheta = FVector::DotProduct(Forward, ToHit);
@@ -280,36 +276,21 @@ void ACBaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
 	double Theta = FMath::Acos(CosTheta);
 	//Theta는 라디안(radian) 값이다. 라디안 값을 degree로 바꾸어준다.
 	Theta = FMath::RadiansToDegrees(Theta);
+	//****************************************************************************
 
-
-
-	///
-	//if (GEngine) //디버깅 메시지. 충돌 시 Theta 값 출력. //추후에 삭제
-	//{
-	//	GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Green, FString::Printf(TEXT("Theta: %f"),Theta));
-	//}
-	//UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 100.0f,10.0f, //FLinearColor::Red, 5.0f);
-	//	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 100.0f, 10.0f, FLinearColor::Green, 5.0f);
-	///
-
-
-
-	/* 외적 */
+	//****************************************************************************
+	//** 외적
 	//Forward와 ToHit의 외적을 구한다.
 	////외적벡터가 아래를 향하고 있으면, Theta값은 음수(-)이다.//언리얼은 왼손좌표계
 	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
 	if (CrossProduct.Z < 0)
 	{
-		Theta *= -1.0f; //
+		Theta *= -1.0f;
 	}
+	//****************************************************************************
 
-	//FName Section("Default");//방향 없을때 Default
+
 	FName Section("FromBack");//방향 없을때 Default
-
-	//if (Theta < -135.0f || Theta >= 135.0f)
-	//{
-	//	Section = FName("FromBack");//뒷 방향 피격
-	//}
 	if (Theta >= -45.0f && Theta < 45.0f)
 	{
 		Section = FName("FromFront");//앞 방향 피격
@@ -329,18 +310,12 @@ void ACBaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
 		AnimInstance->Montage_Play(HitReactMontage);
 		AnimInstance->Montage_JumpToSection(Section, HitReactMontage);
 	}
-
-	//디버깅용. 추후에 삭제
-	//UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward + CrossProduct * 150.0f, 10.0f, FColor::Blue, 5.0f);
-
 }
 
 void ACBaseCharacter::End_Dead()
 {
 	Destroy(); //죽으면 소멸시켜준다.
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 
 void ACBaseCharacter::StoreHitNumber(UUserWidget* InHitNumber, FVector InLocation)

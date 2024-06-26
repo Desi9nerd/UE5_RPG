@@ -122,19 +122,16 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveRight", Movement, &UCMovementComponent::OnMoveRight);
 	PlayerInputComponent->BindAxis("VerticalLook", Movement, &UCMovementComponent::OnVerticalLook);
 	PlayerInputComponent->BindAxis("HorizontalLook", Movement, &UCMovementComponent::OnHorizontalLook);
+	PlayerInputComponent->BindAxis("Zoom", this, &ACPlayer::SetZooming);//Bow 모드가 아닐 때만 사용하려고 SetZooming으로 설정하여 만들었다.
+	//PlayerInputComponent->BindAxis("Zoom", Zoom, &UCZoomComponent::SetZoomValue);//Value로 연동되게하면 Bow 모드 시 문제가 될 수 있다.
 
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::OnJump);
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnStopJumping);
-
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::OnSprint);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnRun);
 	PlayerInputComponent->BindAction("SprintFast", EInputEvent::IE_Pressed, Movement, &UCMovementComponent::OnSprintFast);
 	PlayerInputComponent->BindAction("SprintFast", EInputEvent::IE_Released, Movement, &UCMovementComponent::OnSprint);
-
 	PlayerInputComponent->BindAction("Avoid", EInputEvent::IE_Pressed, this, &ACPlayer::OnAvoid);
-
-	//PlayerInputComponent->BindAxis("Zoom", Zoom, &UCZoomComponent::SetZoomValue);//Value로 연동되게하면 Bow 모드 시 문제가 될 수 있다.
-	PlayerInputComponent->BindAxis("Zoom", this, &ACPlayer::SetZooming);//Bow 모드가 아닐 때만 사용하려고 SetZooming으로 설정하여 만들었다.
 
 	PlayerInputComponent->BindAction("Fist", EInputEvent::IE_Pressed, Weapon, &UCWeaponComponent::SetFistMode);
 	PlayerInputComponent->BindAction("Sword", EInputEvent::IE_Pressed, Weapon, &UCWeaponComponent::SetSwordMode);
@@ -145,10 +142,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Blade", EInputEvent::IE_Pressed, Weapon, &UCWeaponComponent::SetBladeMode);
 
 	PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, Weapon, &UCWeaponComponent::DoAction);
-
 	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnRightButton);
 	PlayerInputComponent->BindAction("SubAction", EInputEvent::IE_Released, this, &ACPlayer::OffRightButton);
-
 	PlayerInputComponent->BindAction("MiddleClick", EInputEvent::IE_Pressed, this, &ACPlayer::MiddleMouse_Pressed);
 	PlayerInputComponent->BindAction("MiddleClick", EInputEvent::IE_Released, this, &ACPlayer::MiddleMouse_Released);
 
@@ -173,9 +168,7 @@ void ACPlayer::OnAvoid()
 	CheckNull(State);
 	CheckFalse(State->IsIdleMode());
 	CheckFalse(Movement->CanMove());
-
 	CheckTrue(InputComponent->GetAxisValue("MoveForward") == 0.0f && InputComponent->GetAxisValue("MoveRight") == 0.0f);
-
 	CheckNull(Status);
 
 	if (Status->GetStamina() < Status->GetDodgeCost())
@@ -200,8 +193,7 @@ void ACPlayer::OnAvoid()
 void ACPlayer::Dodge()
 {
 	DisableInput(PlayerController);//Dodge가 시작되면 키 입력이 안 되게 만들어준다.
-
-	//GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	
 	Movement->EnableControlRotation();//정면을 바라본 상태로 뒤로 뛰어야하기 때문에 EnableControlRotation으로 만들어준다.
 
 	Montages->PlayDodgeMode();//PlayDodgeMode()를 통해 몽타주 재생.
@@ -250,8 +242,6 @@ void ACPlayer::MiddleMouse_Pressed()
 	if (Weapon->IsBladeMode())
 	{
 		Weapon->Parrying_Pressed();
-
-		return;
 	}
 }
 
@@ -260,8 +250,6 @@ void ACPlayer::MiddleMouse_Released()
 	if (Weapon->IsBladeMode())
 	{
 		Weapon->Parrying_Released();
-
-		return;
 	}
 }
 
@@ -278,28 +266,21 @@ void ACPlayer::SetZooming(float InValue)
 
 	Zoom->SetZoomValue(InValue);//BowMode가 아닌 경우 Zoom In&Out 가능.
 }
- 
-////////////////////////////////////////////////////////////// 
+
  
 float ACPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	SetHUDHealth();
-	
-	//**
-	//HitNumber 구현하기
-	//ACEnemy* HitEnemy = Cast<ACEnemy>(DamageEvent.);
-	//HitEnemy->ShowHitNumber(Damage.Power, ImpactPoint_Hit);
-
 
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
 void ACPlayer::InitializePlayerOverlay()
 {
-	if (!!PlayerController)
+	if (IsValid(PlayerController))
 	{
 		ACCharacterHUD* PlayerHUD = Cast<ACCharacterHUD>(PlayerController->GetHUD());
-		if (!!PlayerHUD)
+		if (IsValid(PlayerHUD))
 		{
 			PlayerOverlay = PlayerHUD->GetPlayerOverlay();
 			if (PlayerOverlay && Status)

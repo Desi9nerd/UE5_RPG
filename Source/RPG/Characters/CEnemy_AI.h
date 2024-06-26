@@ -1,8 +1,12 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Characters/CEnemy.h"
 #include "CEnemy_AI.generated.h"
+
+class UBehaviorTree;
+class UCAIBehaviorComponent;
+class ACPatrolPath;
+class UWidgetComponent;
 
 UCLASS()
 class RPG_API ACEnemy_AI : public ACEnemy
@@ -15,8 +19,8 @@ public:
 	void End_Hitted() override;//CEnemy의 End_Hitted 재정의
 
 	FORCEINLINE uint8 GetTeamID() { return TeamID; }
-	FORCEINLINE class UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
-	FORCEINLINE class ACPatrolPath* GetPatrolPath() { return PatrolPath; }
+	FORCEINLINE UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
+	FORCEINLINE ACPatrolPath* GetPatrolPath() { return PatrolPath; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -24,20 +28,19 @@ protected:
 
 private:
 	void UpdateLabelRenderScale();
-
-private:
+	
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	class UBehaviorTree* BehaviorTree;
+	UBehaviorTree* BehaviorTree;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Label")
 	float LabelViewAmount = 3000.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Patrol")
-	class ACPatrolPath* PatrolPath;//클래스 밖에서도 지정할 수 있어야 한다. 서로간 만들어진 객체를 참조할것이라서 softObjectPtr 사용
+	ACPatrolPath* PatrolPath;//클래스 밖에서도 지정할 수 있어야 한다. 서로간 만들어진 객체를 참조할것이라서 softObjectPtr 사용
 
 	UPROPERTY(VisibleDefaultsOnly)
-	class UWidgetComponent* LabelWidget;
+	UWidgetComponent* LabelWidget;
 
 	UPROPERTY(VisibleDefaultsOnly)
-	class UCAIBehaviorComponent* Behavior;
+	UCAIBehaviorComponent* Behavior;
 };

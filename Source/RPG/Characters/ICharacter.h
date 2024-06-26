@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "ICharacter.generated.h"
@@ -18,8 +17,7 @@ public:
 	virtual void End_Dodge() { }
 	virtual void End_Hitted() { }
 	virtual void End_Dead() { }
-
-public:
+	
 	void Create_DynamicMaterial(class ACharacter* InCharacter);
 	void Change_Color(class ACharacter* InCharacter, FLinearColor InColor);
 };

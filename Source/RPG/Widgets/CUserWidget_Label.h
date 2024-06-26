@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "CUserWidget_Label.generated.h"
@@ -11,12 +10,11 @@ class RPG_API UCUserWidget_Label : public UUserWidget
 
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Label")
-		void UpdateHealth(float InHealth, float InMaxHealth);
+	void UpdateHealth(float InHealth, float InMaxHealth);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Label")
-		void UpdateName(const FString& InName);
+	void UpdateName(const FString& InName);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Label")
-		void UpdateControllerName(const FString& InName);
-
+	void UpdateControllerName(const FString& InName);
 };

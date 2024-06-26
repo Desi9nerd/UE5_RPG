@@ -1,9 +1,7 @@
 #include "CEnemy.h"
 #include "Global.h"
-#include "CAnimInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Components/CMovementComponent.h"
 
 ACEnemy::ACEnemy()
 {
@@ -38,7 +36,6 @@ void ACEnemy::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
 void ACEnemy::Hitted()
 {
 	Super::Hitted();
-
 }
 
 void ACEnemy::End_Hitted()

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "IHit.generated.h"
@@ -16,5 +15,5 @@ class RPG_API IIHit
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
-		void GetHit(const FVector& ImpactPoint, AActor* Hitter);
+	void GetHit(const FVector& ImpactPoint, AActor* Hitter);
 };

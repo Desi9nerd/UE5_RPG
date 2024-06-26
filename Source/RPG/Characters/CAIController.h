@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "CAIController.generated.h"

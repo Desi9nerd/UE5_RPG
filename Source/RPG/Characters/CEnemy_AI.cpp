@@ -1,6 +1,5 @@
 #include "Characters/CEnemy_AI.h"
 #include "Global.h"
-#include "Components/CWeaponComponent.h"
 #include "Components/CAIBehaviorComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/CStatusComponent.h"
@@ -32,8 +31,6 @@ void ACEnemy_AI::BeginPlay()
 	label->UpdateHealth(Status->GetHealth(), Status->GetMaxHealth());
 	label->UpdateName(GetName());
 	label->UpdateControllerName(GetController()->GetName());
-
-	//TeamID = 2;//TeamID를 0~255번까지 지정가능하다. 255번은 중립이다. ID 같으면 아군이고 ID가 다르면 적이다.
 }
 
 void ACEnemy_AI::Tick(float DeltaTime)
@@ -42,7 +39,7 @@ void ACEnemy_AI::Tick(float DeltaTime)
 
 	UCUserWidget_Label* label = Cast<UCUserWidget_Label>(LabelWidget->GetUserWidgetObject());
 
-	if (!!label)
+	if (IsValid(label))
 	{
 		label->UpdateHealth(Status->GetHealth(), Status->GetMaxHealth());
 
@@ -51,9 +48,13 @@ void ACEnemy_AI::Tick(float DeltaTime)
 
 	float distanceToPlayer = GetDistanceTo(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (distanceToPlayer < 1000.0f)
+	{
 		LabelWidget->SetVisibility(true);
+	}
 	else
+	{
 		LabelWidget->SetVisibility(false);
+	}
 }
 
 void ACEnemy_AI::UpdateLabelRenderScale()
