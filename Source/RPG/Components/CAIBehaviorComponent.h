@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "CAIBehaviorComponent.generated.h"
@@ -11,6 +10,7 @@ enum class EAIStateType : uint8
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAIStateTypeChanged, EAIStateType, InPrevType, EAIStateType, InNewType);
+
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class RPG_API UCAIBehaviorComponent : public UActorComponent
@@ -25,13 +25,10 @@ public:
 	bool IsHittedMode();
 	bool IsAvoidMode();
 	bool IsDeadMode();
-	
-	UCAIBehaviorComponent();
 
 	FORCEINLINE void SetBlackboard(class UBlackboardComponent* InBlackboard) { Blackboard = InBlackboard; }
 
 	class ACharacter* GetTarget();
-
 	FVector GetPatrolLocation();
 	void SetPatrolLocation(const FVector& InLocation);
 	FVector GetAvoidLocation();
@@ -43,6 +40,8 @@ public:
 	void SetHittedMode();
 	void SetAvoidMode();
 	void SetDeadMode();
+	
+	FAIStateTypeChanged OnAIStateTypeChanged;
 
 protected:
 	virtual void BeginPlay() override;
@@ -51,10 +50,6 @@ private:
 	void ChangeType(EAIStateType InType);
 	EAIStateType GetType();
 
-public:
-	FAIStateTypeChanged OnAIStateTypeChanged;
-
-private:
 	UPROPERTY(EditAnywhere, Category = "Key")
 	FName AIStateTypeKey = "AIState";
 
@@ -67,5 +62,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Key")
 	FName AvoidLocationKey = "Avoid_Location";
 
-	class UBlackboardComponent* Blackboard;
+	UBlackboardComponent* Blackboard;
 };

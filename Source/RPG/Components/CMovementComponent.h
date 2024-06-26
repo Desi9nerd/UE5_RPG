@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "CMovementComponent.generated.h"
@@ -15,22 +14,10 @@ class RPG_API UCMovementComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-private:
-	UPROPERTY(EditAnywhere, Category = "CameraSpeed")
-		float HorizontalLook = 45;
-
-	UPROPERTY(EditAnywhere, Category = "CameraSpeed")
-		float VerticalLook = 45;
-
-private:
-	UPROPERTY(EditAnywhere, Category = "Speed")
-		float Speed[(int32)ESpeedType::Max] = { 200, 400, 600, 800 };
-
 public:
 	FORCEINLINE bool CanMove() { return bCanMove; }
 	FORCEINLINE void Move() { bCanMove = true; }
 	FORCEINLINE void Stop() { bCanMove = false; }
-
 	FORCEINLINE int DoubleJumpCount() const { return JumpCount; }
 
 	FORCEINLINE float GetWalkSpeed() { return Speed[(int32)ESpeedType::Walk]; }
@@ -41,20 +28,11 @@ public:
 	FORCEINLINE bool GetFixedCamera() { return bFixedCamera; }
 	FORCEINLINE void EnableFixedCamera() { bFixedCamera = true; }
 	FORCEINLINE void DisableFixedCamera() { bFixedCamera = false; }
-
 	FORCEINLINE void EnableTopViewCamera() { bTopViewCamera = true; }
 	FORCEINLINE void DisableTopViewCamera() { bTopViewCamera = false; }
-
-public:
-	UCMovementComponent();
-
-protected:
-	virtual void BeginPlay() override;
-
-public:
+	
 	void SetSpeed(ESpeedType InType);
 
-public:
 	void OnJump();
 	void SetJumpCountZero();
 	void OnStopJumping();
@@ -66,16 +44,26 @@ public:
 	void EnableControlRotation();
 	void DisableControlRotation();
 
-public:
 	void OnMoveForward(float InAxis);
 	void OnMoveRight(float InAxis);
 	void OnHorizontalLook(float InAxis);
 	void OnVerticalLook(float InAxis);
 
-private:
-	class ACharacter* OwnerCharacter;
+protected:
+	virtual void BeginPlay() override;
 
 private:
+	UPROPERTY(EditAnywhere, Category = "CameraSpeed")
+	float HorizontalLook = 45;
+
+	UPROPERTY(EditAnywhere, Category = "CameraSpeed")
+	float VerticalLook = 45;
+
+	UPROPERTY(EditAnywhere, Category = "Speed")
+	float Speed[(int32)ESpeedType::Max] = { 200, 400, 600, 800 };
+
+	ACharacter* OwnerCharacter;
+	
 	bool bCanMove = true; //이동할 수 있는가
 	bool bFixedCamera; //카메라 고정인가
 	bool bTopViewCamera;//(Warp)TopView 카메라 사용할건가

@@ -6,30 +6,24 @@
 UCStateComponent::UCStateComponent()
 {
 	AController* controller = Cast<AController>(GetOwner());
-	//OwnerCPlayer = Cast<ACPlayer>(controller->GetPawn());
 }
 
 void UCStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void UCStateComponent::SetIdleMode()
 {
 	ChangeType(EStateType::Idle);
-
-	//CheckNull(OwnerCPlayer);
-	//OwnerCPlayer->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	
 	UGameplayStatics::GetPlayerCharacter(this, 0)->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 void UCStateComponent::SetDodgeMode()
 {
 	ChangeType(EStateType::Dodge);
-
-	//CheckNull(OwnerCPlayer);
-	//OwnerCPlayer->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	
 	UGameplayStatics::GetPlayerCharacter(this, 0)->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
@@ -74,5 +68,7 @@ void UCStateComponent::ChangeType(EStateType InType)
 	Type = InType;
 
 	if (OnStateTypeChanged.IsBound())
+	{
 		OnStateTypeChanged.Broadcast(prevType, Type);
+	}
 }

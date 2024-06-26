@@ -5,7 +5,6 @@
 UCZoomComponent::UCZoomComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
 }
 
 void UCZoomComponent::BeginPlay()
@@ -23,8 +22,8 @@ void UCZoomComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	CheckNull(SpringArm);
-
 	CheckTrue(UKismetMathLibrary::NearlyEqual_FloatFloat(SpringArm->TargetArmLength, CurrentValue));
+
 	SpringArm->TargetArmLength = UKismetMathLibrary::FInterpTo(SpringArm->TargetArmLength, CurrentValue, DeltaTime, InterpSpeed);
 }
 

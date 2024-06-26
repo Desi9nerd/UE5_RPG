@@ -2,12 +2,6 @@
 #include "Global.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Components/CMontagesComponent.h"
-
-UCMovementComponent::UCMovementComponent()
-{
-
-}
 
 void UCMovementComponent::BeginPlay()
 {

@@ -10,7 +10,9 @@ UCTargetComponent::UCTargetComponent()
 
 	Character = Cast<ACBaseCharacter>(GetOwner());
 	if (Character.IsValid())
+	{
 		Controller = Cast<AController>(Character->GetController());
+	}
 } 
 
 void UCTargetComponent::BeginPlay()
@@ -27,17 +29,25 @@ void UCTargetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	float distanceToTarget = Character->GetDistanceTo(&(*Target));
 
 	if (distanceToTarget <= TraceDistance)
+	{
 		Tick_Targeting();
+	}
 	else
+	{
 		End_Targeting();
+	}
 }
 
 void UCTargetComponent::Toggle_Target()
 {
-	if (!!bTargeting)
+	if (bTargeting)
+	{
 		End_Targeting();
+	}
 	else
+	{
 		Begin_Targeting();
+	}
 }
 
 void UCTargetComponent::Begin_Targeting()
@@ -67,9 +77,7 @@ void UCTargetComponent::Begin_Targeting()
 		}
 	}
 
-
 	const TWeakObjectPtr<ACBaseCharacter> target = NearlyForward(Character, Targets, Character->GetController());
-	
 
 	ChangeTarget(target.Get());
 }
@@ -79,8 +87,9 @@ void UCTargetComponent::End_Targeting()
 	CheckNull(Target);
 
 	if(IsValid(Particle))
+	{
 		Particle->DestroyComponent();
-
+	}
 
 	//TargetCameraComp->DisableFixedCamera();
 	Target = nullptr;
@@ -231,11 +240,7 @@ void UCTargetComponent::ChangeFocus(bool InbRight)
 			ChangeTarget(candidate.Get());
 		}
 	}
-	//else//여기 지워도된다.
-	//	ChangeTarget(candidate.Get());
-	
 }
-
 
 //////////////////////////////////////////////////////////////////////
 

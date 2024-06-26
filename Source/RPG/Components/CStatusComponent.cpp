@@ -2,11 +2,6 @@
 #include "Global.h"
 #include "GameFramework/Character.h"
 
-UCStatusComponent::UCStatusComponent()
-{
-
-}
-
 void UCStatusComponent::BeginPlay()
 {
 	Super::BeginPlay();

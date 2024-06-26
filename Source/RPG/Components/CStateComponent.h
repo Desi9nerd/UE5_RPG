@@ -1,8 +1,7 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Characters/ECharacterTypes.h"//Enum
+#include "Characters/ECharacterTypes.h"
 #include "CStateComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStateTypeChanged, EStateType, InPrevType, EStateType, InNewType);
@@ -21,16 +20,10 @@ public:
 	FORCEINLINE bool IsActionMode() { return Type == EStateType::Action; }
 	FORCEINLINE bool IsParryingMode() { return Type == EStateType::Parrying; }
 	FORCEINLINE bool IsSubActionMode() { return bInSubActionMode; }
-
 	FORCEINLINE EStateType GetStateType() { return Type; }
-
-public:
+	
 	UCStateComponent();
-
-protected:
-	virtual void BeginPlay() override;
-
-public:
+	
 	void SetIdleMode();
 	void SetDodgeMode();
 	void SetEquipMode();
@@ -40,20 +33,15 @@ public:
 	void SetParryingMode();
 	void OnSubActionMode();
 	void OffSubActionMode();
+	
+	FStateTypeChanged OnStateTypeChanged;
+
+protected:
+	virtual void BeginPlay() override;
 
 private:
 	void ChangeType(EStateType InType);
 
-public:
-	FStateTypeChanged OnStateTypeChanged;
-
-private:
 	EStateType Type;
-
-private:
 	bool bInSubActionMode;
-
-public:
-	//class ACPlayer* OwnerCPlayer;
-
 };

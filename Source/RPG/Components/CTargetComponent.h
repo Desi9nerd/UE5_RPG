@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "CTargetComponent.generated.h"
@@ -15,13 +14,10 @@ class RPG_API UCTargetComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
+	FORCEINLINE TWeakObjectPtr<ACBaseCharacter> GetTarget() { return Target; }
+
 	UCTargetComponent();
-
-protected:
-	virtual void BeginPlay() override;
-
-public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
@@ -34,8 +30,30 @@ public:
 	void End_Targeting();
 	void ChangeTarget(ACBaseCharacter* InCandidate);
 	void Tick_Targeting();
+	
+	UPROPERTY(VisibleAnywhere, Category = "Focus")
+	bool bTargeting;
 
-	FORCEINLINE TWeakObjectPtr<ACBaseCharacter> GetTarget() { return Target; }
+	UPROPERTY(VisibleAnywhere, Category = "Focus")
+	bool bMovingFocus;
+
+protected:
+	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UParticleSystemComponent* Particle;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float TraceDistance = 2500.f;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	UParticleSystem* ParticleAsset;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float FinishAngle = 0.1f;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float InterpSpeed = 20.f;
 
 private:
 	TWeakObjectPtr<ACBaseCharacter> NearlyForward(TWeakObjectPtr<ACBaseCharacter> InCenterTarget,
@@ -48,30 +66,6 @@ private:
 		TWeakObjectPtr<AController> InController,
 		TMap<float, TWeakObjectPtr<ACBaseCharacter>>& OutNearCharacters);
 
-protected:
-	UPROPERTY(EditAnywhere, Category = "Components")
-	class UParticleSystemComponent* Particle;
-
-	UPROPERTY(EditAnywhere, Category = "Settings")
-	float TraceDistance = 2500.0f;
-
-	UPROPERTY(EditAnywhere, Category = "Settings")
-	UParticleSystem* ParticleAsset;	
-
-	UPROPERTY(EditAnywhere, Category = "Settings")
-	float FinishAngle = 0.1f;
-
-	UPROPERTY(EditAnywhere, Category = "Settings")
-	float InterpSpeed = 20.0f;
-
-public:
-	UPROPERTY(VisibleAnywhere, Category = "Focus")
-	bool bTargeting;
-
-	UPROPERTY(VisibleAnywhere, Category = "Focus")
-	bool bMovingFocus;
-
-private:
 	TWeakObjectPtr<ACBaseCharacter> Character;
 	TWeakObjectPtr<ACBaseCharacter> Target;
 	TWeakObjectPtr<AController> Controller;

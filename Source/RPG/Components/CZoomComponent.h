@@ -19,15 +19,15 @@ protected:
 	virtual void BeginPlay() override;
 	
 private:
-	USpringArmComponent* SpringArm;
-	float CurrentValue;
+	UPROPERTY(EditAnywhere, Category = "Zooming", meta = (AllowPrivateAccess = true))
+	float Speed = 20.f;
 
 	UPROPERTY(EditAnywhere, Category = "Zooming", meta = (AllowPrivateAccess = true))
-	float Speed = 20;
-
-	UPROPERTY(EditAnywhere, Category = "Zooming", meta = (AllowPrivateAccess = true))
-	float InterpSpeed = 5;
+	float InterpSpeed = 5.f;
 
 	UPROPERTY(EditAnywhere, Category = "Zooming", meta = (AllowPrivateAccess = true))
 	FVector2D Range = FVector2D(100, 500);
+
+	USpringArmComponent* SpringArm;
+	float CurrentValue;
 };

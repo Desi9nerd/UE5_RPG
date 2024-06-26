@@ -3,15 +3,9 @@
 #include "GameFramework/Character.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-UCAIBehaviorComponent::UCAIBehaviorComponent()
-{
-}
-
 void UCAIBehaviorComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-
 }
 
 EAIStateType UCAIBehaviorComponent::GetType()
@@ -117,5 +111,7 @@ void UCAIBehaviorComponent::ChangeType(EAIStateType InType)
 	Blackboard->SetValueAsEnum(AIStateTypeKey, (uint8)InType);
 
 	if (OnAIStateTypeChanged.IsBound())
+	{
 		OnAIStateTypeChanged.Broadcast(prevType, InType);
+	}
 }

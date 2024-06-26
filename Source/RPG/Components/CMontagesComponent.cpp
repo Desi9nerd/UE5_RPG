@@ -4,18 +4,13 @@
 
 //#define LOG_UCMontagesComponent 1
 
-UCMontagesComponent::UCMontagesComponent()
-{
-}
-
 void UCMontagesComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(DataTable == nullptr)//DataTable이 없다면
-	{   //DataTable이 없다고 메시지를 띄워준다.
+	if(DataTable == nullptr)
+	{   
 		GLog->Log(ELogVerbosity::Error, "DataTable is not selected");
-
 		return;
 	}
 
@@ -35,11 +30,10 @@ void UCMontagesComponent::BeginPlay()
 
 				continue;
 			}
-		}//for(data)
-	}//for(i)
+		}
+	}
 }
 
-//
 //#if LOG_UCMontagesComponent
 //for (FMontagesData* data : datas)
 //{

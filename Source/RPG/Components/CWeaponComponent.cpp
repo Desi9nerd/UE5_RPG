@@ -32,11 +32,15 @@ void UCWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (!!GetDoAction())//DoAction이 있다면
+	if (IsValid(GetDoAction()))//DoAction이 있다면
+	{
 		GetDoAction()->Tick(DeltaTime);//DoAction의 Tick을 콜 해준다.
+	}
 
-	if (!!GetSubAction())//SubAction이 있다면
+	if (IsValid(GetSubAction()))//SubAction이 있다면
+	{
 		GetSubAction()->Tick(DeltaTime);//SubAction의 Tick을 콜 해준다.
+	}
 }
 
 bool UCWeaponComponent::IsIdleMode()
@@ -96,49 +100,42 @@ void UCWeaponComponent::SetUnarmedMode()
 void UCWeaponComponent::SetFistMode()
 {
 	CheckFalse(IsIdleMode());
-
 	SetMode(EWeaponType::Fist);
 }
 
 void UCWeaponComponent::SetSwordMode()
 {
 	CheckFalse(IsIdleMode());
-
 	SetMode(EWeaponType::Sword);
 }
 
 void UCWeaponComponent::SetHammerMode()
 {
 	CheckFalse(IsIdleMode());
-
 	SetMode(EWeaponType::Hammer);
 }
 
 void UCWeaponComponent::SetWarpMode()
 {
 	CheckFalse(IsIdleMode());
-
 	SetMode(EWeaponType::Warp);
 }
 
 void UCWeaponComponent::SetAroundMode()
 {
 	CheckFalse(IsIdleMode());
-
 	SetMode(EWeaponType::Around);
 }
 
 void UCWeaponComponent::SetBowMode()
 {
 	CheckFalse(IsIdleMode());
-
 	SetMode(EWeaponType::Bow);
 }
 
 void UCWeaponComponent::SetBladeMode()
 {
 	CheckFalse(IsIdleMode());
-
 	SetMode(EWeaponType::Blade);
 }
 
@@ -150,12 +147,13 @@ void UCWeaponComponent::SetMode(EWeaponType InType)
 
 		return;
 	}
-	else if (IsUnarmedMode() == false)
+
+	if (false == IsUnarmedMode())
 	{
 		GetEquipment()->Unequip();
 	}
 
-	if (!!Datas[(int32)InType])//실제 데이터가 있다면
+	if (Datas[(int32)InType])//실제 데이터가 있다면
 	{
 		Datas[(int32)InType]->GetEquipment()->Equip();
 
@@ -169,52 +167,52 @@ void UCWeaponComponent::ChangeType(EWeaponType InType)
 	Type = InType;
 
 	if (OnWeaponTypeChange.IsBound())
+	{
 		OnWeaponTypeChange.Broadcast(prevType, InType);
+	}
 }
 
 void UCWeaponComponent::DoAction()
 {
-	if (!!GetDoAction())
+	if (IsValid(GetDoAction()))
 	{
 		if(false == OwnerCharacter->GetCharacterMovement()->IsFalling())
+		{
 			GetDoAction()->DoAction();
+		}
 		else
+		{
 			GetDoAction()->DoAction_AirCombo();//공중콤보
+		}
 	}
 }
 
 void UCWeaponComponent::SubAction_Pressed()
 {
-	if (!!GetSubAction())
-		GetSubAction()->Pressed();
+	if (IsValid(GetSubAction())) GetSubAction()->Pressed();
 }
 
 void UCWeaponComponent::SubAction_Released()
 {
-	if (!!GetSubAction())
-		GetSubAction()->Released();
+	if (IsValid(GetSubAction())) GetSubAction()->Released();
 }
 
 void UCWeaponComponent::AirborneInitATK()
 {
-	if (!!GetDoAction())
-		GetDoAction()->AirborneInitATK();
+	if (IsValid(GetDoAction())) GetDoAction()->AirborneInitATK();
 }
 
 void UCWeaponComponent::DoAction_AirCombo()
 {
-	if (!!GetDoAction())
-		GetDoAction()->DoAction_AirCombo();
+	if (IsValid(GetDoAction())) GetDoAction()->DoAction_AirCombo();
 }
 
 void UCWeaponComponent::Parrying_Pressed()
 {
-	if (!!GetDoAction())
-		GetDoAction()->Parrying_Start();
+	if (IsValid(GetDoAction())) GetDoAction()->Parrying_Start();
 }
 
 void UCWeaponComponent::Parrying_Released()
 {
-	if (!!GetDoAction())
-		GetDoAction()->Parrying_End();
+	if (IsValid(GetDoAction())) GetDoAction()->Parrying_End();
 }
