@@ -1,8 +1,9 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "CHitNumber.generated.h"
+
+class UTextBlock;
 
 UCLASS()
 class RPG_API UCHitNumber : public UUserWidget
@@ -11,5 +12,5 @@ class RPG_API UCHitNumber : public UUserWidget
 
 private:
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* HitNumberText;
+	UTextBlock* HitNumberText;
 };

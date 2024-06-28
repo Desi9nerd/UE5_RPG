@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Particles/ParticleSystem.h"
 #include "NiagaraSystem.h"
@@ -38,7 +37,7 @@ public:
 	{
 		*OutComponent = InActor->CreateDefaultSubobject<T>(InName);
 
-		if (!!InParent)
+		if (IsValid(InParent))
 		{
 			(*OutComponent)->SetupAttachment(InParent, InSocketName); //이렇게 사용하면 Socket Name에 _를 사용하면 안 된다.
 
@@ -85,7 +84,7 @@ public:
 	{
 		for (AActor* actor : InWorld->GetCurrentLevel()->Actors)
 		{
-			if (!!actor && actor->IsA<T>())
+			if (IsValid(actor) && actor->IsA<T>())
 				return Cast<T>(actor);
 		}
 
@@ -97,8 +96,10 @@ public:
 	{
 		for (AActor* actor : InWorld->GetCurrentLevel()->Actors)
 		{
-			if (!!actor && actor->IsA<T>())
+			if (IsValid(actor) && actor->IsA<T>())
+			{
 				OutActors.Add(Cast<T>(actor));
+			}
 		}
 	}
 
@@ -116,8 +117,7 @@ public:
 
 		for (T* component : components)
 		{
-			if (component->GetName() == InName)
-				return component;
+			if (component->GetName() == InName) return component;
 		}
 
 		return nullptr;
@@ -137,32 +137,30 @@ public:
 		FRotator rotation = FRotator(InTransform.GetRotation());
 		FVector scale = InTransform.GetScale3D();
 
-		if(!!InMesh) //InMesh에 붙어있다면
+		if(IsValid(InMesh)) //InMesh에 붙어있다면
 		{
-			if(!!particle) //particle이라면
+			if(IsValid(particle)) //particle이라면
 			{
 				UGameplayStatics::SpawnEmitterAttached(particle, InMesh, InSocketName, location, rotation, scale);
 				return;
 			}
 
-			if(!!niagara) //niagara라면
+			if(IsValid(niagara)) //niagara라면
 			{
 				UNiagaraFunctionLibrary::SpawnSystemAttached(niagara, InMesh, InSocketName, location, rotation, scale, EAttachLocation::KeepRelativeOffset, true, ENCPoolMethod::None);//Pooling풀링 사용.
 				return;
 			}
 		}
 
-		if(!!particle) //어디에 붙어있지 않고 particle이면
+		if(IsValid(particle)) //어디에 붙어있지 않고 particle이면
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(InWorld, particle, InTransform);//해당 위치에서 실행
-
 			return;
 		}
 
-		if (!!niagara) //어디에 붙어있지 않고 niagara면
+		if (IsValid(niagara)) //어디에 붙어있지 않고 niagara면
 		{
 			UNiagaraFunctionLibrary::SpawnSystemAtLocation(InWorld, niagara, location, rotation, scale);//해당 위치에서 실행
-
 			return;
 		}
 	}
@@ -172,7 +170,6 @@ public:
 		//InClass나 InOwner 둘 중 하나라도 없으면 플레이 할 수 없다.
 		CheckNullResult(InClass, nullptr);//InClass가 없다면 nullptr
 		CheckNullResult(InOwner, nullptr);//InOwner가 없다면 nullptr
-
 
 		FActorSpawnParameters params;
 		params.Owner = InOwner;

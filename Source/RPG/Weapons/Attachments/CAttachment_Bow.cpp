@@ -7,7 +7,6 @@
 #include "Components/SplineMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetArrayLibrary.h"
-
 #include "Components/CStateComponent.h"
 #include "Weapons/AddOns/CArrow.h"
 
@@ -15,22 +14,19 @@ ACAttachment_Bow::ACAttachment_Bow()
 {
 	PrimaryActorTick.bCanEverTick = true;//실시간 적용이 되도록 넣어준다. 안 넣어주면 활 시위가 구부러지는것이 업데이트 되지 않을 수도 있다.
 
-	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &SkeletalMesh, "SkeletalMesh", Root);
-	CHelpers::CreateComponent<UPoseableMeshComponent>(this, &PoseableMesh, "PoseableMesh", Root);
-
+	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &SkeletalMesh, TEXT("SkeletalMesh"), Root);
+	CHelpers::CreateComponent<UPoseableMeshComponent>(this, &PoseableMesh, TEXT("PoseableMesh"), Root);
 
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Character/Weapons/ElvenBow/SK_ElvenBow.SK_ElvenBow'");//ElevenBow 에셋을 할당한다.
 	SkeletalMesh->SetSkeletalMesh(mesh);//부모 클래스의 CItem의 SkeletalMeshComponent 데이터형의 ItemMesh 변수를 가져다 쓴다. ItemMesh에 mesh(=Elven Bow를 할당한 USkeletalMesh)를 할당한다. XXX //앞의 방식을 시도했다가 다시 돌림. 다시 SkeletalMesh 사용으로 변경.
-	SkeletalMesh->SetCollisionProfileName("NoCollision");
-		
+	SkeletalMesh->SetCollisionProfileName(TEXT("NoCollision"));
 
 	TSubclassOf<UCAnimInstance_Bow> animInstacne;
-	CHelpers::GetClass<UCAnimInstance_Bow>(&animInstacne, "AnimBlueprint'/Game/Weapons/Bow/ABP_ElvenBow.ABP_ElvenBow_C'");//ABP_ElvenBow 레퍼런스 복사하여 생성.
+	CHelpers::GetClass<UCAnimInstance_Bow>(&animInstacne, TEXT("AnimBlueprint'/Game/Weapons/Bow/ABP_ElvenBow.ABP_ElvenBow_C'"));//ABP_ElvenBow 레퍼런스 복사하여 생성.
 	SkeletalMesh->SetAnimInstanceClass(animInstacne);
 
-		
-	CHelpers::CreateComponent<USplineComponent>(this, &ArrowPathSpline, "ArrowPathSpline", Root);
+	CHelpers::CreateComponent<USplineComponent>(this, &ArrowPathSpline, TEXT("ArrowPathSpline"), Root);
 	ArcEndSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 
 }
@@ -46,10 +42,8 @@ void ACAttachment_Bow::BeginPlay()
 	PoseableMesh->SetSkeletalMesh(SkeletalMesh->SkeletalMesh);//SkeletalMesh 내의 SkeletalMesh 사용.
 	PoseableMesh->CopyPoseFromSkeletalComponent(SkeletalMesh);//포즈를 캡처해둔다.
 
-	
 	PlayerCharacterCast = Cast<ACPlayer>(OwnerCharacter);	
 	state = CHelpers::GetComponent<UCStateComponent>(OwnerCharacter);
-	
 }
 
 void ACAttachment_Bow::Tick(float DeltaTime)
@@ -75,11 +69,10 @@ void ACAttachment_Bow::OnBeginEquip_Implementation()
 {
 	Super::OnBeginEquip_Implementation();//CAttachment.h에 있는 함수
 
-	AttachTo("Hand_Bow_Left");//Hand_Bow_Left 소켓에 장착.
-
+	AttachTo(TEXT("Hand_Bow_Left"));//Hand_Bow_Left 소켓에 장착.
 
 	APlayerController* controller = OwnerCharacter->GetController<APlayerController>();
-	if (!!controller)
+	if (IsValid(controller))
 	{
 		OriginViewPitchRange.X = controller->PlayerCameraManager->ViewPitchMin;
 		OriginViewPitchRange.Y = controller->PlayerCameraManager->ViewPitchMax;
@@ -95,9 +88,8 @@ void ACAttachment_Bow::OnUnequip_Implementation()
 
 	AttachTo("Holster_Bow");//Holster_Bow 소켓에 장착.
 
-
 	APlayerController* controller = OwnerCharacter->GetController<APlayerController>();
-	if (!!controller)
+	if (IsValid(controller))
 	{
 		controller->PlayerCameraManager->ViewPitchMin = OriginViewPitchRange.X;
 		controller->PlayerCameraManager->ViewPitchMax = OriginViewPitchRange.Y;
@@ -109,9 +101,8 @@ float* ACAttachment_Bow::GetBend()
 	return Cast<UCAnimInstance_Bow>(SkeletalMesh->GetAnimInstance())->GetBend();//UCAnimInstance_Bow 안의 GetBend() 함수로 Bend값 리턴. UCAnimInstance_Bow 안의 Bend값을 사용한다.
 }
 
-/** 화살 궤적
- *
- */
+//---------------------------------------------------------------------------------------
+//-- 화살 궤적
 
 void ACAttachment_Bow::GetStartAndEndforTrace()
 {
@@ -227,3 +218,5 @@ void ACAttachment_Bow::UpdateArcSpline(FPredictProjectilePathResult InPredictRes
 
 	RegisterAllComponents();
 }
+
+//---------------------------------------------------------------------------------------

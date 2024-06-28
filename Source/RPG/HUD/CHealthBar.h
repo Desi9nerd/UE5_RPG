@@ -1,8 +1,9 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "CHealthBar.generated.h"
+
+class UProgressBar;
 
 UCLASS()
 class RPG_API UCHealthBar : public UUserWidget
@@ -11,5 +12,5 @@ class RPG_API UCHealthBar : public UUserWidget
 
 public:
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* HealthBar;//여기 변수이름(HealthBar)와 BP의 변수(HealthBar)는 일치해야만 한다.
+	UProgressBar* HealthBar;//여기 변수이름(HealthBar)와 BP의 변수(HealthBar)는 일치해야만 한다.
 };

@@ -1,6 +1,5 @@
 #include "HUD/CPlayerOverlay.h"
 #include "Components/ProgressBar.h"
-#include "Components/TextBlock.h"
 
 void UCPlayerOverlay::SetHealthBarPercent(float Percent)
 {

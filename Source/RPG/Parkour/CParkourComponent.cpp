@@ -14,8 +14,10 @@ void FParkourData::PlayMontage(class ACharacter* InCharacter)
 	{
 		UCMovementComponent* movement = CHelpers::GetComponent<UCMovementComponent>(InCharacter);
 
-		if (!!movement)
+		if (IsValid(movement))
+		{
 			movement->EnableFixedCamera();
+		}
 	}
 
 	InCharacter->PlayAnimMontage(Montage, PlayRatio, SectionName);
@@ -26,8 +28,6 @@ void FParkourData::PlayMontage(class ACharacter* InCharacter)
 UCParkourComponent::UCParkourComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	
-	//CHelpers::GetAsset<UDataTable>(&DataTable, "DataTable'/Game/Player/DT_Parkour_PP.DT_Parkour_PP'");//DataTable 생성.
 }
 
 void UCParkourComponent::BeginPlay()
@@ -43,7 +43,9 @@ void UCParkourComponent::BeginPlay()
 		for (FParkourData* data : datas)//datas를 순회하여 검색
 		{
 			if (data->Type == (EParkourType)i)//데이터의 타입 == UENUM인 EParkourType 이라면
+			{
 				temp.Add(*data);//해당 파쿠르 타입을 temp에 담는다. 
+			}
 
 			DataMap.Add((EParkourType)i, temp);//DataMap에 Key에 파쿠르 타입을 숫자로, Value에 FParkourData 배열 temp를 담는다.
 		}
@@ -58,7 +60,9 @@ void UCParkourComponent::BeginPlay()
 	arrow->GetChildrenComponents(false, components);
 
 	for (int32 i = 0; i < (int32)EParkourArrowType::Max; i++)
+	{
 		Arrows[i] = Cast<UArrowComponent>(components[i]);//Arrows[] 배열 변수에 components인 Arrows를 담는다.
+	}
 }
 
 void UCParkourComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -204,7 +208,6 @@ void UCParkourComponent::DoParkour(bool bLanded)
 	if (bLanded && Check_FallMode())
 	{
 		DoParkour_Fall();
-
 		return;
 	}
 
@@ -216,7 +219,7 @@ void UCParkourComponent::DoParkour(bool bLanded)
 
 	CheckTrace_Center();
 
-	if (!!HitObstacle)//HitObstacle이 있다면(=CheckTrace_Center의 hitResult가 있다면)
+	if (IsValid(HitObstacle))//HitObstacle이 있다면(=CheckTrace_Center의 hitResult가 있다면)
 	{
 		//나머지 Arrow들로도 LineTrace 검사한다.
 		CheckTrace_Ceil();
@@ -230,14 +233,12 @@ void UCParkourComponent::DoParkour(bool bLanded)
 	if (Check_ClimbMode())//올라가기 파쿠르를 수행할 조건이 된다면
 	{
 		DoParkour_Climb();//올라가기 파쿠르 수행
-
 		return;
 	}
 
 	if (Check_SlideMode())//슬라이드 파쿠르를 수행할 조건이 된다면
 	{
 		DoParkour_Slide();//슬라이드 파쿠르 수행
-
 		return;
 	}
 
@@ -246,21 +247,18 @@ void UCParkourComponent::DoParkour(bool bLanded)
 	if (Check_ObstacleMode(EParkourType::Normal, data))//Normal
 	{
 		DoParkour_Obstacle(EParkourType::Normal, data);
-
 		return;
 	}
 
 	if (Check_ObstacleMode(EParkourType::Short, data))//Short
 	{
 		DoParkour_Obstacle(EParkourType::Short, data);
-
 		return;
 	}
 
 	if (Check_ObstacleMode(EParkourType::Wall, data))//Wall
 	{
 		DoParkour_Obstacle(EParkourType::Wall, data);
-
 		return;
 	}
 }
@@ -292,8 +290,10 @@ void UCParkourComponent::End_DoParkour()
 
 	//파쿠르가 끝난 후에 FixedCamera를 꺼준다.
 	UCMovementComponent* movement = CHelpers::GetComponent<UCMovementComponent>(OwnerCharacter);
-	if (!!movement)
+	if (IsValid(movement))
+	{
 		movement->DisableFixedCamera();
+	}
 }
 
 bool UCParkourComponent::Check_ClimbMode()

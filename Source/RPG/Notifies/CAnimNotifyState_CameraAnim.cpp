@@ -31,8 +31,10 @@ void UCAnimNotifyState_CameraAnim::NotifyBegin(USkeletalMeshComponent* MeshComp,
 	CheckNull(controller);
 
 	ACharacter* target = character;//Unreal Editor에서 설정하지 않으면 기본값은 Player다.
-	if (Target.IsNull() == false)//Target이 있다면(=Unreal Editor에서 Target을 지정했다면)
+	if (false == Target.IsNull())//Target이 있다면(=Unreal Editor에서 Target을 지정했다면)
+	{
 		target = Target.Get();
+	}
 
 	FVector location = target->GetActorLocation();//Target의 위치
 
@@ -60,7 +62,6 @@ void UCAnimNotifyState_CameraAnim::NotifyEnd(USkeletalMeshComponent* MeshComp, U
 
 	ACharacter* character = Cast<ACharacter>(MeshComp->GetOwner());
 	CheckNull(character);
-
 
 	APlayerController* controller = character->GetController<APlayerController>();
 	CheckNull(controller);

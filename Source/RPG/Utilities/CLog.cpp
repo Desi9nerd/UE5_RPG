@@ -5,7 +5,6 @@ DEFINE_LOG_CATEGORY_STATIC(GP, Display, All)
 
 void CLog::Log(int32 InValue)
 {
-	//GLog->Log("GP", ELogVerbosity::Display, FString::FromInt(InValue));
 	UE_LOG(GP, Display, L"%d", InValue);
 }
 

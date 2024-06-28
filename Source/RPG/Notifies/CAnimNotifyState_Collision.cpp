@@ -1,5 +1,4 @@
 #include "CAnimNotifyState_Collision.h"
-
 #include "EngineUtils.h"
 #include "Global.h"
 #include "Characters/CBaseCharacter.h"
@@ -107,6 +106,5 @@ void UCAnimNotifyState_Collision::NotifyTick(USkeletalMeshComponent* MeshComp, U
 			true
 		);
 	}
-
 
 } 

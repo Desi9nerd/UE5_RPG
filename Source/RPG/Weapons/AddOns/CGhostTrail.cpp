@@ -32,24 +32,30 @@ void ACGhostTrail::BeginPlay()
 	Mesh->SetRelativeScale3D(Scale);
 
 	for (int32 i = 0; i < Owner->GetMesh()->SkeletalMesh->GetMaterials().Num(); i++)
+	{
 		Mesh->SetMaterial(i, Material);//Material 할당.
+	}
 
 
 	FTimerDelegate timerDelegate;
-	timerDelegate.BindLambda([=]()
-		{
-			if (Mesh->IsVisible() == false)//GhostTrail의 Mesh가 숨겨져있었다면
-				Mesh->ToggleVisibility();//켜준다.
-
-			//위치보정
-			float height = Owner->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-			SetActorLocation(Owner->GetActorLocation() - FVector(ScaleAmount.X, ScaleAmount.Y, height - ScaleAmount.Z));
-			SetActorRotation(Owner->GetActorRotation() + FRotator(0, -90, 0));
-
-			Mesh->CopyPoseFromSkeletalComponent(Owner->GetMesh());
-		});
+	timerDelegate.BindUObject(this, &ACGhostTrail::OnUpdateGhostTrail);
 
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, timerDelegate, Interval, true, StartDelay);
+}
+
+void ACGhostTrail::OnUpdateGhostTrail()
+{
+	if (false == Mesh->IsVisible())//GhostTrail의 Mesh가 숨겨져있었다면
+	{
+		Mesh->ToggleVisibility();//켜준다.
+	}
+
+	//위치보정
+	float height = Owner->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	SetActorLocation(Owner->GetActorLocation() - FVector(ScaleAmount.X, ScaleAmount.Y, height - ScaleAmount.Z));
+	SetActorRotation(Owner->GetActorRotation() + FRotator(0.f, -90.f, 0.f));
+
+	Mesh->CopyPoseFromSkeletalComponent(Owner->GetMesh());
 }
 
 void ACGhostTrail::EndPlay(const EEndPlayReason::Type EndPlayReason)

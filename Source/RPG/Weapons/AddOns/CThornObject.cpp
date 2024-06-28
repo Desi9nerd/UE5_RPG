@@ -5,8 +5,8 @@
 
 ACThornObject::ACThornObject()
 {
-	CHelpers::CreateComponent<USceneComponent>(this, &Root, "Root");//Root 생성
-	CHelpers::CreateComponent<UNiagaraComponent>(this, &Niagara, "Niagara", Root);//나이아가라 컴포넌트 생성
+	CHelpers::CreateComponent<USceneComponent>(this, &Root, TEXT("Root"));//Root 생성
+	CHelpers::CreateComponent<UNiagaraComponent>(this, &Niagara, TEXT("Niagara"), Root);//나이아가라 컴포넌트 생성
 }
 
 void ACThornObject::BeginPlay()
@@ -16,7 +16,7 @@ void ACThornObject::BeginPlay()
 	Niagara->SetNiagaraVariableObject("Collision", this);
 	Niagara->OnSystemFinished.AddDynamic(this, &ACThornObject::OnSystemFinished);
 
-	if (!!NiagaraMesh)//NiagaraMesh가 있다면
+	if (IsValid(NiagaraMesh))//NiagaraMesh가 있다면
 	{
 		FBox box = NiagaraMesh->GetBoundingBox();//NiagaraMesh 충돌체 사이즈
 		BoxExtent = (box.Min - box.Max).GetAbs() * 0.5f;//부피로 전환해서 사용.
@@ -46,7 +46,7 @@ void ACThornObject::ReceiveParticleData_Implementation(const TArray<FBasicPartic
 
 		if (hitResult.bBlockingHit)
 		{
-			if (!!CollisionEffect)
+			if (IsValid(CollisionEffect))
 			{
 				FTransform transform = CollisionEffectTransform;
 				transform.AddToTranslation(hitResult.Location);
@@ -55,8 +55,10 @@ void ACThornObject::ReceiveParticleData_Implementation(const TArray<FBasicPartic
 			}
 
 			ACharacter* character = Cast<ACharacter>(hitResult.GetActor());
-			if (!!character)
+			if (IsValid(character))
+			{
 				HitData.SendDamage(Cast<ACharacter>(GetOwner()), this, character);
+			}
 		}
 	}
 }

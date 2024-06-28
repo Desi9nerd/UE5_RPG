@@ -6,9 +6,9 @@
 
 ACAura::ACAura()
 {
-	CHelpers::CreateComponent<USceneComponent>(this, &Root, "Root");
-	CHelpers::CreateComponent<UNiagaraComponent>(this, &Niagara, "Niagara", Root);
-	CHelpers::CreateComponent<UBoxComponent>(this, &Box, "Box", Root);
+	CHelpers::CreateComponent<USceneComponent>(this, &Root, TEXT("Root"));
+	CHelpers::CreateComponent<UNiagaraComponent>(this, &Niagara, TEXT("Niagara"), Root);
+	CHelpers::CreateComponent<UBoxComponent>(this, &Box, TEXT("Box"), Root);
 
 	UNiagaraSystem* niagara;
 	CHelpers::GetAsset<UNiagaraSystem>(&niagara, "NiagaraSystem'/Game/Assets/sA_StylizedSwordSet/Fx/NS_Ulti_lv1.NS_Ulti_lv1'");//나이아가라 에셋 할당.
@@ -25,14 +25,17 @@ void ACAura::BeginPlay()
 	Box->OnComponentBeginOverlap.AddDynamic(this, &ACAura::OnComponentBeginOverlap);
 	Box->OnComponentEndOverlap.AddDynamic(this, &ACAura::OnComponentEndOverlap);
 
-	//타이머 설정. 일정시간 동안 Damage를 준다. 
-	FTimerDelegate delegate = FTimerDelegate::CreateLambda([&]()
-		{
-			for (int32 i = Hitted.Num() - 1; i >= 0; i--)
-				HitData.SendDamage(Cast<ACharacter>(GetOwner()), this, Hitted[i]);
-		});
+	//타이머 설정. 일정시간 동안 Damage를 준다.
+	FTimerDelegate delegate = FTimerDelegate::CreateUObject(this, &ACAura::OnApplyDamage);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, delegate, DamageInterval, true, 0.f);
+}
 
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, delegate, DamageInterval, true, 0);
+void ACAura::OnApplyDamage()
+{
+	for (int32 i = Hitted.Num() - 1; i >= 0; i--)
+	{
+		HitData.SendDamage(Cast<ACharacter>(GetOwner()), this, Hitted[i]);
+	}
 }
 
 void ACAura::OnSystemFinished(UNiagaraComponent* PSystem)
@@ -60,8 +63,10 @@ void ACAura::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 	CheckTrue(GetOwner() == OtherActor);
 
 	ACharacter* character = Cast<ACharacter>(OtherActor);
-	if (!!character)
+	if (IsValid(character))
+	{
 		Hitted.AddUnique(character);
+	}
 }
 
 void ACAura::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -69,6 +74,8 @@ void ACAura::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	CheckTrue(GetOwner() == OtherActor);
 
 	ACharacter* character = Cast<ACharacter>(OtherActor);
-	if (!!character)
+	if (IsValid(character))
+	{
 		Hitted.Remove(character);
+	}
 }

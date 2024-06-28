@@ -7,15 +7,15 @@
 
 ACArrow::ACArrow()
 {
-	CHelpers::CreateComponent<UCapsuleComponent>(this, &Capsule, "Capsule");
-	CHelpers::CreateActorComponent<UProjectileMovementComponent>(this, &Projectile, "Projectile");
+	CHelpers::CreateComponent<UCapsuleComponent>(this, &Capsule, TEXT("Capsule"));
+	CHelpers::CreateActorComponent<UProjectileMovementComponent>(this, &Projectile, TEXT("Projectile"));
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> Particle(TEXT("/Game/ParagonSparrow/FX/Particles/Sparrow/Abilities/Primary/FX/P_Sparrow_HitHero.P_Sparrow_HitHero"));
 	ArrowParticle = Particle.Object;
 
-	Projectile->ProjectileGravityScale = 1;
+	Projectile->ProjectileGravityScale = 1.f;
 	Capsule->BodyInstance.bNotifyRigidBodyCollision = true;//BP와는 달리 UnrealC++에서는 bNotifyRigidBodyCollision를 true로 켜줘야 Block 연산이 일어난다.
-	Capsule->SetCollisionProfileName("BlockAll");//Overlap과는 달리 Block의 경우 충돌이 일어나면 멈춘다. 화살은 적에게 박히면 멈춰야하기 때문에 Block으로 설정한다.
+	Capsule->SetCollisionProfileName(TEXT("BlockAll"));//Overlap과는 달리 Block의 경우 충돌이 일어나면 멈춘다. 화살은 적에게 박히면 멈춰야하기 때문에 Block으로 설정한다.
 }
 
 void ACArrow::BeginPlay()
@@ -36,7 +36,9 @@ void ACArrow::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 	//소유자 이벤트를 콜해 자기 자신을 지워준다. FProjectileEndPlay OnEndPlay 사용하여 Delegate 이벤트 콜.
 	if (OnEndPlay.IsBound())
+	{
 		OnEndPlay.Broadcast(this);
+	}
 }
 
 void ACArrow::Shoot(const FVector& InForward)
@@ -52,7 +54,9 @@ void ACArrow::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	SetLifeSpan(LifeSpanAfterCollision);
 
 	for (AActor* actor : Ignores)
+	{
 		CheckTrue(actor == OtherActor);
+	}
 
 	Projectile->StopMovementImmediately();
 	Projectile->ProjectileGravityScale = 0;
@@ -61,8 +65,9 @@ void ACArrow::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 
 	//충돌 위치에 Emitter 넣어주기
 	if (ArrowParticle)
+	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowParticle, GetActorLocation());
-
+	}
 
 	ACharacter* HittedCharacter = Cast<ACharacter>(OtherActor);
 	CheckNull(HittedCharacter);
@@ -78,6 +83,8 @@ void ACArrow::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	AttachToComponent(HittedCharacter->GetMesh(), rule, ClosestBone);
 
 	//Hit 처리하기
-	if (!!HittedCharacter && OnHit.IsBound())
-		OnHit.Broadcast(this, HittedCharacter);	
+	if (IsValid(HittedCharacter) && OnHit.IsBound())
+	{
+		OnHit.Broadcast(this, HittedCharacter);
+	}
 }

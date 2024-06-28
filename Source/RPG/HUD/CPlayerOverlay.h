@@ -1,8 +1,9 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "CPlayerOverlay.generated.h"
+
+class UProgressBar;
 
 UCLASS()
 class RPG_API UCPlayerOverlay : public UUserWidget
@@ -15,8 +16,8 @@ public:
 
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* HealthProgressBar;
+	UProgressBar* HealthProgressBar;
 
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* StaminaProgressBar;
+	UProgressBar* StaminaProgressBar;
 };

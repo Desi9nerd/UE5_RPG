@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Camera/CameraModifier.h"
 #include "CCameraModifier.generated.h"
