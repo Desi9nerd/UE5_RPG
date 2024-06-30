@@ -1,9 +1,11 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Weapons/CWeaponStructures.h"
 #include "CDoAction.generated.h"
+
+class UCMovementComponent;
+class UCStateComponent;
 
 UCLASS(Abstract)//DoAction 그 자체로는 객체화되면 안 되기 때문에 Abstract을 붙여준다.
 class RPG_API UCDoAction : public UObject
@@ -14,9 +16,6 @@ public:
 	FORCEINLINE bool GetBeginAction() { return bBeginAction; }
 	FORCEINLINE bool GetInAction() { return bInAction; }
 	FORCEINLINE bool GetInAction_AirCombo() { return bInAction_AirCombo; }
-
-public:
-	UCDoAction();
 
 	virtual void BeginPlay //재정의 할 수 있도록 virtual로 만든다.
 	(
@@ -44,9 +43,8 @@ public:
 	);
 	
 	virtual void Tick(float InDeltaTime) { }
-
-public:
-	//재정의 할 수 있도록 virtual로 만든다.
+	
+	//기본(=마우스 좌클릭) 공격
 	virtual void DoAction();
 	virtual void Begin_DoAction();
 	virtual void End_DoAction();
@@ -61,28 +59,26 @@ public:
 	//패링
 	virtual void Parrying_Start();
 	virtual void Parrying_End();
-
-public:
+	
 	//CDoAction_Bow에서 재정의 시키기위해 virtual로 만든다.
 	//BeginEquip될 때 충돌체를 꺼주고 Unequip될 때 충돌체를 켜준다.	
 	UFUNCTION()
-		virtual void OnBeginEquip() { }
+	virtual void OnBeginEquip() { }
 
 	UFUNCTION()
-		virtual void OnUnequip() { }
-
-public:
+	virtual void OnUnequip() { }
+	
 	UFUNCTION()
-		virtual void OnAttachmentBeginCollision() {}
-
-	UFUNCTION()
-		virtual void OnAttachmentEndCollision() {}
+	virtual void OnAttachmentBeginCollision() {}
 
 	UFUNCTION()
-		virtual void OnAttachmentBeginOverlap(class ACharacter* InAttacker, AActor* InAttackCauser, class ACharacter* InOther) { }
+	virtual void OnAttachmentEndCollision() {}
 
 	UFUNCTION()
-		virtual void OnAttachmentEndOverlap(class ACharacter* InAttacker, class ACharacter* InOther) { }
+	virtual void OnAttachmentBeginOverlap(class ACharacter* InAttacker, AActor* InAttackCauser, class ACharacter* InOther) { }
+
+	UFUNCTION()
+	virtual void OnAttachmentEndOverlap(class ACharacter* InAttacker, class ACharacter* InOther) { }
 	
 protected:
 	bool bInAction;//Action 중인지 체크하는 변수.DoAction에 true, End_DoAction에 false로 만들어준다.
@@ -93,11 +89,11 @@ protected:
 
 	bool InitialLaunchATK;
 
-	class ACharacter* OwnerCharacter;
-	class UWorld* World;
+	ACharacter* OwnerCharacter;
+	UWorld* World;
 
-	class UCMovementComponent* Movement;
-	class UCStateComponent* State;
+	UCMovementComponent* Movement;
+	UCStateComponent* State;
 
 	TArray<FDoActionData> DoActionDatas;
 	TArray<FHitData> HitDatas;

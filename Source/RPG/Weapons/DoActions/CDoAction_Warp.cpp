@@ -8,11 +8,6 @@
 #include "Components/CAIBehaviorComponent.h"
 #include "Weapons/CAttachment.h"
 
-UCDoAction_Warp::UCDoAction_Warp()
-{
-
-}
-
 void UCDoAction_Warp::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment, ACharacter* InOwner, const TArray<FDoActionData>& InDoActionData, const TArray<FHitData>& InHitData)
 {
 	Super::BeginPlay(InAttachment, InEquipment, InOwner, InDoActionData, InHitData);
@@ -31,20 +26,18 @@ void UCDoAction_Warp::Tick(float InDeltaTime)
 	FRotator rotation = FRotator::ZeroRotator;
 
 	//GetCursorLocationAndRotation이 false면 hit가 안 된 것이다.
-	if (GetCursorLocationAndRotation(location, rotation) == false)
+	if (false == GetCursorLocationAndRotation(location, rotation))
 	{
 		Decal->SetVisibility(false);
-
 		return;
 	}
 
 	//Warp 실행 중에는 Cursor가 움직이지 않도록 만든다.
-	if (bInAction)//Action이 실행중이라면 실행을 할 필요가 없으므로
-		return;//리턴
+	if (bInAction) return; //Action이 실행중이라면 실행을 할 필요가 없으므로 리턴
+		
 
-
+	//Decal을 화면에 표시하고 그려지는 위치와 회전값을 설정해준다.
 	Decal->SetVisibility(true);
-	//Decal이 그려지는 위치와 회전값을 설정해준다.
 	Decal->SetWorldLocation(location);
 	Decal->SetWorldRotation(rotation);
 }
@@ -67,8 +60,6 @@ void UCDoAction_Warp::DoAction()
 		float yaw = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), MoveToLocation).Yaw;
 		OwnerCharacter->SetActorRotation(FRotator(0, yaw, 0));
 	}
-	//else
-	//	return;
 
 	DoActionDatas[0].DoAction(OwnerCharacter);
 }
@@ -78,7 +69,7 @@ void UCDoAction_Warp::Begin_DoAction()
 	Super::Begin_DoAction();
 
 	//Player
-	if (!!PlayerController)
+	if (IsValid(PlayerController))
 	{
 		OwnerCharacter->SetActorLocation(MoveToLocation);//DoAction에서 설정한 MoveToLocation 위치로 이동한다.
 		MoveToLocation = FVector::ZeroVector;//이동 후에 MoveToLocation 위치를 ZeroVector로 초기화해준다.
@@ -106,4 +97,3 @@ bool UCDoAction_Warp::GetCursorLocationAndRotation(FVector& OutLocation, FRotato
 
 	return true;
 }
-

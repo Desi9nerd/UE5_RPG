@@ -6,9 +6,6 @@
 #include "Components/CStateComponent.h"
 #include "Components/CMovementComponent.h"
 
-UCDoAction::UCDoAction()
-{
-}
 void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment, ACharacter* InOwner, const TArray<FDoActionData>& InDoActionDatas, const TArray<FHitData>& InHitDatas)
 {
 	OwnerCharacter = InOwner;
@@ -38,7 +35,6 @@ void UCDoAction::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment,
 	HitDatas_AirborneInitATK = InAirborneATKHitDatas;
 	DoActionDatas_AirCombo = InDoAirActionDatas;
 	HitDatas_AirCombo = InAirHitDatas;
-
 }
 
 void UCDoAction::DoAction()

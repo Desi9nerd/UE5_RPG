@@ -5,11 +5,6 @@
 #include "Components/CMovementComponent.h"
 #include "Weapons/AddOns/CThornObject.h"
 
-UCSubAction_Around::UCSubAction_Around()
-{
-
-}
-
 void UCSubAction_Around::Pressed()
 {
 	Super::Pressed();

@@ -18,7 +18,7 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 	//CWeaponData.h로 변수들이 이동하였기 attachment, equipment, doAction, subAction 객체 각각 생성.
 
 	ACAttachment* attachment = nullptr;
-	if (!!AttachmentClass)//AttachmentClass가 선택되어 있다면
+	if (IsValid(AttachmentClass))//AttachmentClass가 선택되어 있다면
 	{
 		FActorSpawnParameters params;
 		params.Owner = InOwner;
@@ -27,12 +27,12 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 	}
 
 	UCEquipment* equipment = nullptr;
-	if (!!EquipmentClass)//EquipmentClass가 선택되어 있다면
+	if (IsValid(EquipmentClass))//EquipmentClass가 선택되어 있다면
 	{
 		equipment = NewObject<UCEquipment>(this, EquipmentClass);
 		equipment->BeginPlay(InOwner, EquipmentData);
 
-		if (!!attachment)//Attachment가 있다면
+		if (IsValid(attachment))//Attachment가 있다면
 		{
 			equipment->OnEquipmentBeginEquip.AddDynamic(attachment, &ACAttachment::OnBeginEquip);
 			equipment->OnEquipmentUnequip.AddDynamic(attachment, &ACAttachment::OnUnequip);
@@ -40,14 +40,14 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 	}
 
 	UCDoAction* doAction = nullptr;
-	if (!!DoActionClass)
+	if (IsValid(DoActionClass))
 	{
 		doAction = NewObject<UCDoAction>(this, DoActionClass);
 		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas);
 		doAction->BeginPlay(attachment, equipment, InOwner, DoActionDatas, HitDatas, DoActionDatas_AirborneATK, HitDatas_AirborneATK,DoActionDatas_AirCombo, HitDatas_AirCombo);
 					
 
-		if (!!attachment)
+		if (IsValid(attachment))
 		{
 			attachment->OnAttachmentBeginCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentBeginCollision);
 			attachment->OnAttachmentEndCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentEndCollision);
@@ -56,14 +56,14 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 			attachment->OnAttachmentEndOverlap.AddDynamic(doAction, &UCDoAction::OnAttachmentEndOverlap);
 		}
 
-		if (!!equipment)//Bow_String 작업
+		if (IsValid(equipment))//Bow_String 작업
 		{
 			equipment->OnEquipmentBeginEquip.AddDynamic(doAction, &UCDoAction::OnBeginEquip);
 			equipment->OnEquipmentUnequip.AddDynamic(doAction, &UCDoAction::OnUnequip);
 		}
 
 		//공중 띄우기 AirborneATK
-		if (!!attachment)
+		if (IsValid(attachment))
 		{
 			attachment->OnAttachmentBeginCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentBeginCollision);
 			attachment->OnAttachmentEndCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentEndCollision);
@@ -73,7 +73,7 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 		}
 
 		//공중콤보 AirCombo
-		if (!!attachment)
+		if (IsValid(attachment))
 		{
 			attachment->OnAttachmentBeginCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentBeginCollision);
 			attachment->OnAttachmentEndCollision.AddDynamic(doAction, &UCDoAction::OnAttachmentEndCollision);
@@ -84,7 +84,7 @@ void UCWeaponAsset::BeginPlay(ACharacter* InOwner, class UCWeaponData** OutWeapo
 	}
 
 	UCSubAction* subAction = nullptr;
-	if (!!SubActionClass)
+	if (IsValid(SubActionClass))
 	{
 		subAction = NewObject<UCSubAction>(this, SubActionClass);
 		subAction->BeginPlay(InOwner, attachment, doAction);
@@ -106,12 +106,12 @@ void UCWeaponAsset::PostEditChangeChainProperty(FPropertyChangedChainEvent& Prop
 	CheckTrue(FApp::IsGame());//게임이 실행중이면 실행하면 안 되기 때문에 체크
 
 	bool bRefresh = false;
-	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("DoActionDatas") == 0;
-	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("HitDatas") == 0;
-	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("DoActionDatas_AirborneATK") == 0;
-	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("HitDatas_AirborneATK") == 0;
-	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("DoActionDatas_AirCombo") == 0;
-	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare("HitDatas_AirCombo") == 0;//수정하려는 변수명 == 0 이면 이름이 동일하다는 의미.
+	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare(TEXT("DoActionDatas")) == 0;
+	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare(TEXT("HitDatas")) == 0;
+	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare(TEXT("DoActionDatas_AirborneATK")) == 0;
+	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare(TEXT("HitDatas_AirborneATK")) == 0;
+	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare(TEXT("DoActionDatas_AirCombo")) == 0;
+	bRefresh |= PropertyChangedEvent.GetPropertyName().Compare(TEXT("HitDatas_AirCombo")) == 0;//수정하려는 변수명 == 0 이면 이름이 동일하다는 의미.
 
 	if (bRefresh)
 	{
@@ -123,11 +123,13 @@ void UCWeaponAsset::PostEditChangeChainProperty(FPropertyChangedChainEvent& Prop
 
 		if (bCheck)
 		{
-			FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");//WITH_EDITOR로 Editor 내에서 수행하기 때문에 사용 가능.
-			TSharedPtr<IDetailsView> detailsView = prop.FindDetailView("WeaponAssetEditorDetailsView");//WeaponAssetEditor.cpp에서 설정한 arg.ViewIdentifier이름 WeaponAssetEditorDetailsView 사용. WeaponAssetEditorDetailsView를 찾는다.
+			FPropertyEditorModule& prop = FModuleManager::LoadModuleChecked<FPropertyEditorModule>(TEXT("PropertyEditor"));//WITH_EDITOR로 Editor 내에서 수행하기 때문에 사용 가능.
+			TSharedPtr<IDetailsView> detailsView = prop.FindDetailView(TEXT("WeaponAssetEditorDetailsView"));//WeaponAssetEditor.cpp에서 설정한 arg.ViewIdentifier이름 WeaponAssetEditorDetailsView 사용. WeaponAssetEditorDetailsView를 찾는다.
 
 			if (detailsView.IsValid())//detailsView 창이 그려졌다면
+			{
 				detailsView->ForceRefresh();//새로고침
+			}
 		}
 	}
 }

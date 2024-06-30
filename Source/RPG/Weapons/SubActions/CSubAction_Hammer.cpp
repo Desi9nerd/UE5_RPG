@@ -5,6 +5,7 @@
 #include "Components/CMovementComponent.h"
 #include "Weapons/CAttachment.h"
 #include "Weapons/CDoAction.h"
+#include "Weapons/AddOns/CAura.h"
 #include "Weapons/AddOns/CGhostTrail.h"
 
 void UCSubAction_Hammer::Pressed()
@@ -49,6 +50,8 @@ void UCSubAction_Hammer::End_SubAction_Implementation()
 	Movement->Move();
 	Movement->DisableFixedCamera();
 
-	if (!!GhostTrail)
+	if (IsValid(GhostTrail))
+	{
 		GhostTrail->Destroy();
+	}
 }

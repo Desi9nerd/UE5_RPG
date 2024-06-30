@@ -6,13 +6,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/CStateComponent.h"
 #include "Components/CMovementComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Weapons/AddOns/CGhostTrail.h"
 #include "Components/CTargetComponent.h"
-
-UCSubAction_Sword::UCSubAction_Sword()
-{
-}
 
 void UCSubAction_Sword::BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment, UCDoAction* InDoAction)
 {
@@ -42,12 +37,12 @@ void UCSubAction_Sword::Begin_SubAction_Implementation()
 	Super::Begin_SubAction_Implementation();
 
 	//Begin_SubAction이 시작할 때 DoAction의 충돌체를 빼주고 SubAction_Sword는 AddDynamic으로 추가해준다.
-	Attachment->OnAttachmentBeginOverlap.Remove(DoAction, "OnAttachmentBeginOverlap");
+	Attachment->OnAttachmentBeginOverlap.Remove(DoAction, TEXT("OnAttachmentBeginOverlap"));
 	Attachment->OnAttachmentBeginOverlap.AddDynamic(this, &UCSubAction_Sword::OnAttachmentBeginOverlap);
 
 	bMoving = true;//이동할 수 있게 설정해준다.
 
-	if(Target == nullptr)
+	if(false == Target.IsValid())
 	{
 		CLog::Print(FString("NO Target"));
 	}
@@ -73,9 +68,9 @@ void UCSubAction_Sword::Begin_SubAction_Implementation()
 		{
 			ACharacter* character = Cast<ACharacter>(hitResult.GetActor());
 
-			if (!!character)
+			if (IsValid(character))
 			{
-				character->GetCapsuleComponent()->SetCollisionProfileName("Sword_SubAction");//프로젝트 세팅에서 만든 Profile인 Sword_SubAction 사용.
+				character->GetCapsuleComponent()->SetCollisionProfileName(TEXT("Sword_SubAction"));//프로젝트 세팅에서 만든 Profile인 Sword_SubAction 사용.
 
 				Overlapped.Add(character);
 			}
@@ -83,17 +78,16 @@ void UCSubAction_Sword::Begin_SubAction_Implementation()
 
 		FHitResult lineHitResult;
 		UKismetSystemLibrary::LineTraceSingle(Owner->GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1, false, ignores, DrawDebug, lineHitResult, true);//TraceTypeQuery1은 Visibility
-
-		if(Target.IsValid())
-		{}
-
+		
 		if (lineHitResult.bBlockingHit)//하나라도 충돌되었다면
 		{
 			FVector direction = (End - Start).GetSafeNormal2D();
 			End = lineHitResult.Location - (direction * radius * 2);//(벽에) 부딛혔을 때 밀착하는게 아니라 capsule * 2 거리에서 멈춘추도록 End 설정.
 
 			if (DrawDebug == EDrawDebugTrace::ForDuration)
+			{
 				DrawDebugSphere(Owner->GetWorld(), End, radius * 2, 20, FColor::Magenta, true, 2);
+			}
 		}
 	}
 	
@@ -107,7 +101,7 @@ void UCSubAction_Sword::End_SubAction_Implementation()
 	Super::End_SubAction_Implementation();
 
 	//Begin_SubAction이 끝나면 SubAction_Sword의 충돌은 빼주고 DoAction의 충돌체는 AddDynamic으로 추가한다.
-	Attachment->OnAttachmentBeginOverlap.Remove(this, "OnAttachmentBeginOverlap");
+	Attachment->OnAttachmentBeginOverlap.Remove(this, TEXT("OnAttachmentBeginOverlap"));
 	Attachment->OnAttachmentBeginOverlap.AddDynamic(DoAction, &UCDoAction::OnAttachmentBeginOverlap);
 
 	bMoving = false;//동작이 끝났으니 이동하지 못하게 false로 만들어준다.
@@ -119,10 +113,14 @@ void UCSubAction_Sword::End_SubAction_Implementation()
 	Movement->DisableFixedCamera();
 
 	for (ACharacter* character : Overlapped)
-		character->GetCapsuleComponent()->SetCollisionProfileName("Pawn");//Sword_SubAction으로 변경했던 프로파일을 원래 프로파일 이었던 Pawn으로 돌려준다.
+	{
+		character->GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));//Sword_SubAction으로 변경했던 프로파일을 원래 프로파일 이었던 Pawn으로 돌려준다.
+	}
 
-	if (!!GhostTrail)
+	if (IsValid(GhostTrail))
+	{
 		GhostTrail->Destroy();//GhostTrail를 없앤다.
+	}
 }
 
 void UCSubAction_Sword::Tick_Implementation(float InDeltaTime)
@@ -137,7 +135,7 @@ void UCSubAction_Sword::Tick_Implementation(float InDeltaTime)
 	////Owner(여기서는 Player)의 위치가 radius 오차값 내의 End 위치에 도달했다면
 	//if (location.Equals(End, radius))
 	//{
-	//	bMoving = false;//일섬 공격이 끝났으니 이동하지 못하게 false로 만들어준//다.
+	//	bMoving = false;//일섬 공격이 끝났으니 이동하지 못하게 false로 만들어준다.
 	//	Start = End = Owner->GetActorLocation();//시작과 끝 위치를 현재 Owner의 //위치로 설정해준다. 초기화.
 	//
 	//	return;
@@ -152,10 +150,14 @@ void UCSubAction_Sword::Tick_Implementation(float InDeltaTime)
 	FVector directionToTarget = (Target->GetActorLocation() - Owner->GetActorLocation()).GetSafeNormal2D();
 	FVector direction = (End - Start).GetSafeNormal2D();
 
-	if (Target != nullptr)
+	if (Target.IsValid()) // 타겟 O
+	{
 		Owner->AddActorWorldOffset(directionToTarget * Speed, true);
-	else
+	}
+	else // 타겟 X
+	{
 		Owner->AddActorWorldOffset(direction * Speed, true);
+	}
 }
 
 void UCSubAction_Sword::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InAttackCauser, ACharacter* InOther)
@@ -163,7 +165,9 @@ void UCSubAction_Sword::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor*
 	CheckNull(InOther);
 
 	for (ACharacter* character : Hitted)
+	{
 		CheckTrue(character == InOther);
+	}
 
 	Hitted.AddUnique(InOther);
 

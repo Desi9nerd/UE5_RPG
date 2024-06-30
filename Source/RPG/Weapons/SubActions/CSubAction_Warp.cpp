@@ -29,6 +29,17 @@ void UCSubAction_Warp::BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment
 	camera->FieldOfView = FieldOfView;
 }
 
+void UCSubAction_Warp::Tick_Implementation(float InDeltaTime)
+{
+	Super::Tick_Implementation(InDeltaTime);
+
+	CheckNull(PlayerController);
+	CheckNull(CameraActor);
+
+	//카메라의 위치를 Player위치로 실시간 옮겨준다. 
+	CameraActor->SetActorLocation(Owner->GetActorLocation() + CameraRelativeLocation);
+}
+
 void UCSubAction_Warp::Pressed()
 {
 	CheckNull(PlayerController);
@@ -53,15 +64,4 @@ void UCSubAction_Warp::Released()
 	State->OffSubActionMode();
 	Movement->DisableTopViewCamera();//CMovementComponent의 bTopViewCamera를 false로 만듬.
 	PlayerController->SetViewTargetWithBlend(Owner, BlendOut);
-}
-
-void UCSubAction_Warp::Tick_Implementation(float InDeltaTime)
-{
-	Super::Tick_Implementation(InDeltaTime);
-
-	CheckNull(PlayerController);
-	CheckNull(CameraActor);
-
-	//카메라의 위치를 Player위치로 실시간 옮겨준다. 
-	CameraActor->SetActorLocation(Owner->GetActorLocation() + CameraRelativeLocation);
 }

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Weapons/CDoAction.h"
 #include "CDoAction_Combo.generated.h"
@@ -8,9 +7,6 @@ UCLASS()
 class RPG_API UCDoAction_Combo : public UCDoAction
 {
 	GENERATED_BODY()
-
-private:
-	UCDoAction_Combo();
 		
 public:
 	FORCEINLINE void EnableCombo() { bEnable = true; }
@@ -19,7 +15,9 @@ public:
 	FORCEINLINE bool GetbEnable() { return bEnable; }
 	FORCEINLINE bool GetbExist() { return bExist; }
 
-public:
+	UCDoAction_Combo();
+
+	//기본(마우스 왼쪽클릭) 공격
 	void DoAction() override;
 	void Begin_DoAction() override;
 	void End_DoAction() override;
@@ -35,28 +33,22 @@ public:
 	void Parrying_Start() override;
 	void Parrying_End() override;
 
-public:
 	void OnAttachmentBeginOverlap(class ACharacter* InAttacker, AActor*InAttackCauser, class ACharacter* InOther) override;
 	void OnAttachmentEndCollision() override;
 	
-private:
-	int32 Index;
-	bool bEnable;
-
-public:
 	bool bExist;
 
 private:
-	TArray<class ACharacter*> Hitted;
+	int32 Index;
+	bool bEnable;
+	
+	TArray<ACharacter*> Hitted;
 
-
-//공중콤보
-private:
+	//공중콤보
 	int32 Index_AirCombo;
 	bool InitialLaunchATK;
 
-//패링
-private:
+	//패링 몽타주
 	UAnimMontage* Parrying_Start_Montage;
 	UAnimMontage* Parrying_End_Montage;
 };

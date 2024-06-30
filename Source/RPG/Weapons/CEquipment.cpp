@@ -2,9 +2,7 @@
 #include "Global.h"
 #include "GameFramework/Character.h"
 #include "Components/CMovementComponent.h"
-#include "Characters/ECharacterTypes.h"
 #include "Components/CStateComponent.h"
-#include "CEquipment.h"
 
 void UCEquipment::BeginPlay(ACharacter* InOwner, const FEquipmentData& InData)
 {
@@ -21,15 +19,21 @@ void UCEquipment::Equip_Implementation()
 
 	//isBound()는 delegate가 현재 bind되어 있는지 확인하는 함수이고, broadcast()는 delegate를 호출하는 함수다.
 	if (OnEquipmentEquip.IsBound())
+	{
 		OnEquipmentEquip.Broadcast();
+	}
 
 	if (Data.bCanMove == false)
+	{
 		Movement->Stop();
+	}
 
 	if (Data.bUseControlRotation)
+	{
 		Movement->EnableControlRotation();
+	}
 
-	if (!!Data.Montage)
+	if (IsValid(Data.Montage))
 	{
 		OwnerCharacter->PlayAnimMontage(Data.Montage, Data.PlayRate);
 	}
@@ -45,7 +49,9 @@ void UCEquipment::Begin_Equip_Implementation()
 	bBeginEquip = true;
 
 	if (OnEquipmentBeginEquip.IsBound())
+	{
 		OnEquipmentBeginEquip.Broadcast();
+	}
 }
 
 void UCEquipment::End_Equip_Implementation()
@@ -63,6 +69,7 @@ void UCEquipment::Unequip_Implementation()
 	Movement->DisableControlRotation();
 
 	if (OnEquipmentUnequip.IsBound())
+	{
 		OnEquipmentUnequip.Broadcast();
+	}
 }
-

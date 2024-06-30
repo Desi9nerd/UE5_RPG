@@ -72,7 +72,6 @@ void UCSubAction_Fist::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 	HitDatas[HitIndex].SendDamage(Owner, InAttackCauser, InOther);
 }
 
-
 void UCSubAction_Fist::OnAttachmentEndCollision()
 {
 	Hitted.Empty();//사용이 끝난 Hit Data는 비워준다.

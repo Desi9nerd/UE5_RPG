@@ -3,12 +3,6 @@
 #include "GameFramework/Character.h"
 #include "Components/CStateComponent.h"
 #include "Components/CMovementComponent.h"
-#include "Components/CapsuleComponent.h"
-
-UCSubAction::UCSubAction()
-{
-
-}
 
 void UCSubAction::BeginPlay(ACharacter* InOwner, ACAttachment* InAttachment, UCDoAction* InDoAction)
 {

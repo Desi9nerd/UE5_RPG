@@ -5,16 +5,8 @@
 #include "Weapons/AddOns/CArrow.h"
 #include "GameFramework/Character.h"
 #include "Components/PoseableMeshComponent.h"
-#include "Characters/ECharacterTypes.h"
 #include "Components/CStateComponent.h"
-#include "Components/CMovementComponent.h"
 #include "Components/SplineMeshComponent.h"
-
-
-UCDoAction_Bow::UCDoAction_Bow()
-{
-
-}
 
 void UCDoAction_Bow::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipment, ACharacter* InOwner, const TArray<FDoActionData>& InDoActionData, const TArray<FHitData>& InHitData)
 {
@@ -30,7 +22,23 @@ void UCDoAction_Bow::BeginPlay(ACAttachment* InAttachment, UCEquipment* InEquipm
 	OriginLocation = PoseableMesh->GetBoneLocationByName("bow_string_mid", EBoneSpaces::ComponentSpace);
 
 	bEquipped = InEquipment->GetEquipped();//헤더에 만든 bEquipped변수에 장착 상태를 받아와서 넣어준다.
-	
+}
+
+void UCDoAction_Bow::Tick(float InDeltaTime)
+{
+	Super::Tick(InDeltaTime);
+
+	PoseableMesh->CopyPoseFromSkeletalComponent(SkeletalMesh);
+
+	bool bCheck = true;
+	bCheck &= (*bEquipped == true);//장착 상태여야 한다.
+	bCheck &= (bBeginAction == false);//BeginAction이면(활 발사) 활 시위가 붙으면 안되므로 false여야 한다.
+	bCheck &= (bAttachedString == true);//활 시위 붙는게 true여야 한다.
+
+	CheckFalse(bCheck);
+
+	FVector handLocation = OwnerCharacter->GetMesh()->GetSocketLocation("Hand_Bow_Right");
+	PoseableMesh->SetBoneLocationByName("bow_string_mid", handLocation, EBoneSpaces::WorldSpace);
 }
 
 void UCDoAction_Bow::DoAction()
@@ -97,27 +105,13 @@ void UCDoAction_Bow::OnUnequip()
 	//활 장착을 해제하면 화살들을 삭제한다.
 	for (int32 i = Arrows.Num() - 1; i >= 0; i--)
 	{
-		if (!!Arrows[i]->GetAttachParentActor())
+		if (Arrows[i]->GetAttachParentActor())
+		{
 			Arrows[i]->Destroy();
+		}
 	}
 }
 
-void UCDoAction_Bow::Tick(float InDeltaTime)
-{
-	Super::Tick(InDeltaTime);
-	
-	PoseableMesh->CopyPoseFromSkeletalComponent(SkeletalMesh);
-
-	bool bCheck = true;
-	bCheck &= (*bEquipped == true);//장착 상태여야 한다.
-	bCheck &= (bBeginAction == false);//BeginAction이면(활 발사) 활 시위가 붙으면 안되므로 false여야 한다.
-	bCheck &= (bAttachedString == true);//활 시위 붙는게 true여야 한다.
-	
-	CheckFalse(bCheck);
-
-	FVector handLocation = OwnerCharacter->GetMesh()->GetSocketLocation("Hand_Bow_Right");
-	PoseableMesh->SetBoneLocationByName("bow_string_mid", handLocation, EBoneSpaces::WorldSpace);
-}
 
 void UCDoAction_Bow::End_BowString()
 {
@@ -127,9 +121,7 @@ void UCDoAction_Bow::End_BowString()
 
 void UCDoAction_Bow::CreateArrow()
 {
-	if (World->bIsTearingDown == true)//World->bIsTearingDown는 World가 종료되었다는 의미
-		return;
-
+	if (World->bIsTearingDown == true) return; //World->bIsTearingDown는 World가 종료되었다는 의미
 
 	FTransform transform;
 	ACArrow* arrow = World->SpawnActorDeferred<ACArrow>(ArrowClass, transform, NULL, NULL, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);

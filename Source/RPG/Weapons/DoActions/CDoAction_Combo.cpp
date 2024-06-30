@@ -5,7 +5,7 @@
 
 UCDoAction_Combo::UCDoAction_Combo()
 {
-	//패링 몽타주
+	//패링 몽타주 등록
 	CHelpers::GetAsset<UAnimMontage>(&Parrying_Start_Montage, "AnimMontage'/Game/ABP/PP/Montages/Blade/Block/AM_PP_Blade_BlockStart.AM_PP_Blade_BlockStart'");
 	CHelpers::GetAsset<UAnimMontage>(&Parrying_End_Montage, "AnimMontage'/Game/ABP/PP/Montages/Blade/Block/AM_PP_Blade_BlockEnd.AM_PP_Blade_BlockEnd'");
 }
@@ -59,9 +59,6 @@ void UCDoAction_Combo::AirborneInitATK()
 	InitialLaunchATK = true;
 
 	DoActionDatas_AirborneInitATK[0].DoAction(OwnerCharacter);
-
-
-	
 }
 
 void UCDoAction_Combo::DoAction_AirCombo()
@@ -177,8 +174,10 @@ void UCDoAction_Combo::OnAttachmentEndCollision()
 {
 	Super::OnAttachmentEndCollision();
 
-	//피격 시 공격자에게 피격체를 돌리는 코드
-	//float angle = -2.0f;
+	// 현재 '4방향 피격'을 구현하여 아래 코드 더 이상 사용하지 않음.
+	////**************************************************************************
+	////** 피격 시 공격자에게 피격체를 돌리는 코드
+	//float angle = -2.f;
 	//ACharacter* candidate = nullptr;
 	//
 	//for (ACharacter* hitted : Hitted)
@@ -197,7 +196,7 @@ void UCDoAction_Combo::OnAttachmentEndCollision()
 	//	}
 	//}
 	//
-	//if (!!candidate)
+	//if (IsValid(candidate))
 	//{
 	//	FRotator rotator = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), //candidate->GetActorLocation());
 	//	FRotator target = FRotator(0, rotator.Yaw, 0);
@@ -205,6 +204,7 @@ void UCDoAction_Combo::OnAttachmentEndCollision()
 	//	AController* controller = OwnerCharacter->GetController<AController>();
 	//	controller->SetControlRotation(target);
 	//}
+	////**************************************************************************
 
 	Hitted.Empty();
 }

@@ -1,8 +1,6 @@
 #include "CWeaponStructures.h"
 #include "Global.h"
 #include "GameFramework/Character.h"
-#include "Characters/CBaseCharacter.h"
-#include "Components/CStateComponent.h"
 #include "Components/CMovementComponent.h"
 #include "Animation/AnimMontage.h"
 
@@ -10,16 +8,19 @@ void FDoActionData::DoAction(ACharacter* InOwner)
 {
 	UCMovementComponent* movement = CHelpers::GetComponent<UCMovementComponent>(InOwner);
 
-	if (!!movement)
+	if (IsValid(movement))
 	{
 		if (bFixedCamera)
+		{
 			movement->EnableFixedCamera();
-
-		if (bCanMove == false)
+		}
+		if (false == bCanMove)
+		{
 			movement->Stop();
+		}
 	}
 
-	if (!!Montage)
+	if (IsValid(Montage))
 	{
 		InOwner->PlayAnimMontage(Montage, PlayRate);
 	}
@@ -29,17 +30,22 @@ void FDoActionData::DoAction_AirCombo(ACharacter* InOwner)
 {
 	UCMovementComponent* movement = CHelpers::GetComponent<UCMovementComponent>(InOwner);
 
-	if (!!movement)
+	if (IsValid(movement))
 	{
 		if (bFixedCamera)
+		{
 			movement->EnableFixedCamera();
-
-		if (bCanMove == false)
+		}
+		if (false == bCanMove)
+		{
 			movement->Stop();
+		}
 	}
 
-	if (!!Montage)
+	if (IsValid(Montage))
+	{
 		InOwner->PlayAnimMontage(Montage, PlayRate);
+	}
 }
 
 void FDoActionData::PlayEffect(UWorld* InWorld, const FVector& InLocation)
@@ -65,32 +71,29 @@ void FDoActionData::PlayEffect(UWorld* InWorld, const FVector& InLocation, const
 	CHelpers::PlayEffect(InWorld, Effect, transform);
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 
 void FHitData::SendDamage(ACharacter* InAttacker, AActor* InAttackCauser, ACharacter* InOther)
 {
-	FActionDamageEvent e;
-	e.HitData = this;
+	FActionDamageEvent actionDamageEventData;
+	actionDamageEventData.HitData = this;
 
-	InOther->TakeDamage(Power, e, InAttacker->GetController(), InAttackCauser);
-
+	InOther->TakeDamage(Power, actionDamageEventData, InAttacker->GetController(), InAttackCauser);
 }
 
 void FHitData::PlayMontage(ACharacter* InOwner)
 {
 	if (CharacterCnM.Num() > 0)
 	{
-		for(FClassMontage i : CharacterCnM)
+		for(FClassMontage iter : CharacterCnM)
 		{
-			if(InOwner->GetClass() == i.CharacterClass)
+			if(InOwner->GetClass() == iter.CharacterClass)
 			{
-				InOwner->PlayAnimMontage(i.Montage, PlayRate);
+				InOwner->PlayAnimMontage(iter.Montage, PlayRate);
 			}
 		}
 	}
 }
-
 
 void FHitData::PlayHitStop(UWorld* InWorld)
 {
@@ -100,22 +103,18 @@ void FHitData::PlayHitStop(UWorld* InWorld)
 	for(AActor* actor : InWorld->GetCurrentLevel()->Actors)
 	{
 		ACharacter* character = Cast<ACharacter>(actor);
-
-		if(!!character)
+		if(IsValid(character))
 		{
 			character->CustomTimeDilation = 1e-3f;
-
 			characters.Add(character);
 		}
 	}
-
-	//익명 메소드 //람다 클로저
-	//람다는 외부에서 닫힌 상태로 실행되는 객체
+	
 	FTimerDelegate timerDelegate;
 	timerDelegate.BindLambda([=]()
 		{
 			for (ACharacter* character : characters)
-				character->CustomTimeDilation = 1;
+				character->CustomTimeDilation = 1.f;
 		});
 
 	FTimerHandle timerHandle;
@@ -131,7 +130,6 @@ void FHitData::PlaySoundWave(ACharacter* InOwner)
 
 	UGameplayStatics::SpawnSoundAtLocation(world, Sound, location);
 }
-
 
 void FHitData::PlayEffect(UWorld* InWorld, const FVector& InLocation)
 {
